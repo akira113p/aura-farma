@@ -1,0 +1,16 @@
+{
+  "name": "euro-farma-prototipo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Protótipo farmaDimin — delega os comandos para o app em frontend/",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "dev:backend": "npm --prefix backend run dev",
+    "build": "npm --prefix frontend run build",
+    "lint": "npm --prefix frontend run lint",
+    "preview": "npm --prefix frontend run preview",
+    "typecheck:backend": "npm --prefix backend run typecheck",
+    "install:frontend": "npm --prefix frontend install",
+    "install:backend": "npm --prefix backend install"
+  }
+}

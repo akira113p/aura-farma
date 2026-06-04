@@ -3,7 +3,9 @@ import type { AppState, Route } from './types';
 import { Icon, Sidebar } from './components';
 import { useAppState } from './hooks/useAppState';
 import { useTweaks } from './hooks/useTweaks';
+import { useAuth } from './context/AuthContext';
 import { clearState, seedState } from './services/store';
+import { AuthScreen } from './features/auth/AuthScreen';
 import { TopBar } from './features/TopBar';
 import { Dashboard } from './features/Dashboard';
 import { Produtos } from './features/Produtos';
@@ -44,15 +46,27 @@ function routeSub(route: Route, state: AppState): string {
 }
 
 export default function App() {
+  const { user, loading, logout } = useAuth();
   const [tweaks, setTweak] = useTweaks();
   const [state, setState] = useAppState();
   const [route, setRoute] = useState<Route>('dashboard');
+  const [navOpen, setNavOpen] = useState(false);
   const [flashMsg, setFlashMsg] = useState<string | null>(null);
 
   const flash = useCallback((msg: string) => {
     setFlashMsg(msg);
     setTimeout(() => setFlashMsg(null), 2400);
   }, []);
+
+  // Auth gate (all hooks above run unconditionally to keep hook order stable).
+  if (loading) {
+    return (
+      <div className="auth-wrap">
+        <div className="muted">Carregando…</div>
+      </div>
+    );
+  }
+  if (!user) return <AuthScreen />;
 
   const lowStockCount = state.products.filter((p) => p.stock <= p.min).length;
 
@@ -94,7 +108,16 @@ export default function App() {
 
   return (
     <div className="app">
-      <Sidebar route={route} setRoute={setRoute} requestCount={state.requests.length} lowStockCount={lowStockCount} />
+      <Sidebar
+        route={route}
+        setRoute={setRoute}
+        requestCount={state.requests.length}
+        lowStockCount={lowStockCount}
+        open={navOpen}
+        onClose={() => setNavOpen(false)}
+        user={user}
+        onLogout={logout}
+      />
       <div className="main">
         <TopBar
           route={route}
@@ -103,6 +126,7 @@ export default function App() {
           populated={state.populated}
           theme={tweaks.theme}
           setTheme={(t) => setTweak('theme', t)}
+          onMenu={() => setNavOpen(true)}
         />
         <div className="page">
           <div className="page-head">

@@ -7,6 +7,15 @@
  * client-side) and maps directly to MongoDB's `_id` later.
  */
 
+/** The authenticated account, as returned by the backend (never includes secrets). */
+export interface AuthUser {
+  id: string;
+  username: string;
+  pharmacyName: string;
+  email: string;
+  authProviders: string[];
+}
+
 export type Category =
   | 'Analgésicos'
   | 'Antibióticos'
