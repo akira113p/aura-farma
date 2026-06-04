@@ -14,7 +14,31 @@ const app = express();
 // Behind a proxy in production so that Secure cookies and req.ip work correctly.
 if (env.isProd) app.set('trust proxy', 1);
 
-app.use(helmet());
+// This service only serves JSON (no HTML/scripts of its own), so we can lock the
+// CSP down hard and enable HSTS in production. Helmet already sets
+// X-Content-Type-Options, X-Frame-Options (frameguard), etc. by default.
+app.use(
+  helmet({
+    // Disallow any resource loading from API responses (defense-in-depth for
+    // accidentally-rendered error pages). Disables the default `upgrade-insecure-requests`.
+    contentSecurityPolicy: {
+      useDefaults: false,
+      directives: {
+        'default-src': ["'none'"],
+        'frame-ancestors': ["'none'"],
+        'base-uri': ["'none'"],
+        'form-action': ["'none'"],
+      },
+    },
+    // Don't advertise referrers cross-origin.
+    referrerPolicy: { policy: 'no-referrer' },
+    // Force HTTPS for a year (incl. subdomains) once the app is live behind TLS.
+    // Disabled in dev so localhost over HTTP keeps working.
+    hsts: env.isProd ? { maxAge: 31536000, includeSubDomains: true, preload: true } : false,
+    // Avoid leaking the served-from origin to unrelated resources.
+    crossOriginResourcePolicy: { policy: 'same-site' },
+  }),
+);
 app.use(cors({ origin: env.frontendOrigins, credentials: true }));
 app.use(express.json({ limit: '10kb' }));
 
