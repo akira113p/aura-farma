@@ -1,5 +1,6 @@
 import { Router, type Request } from 'express';
 import { env, isGoogleEnabled } from '../config/env';
+import { loginLimiter } from '../middleware/rateLimit';
 import { AppError, asyncHandler } from '../lib/http';
 import { DUMMY_HASH, hashPassword, verifyPassword } from '../lib/password';
 import { googleCompleteSchema, googleVerifySchema, loginSchema, registerSchema } from '../lib/validation';
@@ -75,6 +76,7 @@ authRouter.post(
 // POST /api/auth/login
 authRouter.post(
   '/login',
+  loginLimiter, // stricter per-IP+identifier limiter on top of the shared authLimiter
   asyncHandler(async (req, res) => {
     const { identifier, password } = loginSchema.parse(req.body);
     const id = identifier.toLowerCase();
