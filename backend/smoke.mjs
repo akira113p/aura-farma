@@ -103,6 +103,28 @@ try {
   check('google/config enabled=false', gc.enabled === false, JSON.stringify(gc));
   r = await fetch(`${BASE}/auth/google`, j(null, { credential: 'x' }));
   check('google sem client id → 503', r.status === 503, `(status ${r.status})`);
+
+  // --- catalog search (requires auth) ---
+  r = await fetch(`${BASE}/auth/login`, j(null, { identifier: 'dono@farma.com', password: 'Senha@123' }));
+  const authCookie = sidOf(r);
+  check('login p/ busca define cookie', Boolean(authCookie));
+
+  r = await fetch(`${BASE}/medicamentos/busca?q=dipirona`, j(authCookie, null, 'GET'));
+  const bs = await r.json();
+  check('busca catálogo (dipirona) → 200', r.status === 200, `(status ${r.status})`);
+  check('busca retorna resultados', Array.isArray(bs.results) && bs.results.length > 0, JSON.stringify(bs).slice(0, 120));
+  check('busca acha DIPIRONA', bs.results?.some((m) => m.nome?.toUpperCase().includes('DIPIRONA')));
+
+  r = await fetch(`${BASE}/medicamentos/busca?q=amoxalina`, j(authCookie, null, 'GET'));
+  const bt = await r.json();
+  check('busca tolera typo (amoxalina→amoxicilina)', bt.results?.some((m) => m.nome?.toUpperCase().includes('AMOXICILINA')), JSON.stringify(bt.results?.slice(0, 2)));
+
+  r = await fetch(`${BASE}/medicamentos/busca?q=d`, j(authCookie, null, 'GET'));
+  const bsh = await r.json();
+  check('busca curta (<2 chars) → vazia', r.status === 200 && Array.isArray(bsh.results) && bsh.results.length === 0, `(status ${r.status})`);
+
+  r = await fetch(`${BASE}/medicamentos/busca?q=dipirona`, j(null, null, 'GET'));
+  check('busca sem auth → 401', r.status === 401, `(status ${r.status})`);
 } finally {
   server.kill();
   if (mongod) {

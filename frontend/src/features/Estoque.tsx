@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import type { AppState, Product } from '../types';
+import { useEffect, useState } from 'react';
+import type { AppState, CatalogMed, Product } from '../types';
 import { Badge, Button, Card, Empty, Field, Icon, Input, Modal, StockBar } from '../components';
 import { seedState } from '../services/store';
+import { medicamentosApi } from '../services/medicamentos';
+import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { CATEGORIES } from '../data/seed';
 import { BRL } from '../lib/format';
 
@@ -13,16 +15,33 @@ interface ScreenProps {
 /** Either an existing product (edit) or the "new product" sentinel. */
 type Editing = Product | { new: true } | null;
 
-export function Produtos({ state, setState }: ScreenProps) {
+/** lowercase + strip accents, so "analgesico" matches "Analgésico". */
+const norm = (s: string) =>
+  s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+/** Split a therapeutic-class string into a few clean tags. */
+function tagsFromClasse(classe: string): string[] {
+  return classe
+    .split(/[,/]|\s-\s|-/)
+    .map((t) => t.trim())
+    .filter((t) => t.length > 2);
+}
+
+export function Estoque({ state, setState }: ScreenProps) {
   const [search, setSearch] = useState('');
   const [cat, setCat] = useState('');
   const [editing, setEditing] = useState<Editing>(null);
 
   const products = state.products;
+  const nq = norm(search);
   const filtered = products.filter(
     (p) =>
       (!cat || p.cat === cat) &&
-      (!search || p.name.toLowerCase().includes(search.toLowerCase()) || p.sku.includes(search)),
+      (!nq ||
+        norm(p.name).includes(nq) ||
+        p.sku.includes(search.trim()) ||
+        norm(p.principioAtivo ?? '').includes(nq) ||
+        (p.tags ?? []).some((t) => norm(t).includes(nq))),
   );
 
   function saveProduct(p: Product) {
@@ -30,7 +49,8 @@ export function Produtos({ state, setState }: ScreenProps) {
       setState({ ...state, products: state.products.map((x) => (x.id === p.id ? p : x)) });
     } else {
       const id = 'p' + Date.now();
-      setState({ ...state, products: [...state.products, { ...p, id }] });
+      // Adding the first medicine flips the screen out of its empty state.
+      setState({ ...state, populated: true, products: [...state.products, { ...p, id }] });
     }
     setEditing(null);
   }
@@ -43,12 +63,12 @@ export function Produtos({ state, setState }: ScreenProps) {
       <Card>
         <Empty
           icon="box"
-          title="Catálogo vazio"
-          sub="Adicione produtos manualmente ou popule com dados de exemplo."
+          title="Estoque vazio"
+          sub="Busque medicamentos reais pelo nome (mesmo com erro de digitação) ou popule com dados de exemplo."
           action={
             <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
               <Button kind="primary" icon="plus" onClick={() => setEditing({ new: true })}>
-                Novo produto
+                Adicionar medicamento
               </Button>
               <Button kind="secondary" icon="sparkle" onClick={() => setState(seedState())}>
                 Popular exemplo
@@ -70,7 +90,7 @@ export function Produtos({ state, setState }: ScreenProps) {
             className="input"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por nome ou código…"
+            placeholder="Buscar por nome, código, princípio ativo ou tag…"
           />
         </div>
         <select className="select" style={{ width: 'auto', minWidth: 160 }} value={cat} onChange={(e) => setCat(e.target.value)}>
@@ -83,7 +103,7 @@ export function Produtos({ state, setState }: ScreenProps) {
         </select>
         <div style={{ flex: 1 }} />
         <Button kind="primary" icon="plus" onClick={() => setEditing({ new: true })}>
-          Novo produto
+          Adicionar medicamento
         </Button>
       </div>
 
@@ -94,10 +114,9 @@ export function Produtos({ state, setState }: ScreenProps) {
             title="Nenhum resultado"
             sub="Tente outros termos de busca."
             action={
-              (!!search || !!cat) && (
+              (search || cat) && (
                 <Button
                   kind="secondary"
-                  icon="x"
                   onClick={() => {
                     setSearch('');
                     setCat('');
@@ -128,14 +147,23 @@ export function Produtos({ state, setState }: ScreenProps) {
               {filtered.map((p) => (
                 <tr key={p.id} className="prod-row" onClick={() => setEditing(p)} style={{ cursor: 'pointer' }}>
                   <td className="cell-name">
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                       <span>{p.name}</span>
                       <span className="mono" style={{ color: 'var(--text-subtle)' }}>
                         {p.sku}
                       </span>
+                      {(p.tags ?? []).length > 0 && (
+                        <span className="prod-tags">
+                          {(p.tags ?? []).slice(0, 2).map((t) => (
+                            <Badge key={t}>{t}</Badge>
+                          ))}
+                        </span>
+                      )}
                     </div>
                   </td>
-                  <td className="muted" data-label="Categoria">{p.cat}</td>
+                  <td className="muted" data-label="Categoria">
+                    {p.cat}
+                  </td>
                   <td data-label="Estoque">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <StockBar stock={p.stock} min={p.min} />
@@ -147,8 +175,12 @@ export function Produtos({ state, setState }: ScreenProps) {
                       ) : null}
                     </div>
                   </td>
-                  <td className="num tabular muted" data-label="Mín.">{p.min}</td>
-                  <td className="num tabular" data-label="Preço">{BRL(p.price)}</td>
+                  <td className="num tabular muted" data-label="Mín.">
+                    {p.min}
+                  </td>
+                  <td className="num tabular" data-label="Preço">
+                    {BRL(p.price)}
+                  </td>
                   <td
                     className="cell-actions"
                     onClick={(e) => {
@@ -157,7 +189,7 @@ export function Produtos({ state, setState }: ScreenProps) {
                     }}
                     style={{ textAlign: 'center' }}
                   >
-                    <button className="btn btn-ghost btn-sm" title="Excluir" aria-label={`Excluir ${p.name}`}>
+                    <button className="btn btn-ghost btn-sm" title="Excluir">
                       <Icon name="trash" size={13} />
                     </button>
                   </td>
@@ -202,15 +234,26 @@ function ProductModal({ product, onClose, onSave, onDelete }: ProductModalProps)
     cost: existing?.cost ?? 0,
     stock: existing?.stock ?? 0,
     min: existing?.min ?? 5,
+    principioAtivo: existing?.principioAtivo,
+    tags: existing?.tags,
   });
   const set = <K extends keyof Product>(k: K, v: Product[K]) => setF((p) => ({ ...p, [k]: v }));
   const valid = f.name.trim().length > 0 && f.sku.trim().length > 0;
+
+  function pickFromCatalog(m: CatalogMed) {
+    setF((p) => ({
+      ...p,
+      name: m.nome,
+      principioAtivo: m.principioAtivo || undefined,
+      tags: m.classeTerapeutica ? tagsFromClasse(m.classeTerapeutica) : p.tags,
+    }));
+  }
 
   return (
     <Modal
       open
       onClose={onClose}
-      title={isNew ? 'Novo produto' : 'Editar produto'}
+      title={isNew ? 'Adicionar medicamento' : 'Editar medicamento'}
       footer={
         <>
           {!isNew && onDelete && (
@@ -228,9 +271,27 @@ function ProductModal({ product, onClose, onSave, onDelete }: ProductModalProps)
         </>
       }
     >
+      <CatalogSearch onPick={pickFromCatalog} />
+
       <Field label="Nome">
-        <Input value={f.name} onChange={(v) => set('name', v)} autoFocus placeholder="Ex: Dipirona 500mg c/10" />
+        <Input value={f.name} onChange={(v) => set('name', v)} placeholder="Ex: Dipirona 500mg c/10" />
       </Field>
+      {(f.principioAtivo || (f.tags ?? []).length > 0) && (
+        <div className="med-meta">
+          {f.principioAtivo && (
+            <span className="med-meta-line">
+              <span className="muted">Princípio ativo:</span> {f.principioAtivo}
+            </span>
+          )}
+          {(f.tags ?? []).length > 0 && (
+            <span className="prod-tags">
+              {(f.tags ?? []).map((t) => (
+                <Badge key={t}>{t}</Badge>
+              ))}
+            </span>
+          )}
+        </div>
+      )}
       <div className="cols-2">
         <Field label="Código de barras (SKU)">
           <Input value={f.sku} onChange={(v) => set('sku', v)} placeholder="789…" />
@@ -260,5 +321,101 @@ function ProductModal({ product, onClose, onSave, onDelete }: ProductModalProps)
         <Input type="number" value={f.stock} onChange={(v) => set('stock', parseInt(v) || 0)} />
       </Field>
     </Modal>
+  );
+}
+
+/** Typo-tolerant catalog typeahead that prefills the form on pick. */
+function CatalogSearch({ onPick }: { onPick: (m: CatalogMed) => void }) {
+  const [q, setQ] = useState('');
+  const dq = useDebouncedValue(q, 250);
+  const [results, setResults] = useState<CatalogMed[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const term = dq.trim();
+    let cancelled = false;
+    // Debounced catalog fetch — a legitimate data-fetching effect that syncs the
+    // dropdown with the backend. The set-state-in-effect rule guards against
+    // cascading renders from local state; here the state mirrors an async
+    // external source, so we opt out as elsewhere in this codebase.
+    /* eslint-disable react-hooks/set-state-in-effect */
+    if (term.length < 2) {
+      setResults([]);
+      setError(null);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    /* eslint-enable react-hooks/set-state-in-effect */
+    medicamentosApi
+      .busca(term)
+      .then((r) => {
+        if (cancelled) return;
+        setResults(r.results);
+        setOpen(true);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setError('Não foi possível buscar no catálogo — verifique se o servidor está ativo.');
+        setResults([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [dq]);
+
+  return (
+    <div className="catalog-search">
+      <Field label="Buscar medicamento real (catálogo ANVISA)">
+        <div className="search">
+          <Icon name="search" size={14} />
+          <input
+            className="input"
+            value={q}
+            onChange={(e) => {
+              setQ(e.target.value);
+              setOpen(true);
+            }}
+            placeholder="Ex: dipirona, amoxicilina… (tolera erro de digitação)"
+            autoFocus
+          />
+          {loading && <span className="btn-spinner" aria-label="Buscando" />}
+        </div>
+      </Field>
+      {error && <div className="field-error">{error}</div>}
+      {open && results.length > 0 && (
+        <ul className="catalog-results">
+          {results.map((m) => (
+            <li key={m.id}>
+              <button
+                type="button"
+                className="catalog-result"
+                onClick={() => {
+                  onPick(m);
+                  setOpen(false);
+                  setQ('');
+                  setResults([]);
+                }}
+              >
+                <span className="cr-name">{m.nome}</span>
+                <span className="cr-sub">
+                  {[m.principioAtivo, m.empresa].filter(Boolean).join(' · ') || 'Medicamento'}
+                </span>
+                {m.classeTerapeutica && <span className="cr-tag">{m.classeTerapeutica}</span>}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {open && !loading && !error && dq.trim().length >= 2 && results.length === 0 && (
+        <div className="catalog-empty muted">Nenhum medicamento encontrado para “{dq.trim()}”.</div>
+      )}
+    </div>
   );
 }

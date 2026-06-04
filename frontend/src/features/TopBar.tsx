@@ -15,7 +15,7 @@ interface TopBarProps {
 
 const LABELS: Record<Route, { title: string; sub: string }> = {
   dashboard: { title: 'Dashboard', sub: 'Visão geral do dia' },
-  produtos: { title: 'Produtos', sub: 'Catálogo e estoque' },
+  estoque: { title: 'Estoque', sub: 'Medicamentos e quantidades' },
   vendas: { title: 'Nova venda', sub: 'Registrar venda no PDV' },
   solicitados: { title: 'Solicitados', sub: 'Pedidos de clientes' },
   historico: { title: 'Histórico', sub: 'Vendas anteriores' },

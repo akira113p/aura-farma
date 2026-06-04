@@ -8,7 +8,7 @@ import { clearState, seedState } from './services/store';
 import { AuthScreen } from './features/auth/AuthScreen';
 import { TopBar } from './features/TopBar';
 import { Dashboard } from './features/Dashboard';
-import { Produtos } from './features/Produtos';
+import { Estoque } from './features/Estoque';
 import { Vendas } from './features/Vendas';
 import { Solicitados } from './features/Solicitados';
 import { Historico } from './features/Historico';
@@ -17,7 +17,7 @@ import { Relatorios } from './features/Relatorios';
 
 const PAGE_TITLES: Record<Route, string> = {
   dashboard: 'Bom dia',
-  produtos: 'Produtos',
+  estoque: 'Estoque',
   vendas: 'Nova venda',
   solicitados: 'Produtos solicitados',
   historico: 'Histórico de vendas',
@@ -30,8 +30,8 @@ function routeSub(route: Route, state: AppState): string {
   switch (route) {
     case 'dashboard':
       return `${today} · ${state.products.length} produto(s) cadastrado(s)`;
-    case 'produtos':
-      return `${state.products.length} produto(s) no catálogo`;
+    case 'estoque':
+      return `${state.products.length} medicamento(s) no estoque`;
     case 'vendas':
       return 'Escaneie ou clique nos produtos para adicionar ao carrinho.';
     case 'solicitados':
@@ -86,8 +86,8 @@ export default function App() {
     case 'dashboard':
       screen = <Dashboard state={state} setState={setState} />;
       break;
-    case 'produtos':
-      screen = <Produtos state={state} setState={setState} />;
+    case 'estoque':
+      screen = <Estoque state={state} setState={setState} />;
       break;
     case 'vendas':
       screen = <Vendas state={state} setState={setState} flash={flash} />;

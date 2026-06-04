@@ -28,7 +28,7 @@ export type Category =
 
 export type Payment = 'pix' | 'cartão' | 'dinheiro';
 
-/** A catalog product (future collection: `products`). */
+/** A product in the pharmacy's own stock (future collection: `products`). */
 export interface Product {
   id: string;
   sku: string;
@@ -38,6 +38,19 @@ export interface Product {
   cost: number;
   stock: number;
   min: number;
+  /** Active ingredient, when added from the real-medicine catalog. */
+  principioAtivo?: string;
+  /** Free tags (e.g. therapeutic class), used by search and badges. */
+  tags?: string[];
+}
+
+/** A real-medicine catalog hit (ANVISA), returned by the backend search. */
+export interface CatalogMed {
+  id: string;
+  nome: string;
+  principioAtivo: string;
+  classeTerapeutica: string;
+  empresa: string;
 }
 
 export interface SaleItem {
@@ -122,7 +135,7 @@ export interface Summary {
 
 export type Route =
   | 'dashboard'
-  | 'produtos'
+  | 'estoque'
   | 'vendas'
   | 'solicitados'
   | 'historico'

@@ -1199,3 +1199,63 @@ input, textarea, select {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---- Catalog typeahead (real-medicine search inside the product modal) ---- */
+.catalog-search {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed var(--border);
+}
+.catalog-search .search .btn-spinner {
+  color: var(--text-subtle);
+  margin-left: 8px;
+}
+.catalog-results {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 6px 20px -12px rgba(0, 0, 0, 0.25);
+}
+.catalog-result {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  transition: background 80ms ease;
+}
+.catalog-result:hover,
+.catalog-result:focus-visible {
+  background: var(--surface-2);
+  outline: none;
+}
+.cr-name { font-weight: 600; font-size: var(--font-md); }
+.cr-sub { font-size: var(--font-sm); color: var(--text-muted); }
+.cr-tag {
+  margin-top: 2px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+.catalog-empty { padding: 10px 4px 0; font-size: var(--font-sm); }
+
+/* Tags + active-ingredient meta shown on stock rows and in the modal. */
+.prod-tags { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.med-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: -4px 0 12px;
+}
+.med-meta-line { font-size: var(--font-sm); }

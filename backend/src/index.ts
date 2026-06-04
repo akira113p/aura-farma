@@ -6,7 +6,10 @@ import cors from 'cors';
 import { env } from './config/env';
 import { connectDb } from './db/mongoose';
 import { authLimiter } from './middleware/rateLimit';
+import { requireAuth } from './middleware/auth';
 import { authRouter } from './routes/auth';
+import { medicamentosRouter } from './routes/medicamentos';
+import { loadCatalog } from './services/catalog';
 import { errorHandler, notFound } from './middleware/error';
 
 const app = express();
@@ -63,16 +66,21 @@ app.get('/api/health', (_req, res) => res.json({ ok: true }));
 // Rate-limit all auth endpoints (login/register/google) against brute force.
 app.use('/api/auth', authLimiter, authRouter);
 
+// Real-medicine catalog search (read-only reference for building stock).
+app.use('/api/medicamentos', requireAuth, medicamentosRouter);
+
 app.use(notFound);
 app.use(errorHandler);
 
 async function start() {
   try {
     await connectDb();
+    const medCount = loadCatalog();
     app.listen(env.port, () => {
       console.log(`[api] farmaDimin ouvindo em http://localhost:${env.port}`);
       console.log(`[api] CORS liberado para: ${env.frontendOrigins.join(', ')}`);
       console.log(`[api] Google login: ${env.googleClientId ? 'configurado' : 'desativado (defina GOOGLE_CLIENT_ID)'}`);
+      console.log(`[catalog] ${medCount} medicamentos carregados`);
     });
   } catch (err) {
     console.error('[api] Falha ao iniciar:', err);

@@ -1,0 +1,9 @@
+# Raw ANVISA source data — only backend/data/MEDICAMENTOS_BUSCA.csv (the slim
+# search catalog) is used by the app and committed. The full dumps stay local.
+dados remedio/
+
+# E2E / Playwright scratch
+.e2e/
+
+# Stray locked worktree dir (Windows handle); not tracked
+.claude/worktrees/

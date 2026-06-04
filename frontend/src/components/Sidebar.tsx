@@ -25,7 +25,7 @@ interface NavItem {
 
 export function Sidebar({ route, setRoute, requestCount, lowStockCount, open, onClose, user, onLogout }: SidebarProps) {
   const items: NavItem[] = [
-    { id: 'produtos', label: 'Produtos', icon: 'box', count: lowStockCount },
+    { id: 'estoque', label: 'Estoque', icon: 'box', count: lowStockCount },
     { id: 'vendas', label: 'Nova venda', icon: 'cart' },
     { id: 'solicitados', label: 'Solicitados', icon: 'bookmark', count: requestCount },
     { id: 'historico', label: 'Histórico', icon: 'history' },

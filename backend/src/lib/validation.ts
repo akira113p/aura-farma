@@ -46,6 +46,13 @@ export const googleCompleteSchema = z.object({
   pharmacyName,
 });
 
+/** Catalog search query params (`q` + optional `limit`). */
+export const medSearchSchema = z.object({
+  q: z.string().trim().max(120).default(''),
+  limit: z.coerce.number().int().min(1).max(50).default(12),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type GoogleCompleteInput = z.infer<typeof googleCompleteSchema>;
+export type MedSearchInput = z.infer<typeof medSearchSchema>;
