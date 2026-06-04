@@ -89,9 +89,27 @@ export function Produtos({ state, setState }: ScreenProps) {
 
       <Card flush>
         {filtered.length === 0 ? (
-          <Empty icon="search" title="Nenhum resultado" sub="Tente outros termos de busca." />
+          <Empty
+            icon="search"
+            title="Nenhum resultado"
+            sub="Tente outros termos de busca."
+            action={
+              (!!search || !!cat) && (
+                <Button
+                  kind="secondary"
+                  icon="x"
+                  onClick={() => {
+                    setSearch('');
+                    setCat('');
+                  }}
+                >
+                  Limpar filtros
+                </Button>
+              )
+            }
+          />
         ) : (
-          <table className="table">
+          <table className="table prod-table">
             <thead>
               <tr>
                 <th>Produto</th>
@@ -108,8 +126,8 @@ export function Produtos({ state, setState }: ScreenProps) {
             </thead>
             <tbody>
               {filtered.map((p) => (
-                <tr key={p.id} onClick={() => setEditing(p)} style={{ cursor: 'pointer' }}>
-                  <td>
+                <tr key={p.id} className="prod-row" onClick={() => setEditing(p)} style={{ cursor: 'pointer' }}>
+                  <td className="cell-name">
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                       <span>{p.name}</span>
                       <span className="mono" style={{ color: 'var(--text-subtle)' }}>
@@ -117,8 +135,8 @@ export function Produtos({ state, setState }: ScreenProps) {
                       </span>
                     </div>
                   </td>
-                  <td className="muted">{p.cat}</td>
-                  <td>
+                  <td className="muted" data-label="Categoria">{p.cat}</td>
+                  <td data-label="Estoque">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <StockBar stock={p.stock} min={p.min} />
                       <span className="tabular">{p.stock}</span>
@@ -129,16 +147,17 @@ export function Produtos({ state, setState }: ScreenProps) {
                       ) : null}
                     </div>
                   </td>
-                  <td className="num tabular muted">{p.min}</td>
-                  <td className="num tabular">{BRL(p.price)}</td>
+                  <td className="num tabular muted" data-label="Mín.">{p.min}</td>
+                  <td className="num tabular" data-label="Preço">{BRL(p.price)}</td>
                   <td
+                    className="cell-actions"
                     onClick={(e) => {
                       e.stopPropagation();
                       deleteProduct(p.id);
                     }}
                     style={{ textAlign: 'center' }}
                   >
-                    <button className="btn btn-ghost btn-sm" title="Excluir">
+                    <button className="btn btn-ghost btn-sm" title="Excluir" aria-label={`Excluir ${p.name}`}>
                       <Icon name="trash" size={13} />
                     </button>
                   </td>

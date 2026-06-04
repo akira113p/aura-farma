@@ -9,6 +9,7 @@ interface ButtonProps {
   children?: ReactNode;
   onClick?: () => void;
   disabled?: boolean;
+  loading?: boolean;
   type?: 'button' | 'submit' | 'reset';
 }
 
@@ -20,14 +21,31 @@ export function Button({
   children,
   onClick,
   disabled,
+  loading,
   type = 'button',
 }: ButtonProps) {
-  const cls = ['btn', `btn-${kind}`, size && `btn-${size}`, block && 'btn-block']
+  const cls = [
+    'btn',
+    `btn-${kind}`,
+    size && `btn-${size}`,
+    block && 'btn-block',
+    loading && 'btn-loading',
+  ]
     .filter(Boolean)
     .join(' ');
   return (
-    <button type={type} className={cls} onClick={onClick} disabled={disabled}>
-      {icon && <Icon name={icon} size={14} />}
+    <button
+      type={type}
+      className={cls}
+      onClick={onClick}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+    >
+      {loading ? (
+        <span className="btn-spinner" aria-hidden="true" />
+      ) : (
+        icon && <Icon name={icon} size={14} />
+      )}
       {children}
     </button>
   );

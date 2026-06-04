@@ -72,7 +72,7 @@ export function Dashboard({ state, setState }: ScreenProps) {
                 { value: 'month', label: 'Mês' },
               ]}
             />
-            <Button kind="ghost" size="sm" icon="sparkle" onClick={regenerate} disabled={aiLoading}>
+            <Button kind="ghost" size="sm" icon="sparkle" onClick={regenerate} loading={aiLoading}>
               Regerar
             </Button>
           </div>
