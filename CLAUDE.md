@@ -99,6 +99,10 @@ O frontend acessa dados pela camada de serviços, com o ponto único de troca em
 - **`passwordHash` nunca sai para o client** — removido em `toSafeUser`.
 - **`.env` é gitignored**; o app é ESM e roda direto via `tsx` (sem step de build no backend).
 
+## Documentação viva (Obsidian)
+
+A pasta `obsidian/` tem 4 arquivos (2 mapas mentais `.canvas` + 2 textos `.md`), em duas perspectivas (técnica e leiga). Sempre que entrar uma **mecânica/feature nova**, mudar o **modelo de dados/endpoints**, ou uma **decisão de arquitetura relevante**, atualize esses arquivos via a skill **`update-obsidian-docs`** (ela tem o gerador dos mapas em `scripts/mapgen.cjs`). Não para mudanças triviais.
+
 ## O que NÃO fazer
 
 - Não commitar `backend/.env` (está no `.gitignore`).

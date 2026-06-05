@@ -1,0 +1,879 @@
+{
+  "nodes": [
+    {
+      "id": "a1f0c2d3e4b00000",
+      "type": "text",
+      "x": 0,
+      "y": 1574,
+      "width": 420,
+      "height": 180,
+      "text": "# farmaDimin\n\nSistema para farmacias pequenas\ncuidarem do estoque, das vendas e da burocracia"
+    },
+    {
+      "id": "a1f0c2d3e4b00001",
+      "type": "text",
+      "x": 540,
+      "y": 110,
+      "width": 340,
+      "height": 92,
+      "text": "**O que e e pra quem**",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00002",
+      "type": "text",
+      "x": 980,
+      "y": -46,
+      "width": 360,
+      "height": 92,
+      "text": "Para farmacias pequenas",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00003",
+      "type": "text",
+      "x": 980,
+      "y": 58,
+      "width": 360,
+      "height": 92,
+      "text": "Resolve a burocracia e a desorganizacao",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00004",
+      "type": "text",
+      "x": 980,
+      "y": 162,
+      "width": 360,
+      "height": 92,
+      "text": "E alugado por mensalidade (SaaS)",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00005",
+      "type": "text",
+      "x": 980,
+      "y": 266,
+      "width": 360,
+      "height": 92,
+      "text": "Eurofarma entra como fornecedor dentro do sistema",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00006",
+      "type": "text",
+      "x": 540,
+      "y": 578,
+      "width": 340,
+      "height": 92,
+      "text": "**O que ja funciona hoje**",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00007",
+      "type": "text",
+      "x": 980,
+      "y": 370,
+      "width": 360,
+      "height": 92,
+      "text": "7 telas prontas",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00008",
+      "type": "text",
+      "x": 980,
+      "y": 474,
+      "width": 360,
+      "height": 92,
+      "text": "Entrar com usuario/senha ou com o Google",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00009",
+      "type": "text",
+      "x": 980,
+      "y": 578,
+      "width": 360,
+      "height": 92,
+      "text": "Senha guardada de forma segura",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0000a",
+      "type": "text",
+      "x": 980,
+      "y": 682,
+      "width": 360,
+      "height": 92,
+      "text": "Estoque e vendas ficam salvos no servidor (banco), por farmacia",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0000b",
+      "type": "text",
+      "x": 980,
+      "y": 786,
+      "width": 360,
+      "height": 92,
+      "text": "Busca em 11.7k remedios reais",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0000c",
+      "type": "text",
+      "x": 540,
+      "y": 1202,
+      "width": 340,
+      "height": 92,
+      "text": "**As telas**",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0000d",
+      "type": "text",
+      "x": 980,
+      "y": 890,
+      "width": 360,
+      "height": 92,
+      "text": "Dashboard",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0000e",
+      "type": "text",
+      "x": 1440,
+      "y": 890,
+      "width": 380,
+      "height": 92,
+      "text": "visao geral do dia: resumos e grafico",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0000f",
+      "type": "text",
+      "x": 980,
+      "y": 994,
+      "width": 360,
+      "height": 92,
+      "text": "Estoque",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00010",
+      "type": "text",
+      "x": 1440,
+      "y": 994,
+      "width": 380,
+      "height": 92,
+      "text": "lista de remedios: buscar, adicionar, editar",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00011",
+      "type": "text",
+      "x": 980,
+      "y": 1098,
+      "width": 360,
+      "height": 92,
+      "text": "Nova venda (caixa)",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00012",
+      "type": "text",
+      "x": 1440,
+      "y": 1098,
+      "width": 380,
+      "height": 92,
+      "text": "monta o carrinho; o estoque baixa sozinho",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00013",
+      "type": "text",
+      "x": 980,
+      "y": 1202,
+      "width": 360,
+      "height": 92,
+      "text": "Solicitados",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00014",
+      "type": "text",
+      "x": 1440,
+      "y": 1202,
+      "width": 380,
+      "height": 92,
+      "text": "remedios que clientes pediram e faltam",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00015",
+      "type": "text",
+      "x": 980,
+      "y": 1306,
+      "width": 360,
+      "height": 92,
+      "text": "Historico",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00016",
+      "type": "text",
+      "x": 1440,
+      "y": 1306,
+      "width": 380,
+      "height": 92,
+      "text": "todas as vendas ja feitas",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00017",
+      "type": "text",
+      "x": 980,
+      "y": 1410,
+      "width": 360,
+      "height": 92,
+      "text": "Contagem",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00018",
+      "type": "text",
+      "x": 1440,
+      "y": 1410,
+      "width": 380,
+      "height": 92,
+      "text": "conferir a prateleira vs o sistema",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00019",
+      "type": "text",
+      "x": 980,
+      "y": 1514,
+      "width": 360,
+      "height": 92,
+      "text": "Relatorios",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0001a",
+      "type": "text",
+      "x": 1440,
+      "y": 1514,
+      "width": 380,
+      "height": 92,
+      "text": "analises do periodo",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0001b",
+      "type": "text",
+      "x": 540,
+      "y": 1774,
+      "width": 340,
+      "height": 92,
+      "text": "**Busca inteligente de remedios**",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0001c",
+      "type": "text",
+      "x": 980,
+      "y": 1618,
+      "width": 360,
+      "height": 92,
+      "text": "Catalogo real da ANVISA (11.7k remedios)",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0001d",
+      "type": "text",
+      "x": 980,
+      "y": 1722,
+      "width": 360,
+      "height": 92,
+      "text": "Aceita erro de digitacao",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0001e",
+      "type": "text",
+      "x": 1440,
+      "y": 1722,
+      "width": 380,
+      "height": 92,
+      "text": "digitar 'amoxalina' acha 'AMOXICILINA'",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0001f",
+      "type": "text",
+      "x": 980,
+      "y": 1826,
+      "width": 360,
+      "height": 92,
+      "text": "Acha por nome, principio ativo e categoria",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b00020",
+      "type": "text",
+      "x": 980,
+      "y": 1930,
+      "width": 360,
+      "height": 92,
+      "text": "Preenche o cadastro sozinho ao escolher",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b00021",
+      "type": "text",
+      "x": 540,
+      "y": 2190,
+      "width": 340,
+      "height": 92,
+      "text": "**Onde os dados ficam**",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00022",
+      "type": "text",
+      "x": 980,
+      "y": 2034,
+      "width": 360,
+      "height": 92,
+      "text": "Agora: no servidor (banco de dados), por farmacia",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00023",
+      "type": "text",
+      "x": 980,
+      "y": 2138,
+      "width": 360,
+      "height": 92,
+      "text": "Carregam rapido numa unica chamada",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00024",
+      "type": "text",
+      "x": 980,
+      "y": 2242,
+      "width": 360,
+      "height": 92,
+      "text": "Antes ficavam so no navegador",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00025",
+      "type": "text",
+      "x": 980,
+      "y": 2346,
+      "width": 360,
+      "height": 92,
+      "text": "Cada conta enxerga so os seus dados",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00026",
+      "type": "text",
+      "x": 540,
+      "y": 2658,
+      "width": 340,
+      "height": 92,
+      "text": "**A burocracia que vai resolver**",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00027",
+      "type": "text",
+      "x": 980,
+      "y": 2450,
+      "width": 360,
+      "height": 92,
+      "text": "SNGPC: avisa a ANVISA sobre controlados automaticamente",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00028",
+      "type": "text",
+      "x": 980,
+      "y": 2554,
+      "width": 360,
+      "height": 92,
+      "text": "Validade: avisa antes do remedio vencer",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00029",
+      "type": "text",
+      "x": 980,
+      "y": 2658,
+      "width": 360,
+      "height": 92,
+      "text": "NF-e: lanca a mercadoria pela nota fiscal",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0002a",
+      "type": "text",
+      "x": 980,
+      "y": 2762,
+      "width": 360,
+      "height": 92,
+      "text": "Alvaras: avisa quando licencas vao vencer",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0002b",
+      "type": "text",
+      "x": 980,
+      "y": 2866,
+      "width": 360,
+      "height": 92,
+      "text": "Relatorios para o Conselho de Farmacia",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0002c",
+      "type": "text",
+      "x": 540,
+      "y": 3126,
+      "width": 340,
+      "height": 92,
+      "text": "**Login e seguranca**",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b0002d",
+      "type": "text",
+      "x": 980,
+      "y": 2970,
+      "width": 360,
+      "height": 92,
+      "text": "Cadastro: usuario, farmacia, e-mail e senha",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b0002e",
+      "type": "text",
+      "x": 980,
+      "y": 3074,
+      "width": 360,
+      "height": 92,
+      "text": "Senha embaralhada (ninguem le a original)",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b0002f",
+      "type": "text",
+      "x": 980,
+      "y": 3178,
+      "width": 360,
+      "height": 92,
+      "text": "Cracha seguro mantem voce logado",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00030",
+      "type": "text",
+      "x": 980,
+      "y": 3282,
+      "width": 360,
+      "height": 92,
+      "text": "Opcao de entrar com o Google",
+      "color": "6"
+    }
+  ],
+  "edges": [
+    {
+      "id": "a1f0c2d3e4b00031",
+      "fromNode": "a1f0c2d3e4b00001",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00002",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00032",
+      "fromNode": "a1f0c2d3e4b00001",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00003",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00033",
+      "fromNode": "a1f0c2d3e4b00001",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00004",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00034",
+      "fromNode": "a1f0c2d3e4b00001",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00005",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00035",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00001",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00036",
+      "fromNode": "a1f0c2d3e4b00006",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00007",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00037",
+      "fromNode": "a1f0c2d3e4b00006",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00008",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00038",
+      "fromNode": "a1f0c2d3e4b00006",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00009",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00039",
+      "fromNode": "a1f0c2d3e4b00006",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0000a",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0003a",
+      "fromNode": "a1f0c2d3e4b00006",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0000b",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0003b",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00006",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0003c",
+      "fromNode": "a1f0c2d3e4b0000d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0000e",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0003d",
+      "fromNode": "a1f0c2d3e4b0000c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0000d",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0003e",
+      "fromNode": "a1f0c2d3e4b0000f",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00010",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0003f",
+      "fromNode": "a1f0c2d3e4b0000c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0000f",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00040",
+      "fromNode": "a1f0c2d3e4b00011",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00012",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00041",
+      "fromNode": "a1f0c2d3e4b0000c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00011",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00042",
+      "fromNode": "a1f0c2d3e4b00013",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00014",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00043",
+      "fromNode": "a1f0c2d3e4b0000c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00013",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00044",
+      "fromNode": "a1f0c2d3e4b00015",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00016",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00045",
+      "fromNode": "a1f0c2d3e4b0000c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00015",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00046",
+      "fromNode": "a1f0c2d3e4b00017",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00018",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00047",
+      "fromNode": "a1f0c2d3e4b0000c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00017",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00048",
+      "fromNode": "a1f0c2d3e4b00019",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0001a",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00049",
+      "fromNode": "a1f0c2d3e4b0000c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00019",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0004a",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0000c",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0004b",
+      "fromNode": "a1f0c2d3e4b0001b",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0001c",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0004c",
+      "fromNode": "a1f0c2d3e4b0001d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0001e",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0004d",
+      "fromNode": "a1f0c2d3e4b0001b",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0001d",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0004e",
+      "fromNode": "a1f0c2d3e4b0001b",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0001f",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0004f",
+      "fromNode": "a1f0c2d3e4b0001b",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00020",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b00050",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0001b",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b00051",
+      "fromNode": "a1f0c2d3e4b00021",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00022",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00052",
+      "fromNode": "a1f0c2d3e4b00021",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00023",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00053",
+      "fromNode": "a1f0c2d3e4b00021",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00024",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00054",
+      "fromNode": "a1f0c2d3e4b00021",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00025",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00055",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00021",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00056",
+      "fromNode": "a1f0c2d3e4b00026",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00027",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00057",
+      "fromNode": "a1f0c2d3e4b00026",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00028",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00058",
+      "fromNode": "a1f0c2d3e4b00026",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00029",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00059",
+      "fromNode": "a1f0c2d3e4b00026",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0002a",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0005a",
+      "fromNode": "a1f0c2d3e4b00026",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0002b",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0005b",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00026",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0005c",
+      "fromNode": "a1f0c2d3e4b0002c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0002d",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b0005d",
+      "fromNode": "a1f0c2d3e4b0002c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0002e",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b0005e",
+      "fromNode": "a1f0c2d3e4b0002c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0002f",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b0005f",
+      "fromNode": "a1f0c2d3e4b0002c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00030",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00060",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0002c",
+      "toSide": "left",
+      "color": "6"
+    }
+  ]
+}
