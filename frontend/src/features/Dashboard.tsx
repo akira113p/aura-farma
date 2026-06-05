@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AppState, ChartPeriod, SummaryPeriod } from '../types';
 import { AIBlock, Badge, Button, Card, Empty, LineChart, Stat, Tabs } from '../components';
-import { summarize, seedState } from '../services/store';
+import { summarize } from '../services/store';
+import { seedData } from '../services/dados';
 import { generateAISummary } from '../services/ai';
 import { buildSeries } from '../lib/series';
 import { BRL, fmtInt } from '../lib/format';
@@ -45,7 +46,17 @@ export function Dashboard({ state, setState }: ScreenProps) {
           title="Nenhum dado ainda"
           sub="Popule o sistema com produtos e vendas de exemplo para ver o dashboard em ação."
           action={
-            <Button kind="primary" icon="sparkle" onClick={() => setState(seedState())}>
+            <Button
+              kind="primary"
+              icon="sparkle"
+              onClick={async () => {
+                try {
+                  setState(await seedData());
+                } catch {
+                  /* backend unavailable */
+                }
+              }}
+            >
               Popular com dados de exemplo
             </Button>
           }

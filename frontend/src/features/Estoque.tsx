@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import type { AppState, CatalogMed, Product } from '../types';
 import { Badge, Button, Card, Empty, Field, Icon, Input, Modal, StockBar } from '../components';
-import { seedState } from '../services/store';
+import { createProduct, removeProduct, seedData, updateProduct } from '../services/dados';
 import { medicamentosApi } from '../services/medicamentos';
+import { ApiError } from '../lib/apiClient';
 import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { CATEGORIES } from '../data/seed';
 import { BRL } from '../lib/format';
@@ -10,7 +11,10 @@ import { BRL } from '../lib/format';
 interface ScreenProps {
   state: AppState;
   setState: React.Dispatch<React.SetStateAction<AppState>>;
+  flash: (msg: string) => void;
 }
+
+const errMsg = (e: unknown) => (e instanceof ApiError ? e.message : 'Operação falhou. Tente novamente.');
 
 /** Either an existing product (edit) or the "new product" sentinel. */
 type Editing = Product | { new: true } | null;
@@ -27,10 +31,11 @@ function tagsFromClasse(classe: string): string[] {
     .filter((t) => t.length > 2);
 }
 
-export function Estoque({ state, setState }: ScreenProps) {
+export function Estoque({ state, setState, flash }: ScreenProps) {
   const [search, setSearch] = useState('');
   const [cat, setCat] = useState('');
   const [editing, setEditing] = useState<Editing>(null);
+  const [seeding, setSeeding] = useState(false);
 
   const products = state.products;
   const nq = norm(search);
@@ -44,18 +49,30 @@ export function Estoque({ state, setState }: ScreenProps) {
         (p.tags ?? []).some((t) => norm(t).includes(nq))),
   );
 
-  function saveProduct(p: Product) {
-    if (p.id) {
-      setState({ ...state, products: state.products.map((x) => (x.id === p.id ? p : x)) });
-    } else {
-      const id = 'p' + Date.now();
-      // Adding the first medicine flips the screen out of its empty state.
-      setState({ ...state, populated: true, products: [...state.products, { ...p, id }] });
+  async function saveProduct(p: Product) {
+    try {
+      setState(p.id ? await updateProduct(state, p) : await createProduct(state, p));
+      setEditing(null);
+    } catch (e) {
+      flash(errMsg(e));
     }
-    setEditing(null);
   }
-  function deleteProduct(id: string) {
-    setState({ ...state, products: state.products.filter((p) => p.id !== id) });
+  async function deleteProduct(id: string) {
+    try {
+      setState(await removeProduct(state, id));
+    } catch (e) {
+      flash(errMsg(e));
+    }
+  }
+  async function popularExemplo() {
+    setSeeding(true);
+    try {
+      setState(await seedData());
+    } catch (e) {
+      flash(errMsg(e));
+    } finally {
+      setSeeding(false);
+    }
   }
 
   if (!state.populated) {
@@ -70,7 +87,7 @@ export function Estoque({ state, setState }: ScreenProps) {
               <Button kind="primary" icon="plus" onClick={() => setEditing({ new: true })}>
                 Adicionar medicamento
               </Button>
-              <Button kind="secondary" icon="sparkle" onClick={() => setState(seedState())}>
+              <Button kind="secondary" icon="sparkle" onClick={popularExemplo} loading={seeding}>
                 Popular exemplo
               </Button>
             </div>
@@ -234,6 +251,7 @@ function ProductModal({ product, onClose, onSave, onDelete }: ProductModalProps)
     cost: existing?.cost ?? 0,
     stock: existing?.stock ?? 0,
     min: existing?.min ?? 5,
+    validade: existing?.validade,
     principioAtivo: existing?.principioAtivo,
     tags: existing?.tags,
   });
@@ -317,9 +335,19 @@ function ProductModal({ product, onClose, onSave, onDelete }: ProductModalProps)
           <Input type="number" value={f.min} onChange={(v) => set('min', parseInt(v) || 0)} />
         </Field>
       </div>
-      <Field label="Estoque atual">
-        <Input type="number" value={f.stock} onChange={(v) => set('stock', parseInt(v) || 0)} />
-      </Field>
+      <div className="cols-2">
+        <Field label="Estoque atual">
+          <Input type="number" value={f.stock} onChange={(v) => set('stock', parseInt(v) || 0)} />
+        </Field>
+        <Field label="Validade">
+          <input
+            className="input"
+            type="date"
+            value={f.validade ?? ''}
+            onChange={(e) => set('validade', e.target.value || undefined)}
+          />
+        </Field>
+      </div>
     </Modal>
   );
 }

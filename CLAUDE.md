@@ -20,7 +20,7 @@ skill/, vibe-security-skill/   # repositórios-fonte das skills (referência)
 ### `frontend/src`
 - `components/` — UI reutilizável tipada (Button, Card, Modal, Tabs, Icon, LineChart, StockBar…), reexportada por `components/index.ts`.
 - `features/` — as 7 telas (`Dashboard`, `Produtos`, `Vendas` (PDV), `Solicitados`, `Historico`, `Contagem`, `Relatorios`) + `TopBar`; auth em `features/auth/` (`Login`, `Register`, `GoogleButton`, `AuthScreen`, `CompleteProfileModal`).
-- `services/` — camada de dados. `store.ts` (mock/localStorage + agregações), `auth.ts` (wrappers das rotas de auth), `ai.ts`, reexport em `index.ts`.
+- `services/` — camada de dados. `dados.ts` (ações async de estado/estoque/vendas/solicitados/contagem — API ou mock), `store.ts` (mock localStorage + agregações `summarize`/`applySale`), `medicamentos.ts` (busca de catálogo), `auth.ts` (rotas de auth), `ai.ts`, reexport em `index.ts`.
 - `lib/` — `apiClient.ts` (fetch tipado p/ o backend), `format.ts`, `series.ts`.
 - `hooks/` — `useAppState.ts` (carrega/persiste o `AppState`), `useTweaks.ts`.
 - `context/` — `AuthContext.tsx`.
@@ -75,19 +75,20 @@ Equivalentes pelo delegador (rodando de dentro de `sla mas ta aq/`): `npm run de
 - `GOOGLE_CLIENT_ID` — Client ID público do Google. Vazio = login com Google desativado (backend responde 503, botão fica desabilitado).
 
 ### Frontend (`frontend/src/config.ts`)
-- `VITE_USE_MOCK` — `'true'` (default) usa o mock local; `'false'` faz o app falar com o backend.
+- `VITE_USE_MOCK` — `'false'` (default) faz o app persistir no backend/Mongo; `'true'` usa o mock local em `localStorage` (dev sem backend).
 - `VITE_API_BASE_URL` — base da API (default `http://localhost:4000/api`).
 
 > Só variáveis `VITE_*` chegam ao bundle do cliente. Tudo em `frontend` é público.
 
 ## O seam principal: mock ↔ API
 
-O frontend acessa dados pela camada de serviços, e o ponto único de troca é o store:
+O frontend acessa dados pela camada de serviços, com o ponto único de troca em `services/dados.ts`:
 
-- Componentes leem/escrevem o `AppState` via `hooks/useAppState.ts`, que chama `services/store.ts`.
-- Hoje **`store.ts` persiste tudo em `localStorage`** (chave `farmadimin.v1`) e faz as agregações (`summarize`, `applySale`) no client. As formas expostas (`AppState`, `Summary`) são o contrato a preservar.
-- Quando `config.useMock === false` (ou seja, `VITE_USE_MOCK=false` em `config.ts`), a intenção é trocar cada função do `store.ts` por uma chamada via `lib/apiClient.ts`. O `apiClient` já existe e usa `credentials: 'include'` para mandar o cookie de sessão httpOnly em toda requisição.
-- A auth já passa pelo backend de verdade: `services/auth.ts` → `apiClient` → `/api/auth/*`. O estoque ainda é mock/localStorage (migração para o backend é planejada).
+- Componentes carregam o `AppState` via `hooks/useAppState.ts` (load assíncrono no mount) e mutam por **ações async** de `services/dados.ts` (`createProduct`, `updateProduct`, `removeProduct`, `recordSale`, `addRequest`, `applyCount`, `seedData`, `resetData`…). Cada ação retorna o próximo `AppState`.
+- `services/dados.ts` ramifica em `config.useMock`: **`false` (default)** fala com o backend via `lib/apiClient.ts` (`credentials:'include'`); `true` usa o mock em `localStorage` de `services/store.ts`. As agregações (`summarize`) seguem no client sobre o `AppState` carregado.
+- **Estoque, vendas, solicitados e contagem persistem no MongoDB** (escopados por usuário): `GET /api/estado` carga tudo numa chamada; CRUD em `/api/estoque`, `/api/vendas` (baixa estoque no servidor), `/api/solicitados`, `/api/contagem`, `/api/estado/seed|reset`. Auth também é real (`/api/auth/*`).
+- No banco os campos vão com **nomes curtos** (alias do Mongoose: `n/sku/ct/p/...`) para caber no cluster free de 500MB; os `toApi*` em `models/pharmacy.ts` remapeiam para os nomes completos na resposta. Rotas de mutação têm `writeLimiter` (120/min por usuário); leitura tem `readLimiter`.
+- **Pagamento/gateway fica fora** (o rótulo do método na venda é só texto). Importação por CSV/NF-e é planejada.
 
 ## Decisões arquiteturais não óbvias
 

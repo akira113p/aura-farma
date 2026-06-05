@@ -9,6 +9,7 @@ import { authLimiter } from './middleware/rateLimit';
 import { requireAuth } from './middleware/auth';
 import { authRouter } from './routes/auth';
 import { medicamentosRouter } from './routes/medicamentos';
+import { dadosRouter } from './routes/dados';
 import { loadCatalog } from './services/catalog';
 import { errorHandler, notFound } from './middleware/error';
 
@@ -68,6 +69,9 @@ app.use('/api/auth', authLimiter, authRouter);
 
 // Real-medicine catalog search (read-only reference for building stock).
 app.use('/api/medicamentos', requireAuth, medicamentosRouter);
+
+// Per-pharmacy data (stock, sales, requests, counts) — all require a session.
+app.use('/api', requireAuth, dadosRouter);
 
 app.use(notFound);
 app.use(errorHandler);

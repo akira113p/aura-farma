@@ -9,8 +9,10 @@ export const config = {
   apiBaseUrl: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000/api',
 
   /**
-   * When true, the app uses the in-memory mock data source and needs no backend.
-   * Defaults to true until the real API exists.
+   * When true, the app uses the in-memory localStorage mock and needs no backend.
+   * Defaults to FALSE now that the data API exists: stock/sales/requests/counts
+   * are persisted in MongoDB. Set `VITE_USE_MOCK=true` to run the front without a
+   * backend (dev only).
    */
-  useMock: (import.meta.env.VITE_USE_MOCK ?? 'true') !== 'false',
+  useMock: (import.meta.env.VITE_USE_MOCK ?? 'false') === 'true',
 } as const;

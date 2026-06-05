@@ -39,3 +39,30 @@ export const loginLimiter = rateLimit({
   },
   message: { error: 'Muitas tentativas de login. Tente novamente em alguns minutos.' },
 });
+
+/** Per-user key: the authenticated session id, falling back to IP. */
+const perUser = (req: Request): string => req.session?.userId ?? req.ip ?? 'unknown';
+
+/**
+ * Write limiter ("tickets") for data-mutation endpoints (stock CRUD, sales,
+ * requests, counts, seed/reset). Keyed per user so one account cannot flood the
+ * cluster with millions of writes; generous enough for normal manual use.
+ */
+export const writeLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 120, // writes per user per minute
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: perUser,
+  message: { error: 'Muitas operacoes em pouco tempo. Aguarde alguns segundos.' },
+});
+
+/** Looser limiter for the state-load read endpoint. */
+export const readLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 240,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: perUser,
+  message: { error: 'Muitas requisicoes. Aguarde alguns segundos.' },
+});

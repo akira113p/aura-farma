@@ -42,6 +42,8 @@ export interface Product {
   principioAtivo?: string;
   /** Free tags (e.g. therapeutic class), used by search and badges. */
   tags?: string[];
+  /** Expiry date (ISO `YYYY-MM-DD`), optional. */
+  validade?: string;
 }
 
 /** A real-medicine catalog hit (ANVISA), returned by the backend search. */

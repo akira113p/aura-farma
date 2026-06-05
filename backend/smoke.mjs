@@ -125,6 +125,55 @@ try {
 
   r = await fetch(`${BASE}/medicamentos/busca?q=dipirona`, j(null, null, 'GET'));
   check('busca sem auth → 401', r.status === 401, `(status ${r.status})`);
+
+  // --- pharmacy data (estoque/vendas/solicitados/contagem) ---
+  const A = (body, method = 'POST') => j(authCookie, body, method);
+
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  let est = await r.json();
+  check('estado inicial vazio (populated:false)', r.status === 200 && est.populated === false && est.products.length === 0, JSON.stringify(est).slice(0, 80));
+
+  r = await fetch(`${BASE}/estoque`, A({ name: 'Dipirona Teste', sku: '789TST001', cat: 'Analgésicos', price: 9.9, cost: 4, stock: 10, min: 3, validade: '2027-01-31', principioAtivo: 'dipirona', tags: ['ANALGESICO'] }));
+  let created = await r.json();
+  const pid = created.product?.id;
+  check('criar produto → 201 com id', r.status === 201 && Boolean(pid), JSON.stringify(created).slice(0, 100));
+  check('produto retorna campos completos', created.product?.name === 'Dipirona Teste' && created.product?.validade === '2027-01-31', JSON.stringify(created.product));
+
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  est = await r.json();
+  check('estado agora populated:true com o produto', est.populated === true && est.products.length === 1 && est.products[0].id === pid);
+
+  r = await fetch(`${BASE}/estoque/${pid}`, A({ price: 11.5 }, 'PATCH'));
+  let upd = await r.json();
+  check('editar produto (PATCH) → preco atualizado', r.status === 200 && upd.product?.price === 11.5, JSON.stringify(upd.product));
+
+  r = await fetch(`${BASE}/vendas`, A({ items: [{ pid, qty: 4 }], payment: 'pix' }));
+  let venda = await r.json();
+  check('venda → 201 e estoque decrementado p/ 6', r.status === 201 && venda.updatedProducts?.[0]?.stock === 6, JSON.stringify(venda).slice(0, 120));
+
+  r = await fetch(`${BASE}/vendas`, A({ items: [{ pid, qty: 999 }], payment: 'pix' }));
+  check('venda sem estoque → 409', r.status === 409, `(status ${r.status})`);
+
+  r = await fetch(`${BASE}/solicitados`, A({ name: 'Insulina NPH', note: 'cliente recorrente' }));
+  check('criar solicitacao → 201', r.status === 201, `(status ${r.status})`);
+
+  r = await fetch(`${BASE}/contagem`, A({ adjustments: [{ pid, newStock: 20 }] }));
+  let cont = await r.json();
+  check('contagem ajusta estoque p/ 20', r.status === 201 && cont.updatedProducts?.[0]?.stock === 20, JSON.stringify(cont).slice(0, 120));
+
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  est = await r.json();
+  check('estado reflete venda+contagem (1 venda, 1 contagem, estoque 20)', est.sales.length === 1 && est.counts.length === 1 && est.products[0].stock === 20, `sales=${est.sales.length} counts=${est.counts.length} stock=${est.products[0]?.stock}`);
+
+  r = await fetch(`${BASE}/estoque/${pid}`, A(null, 'DELETE'));
+  check('remover produto → 204', r.status === 204, `(status ${r.status})`);
+
+  r = await fetch(`${BASE}/estado`, j(null, null, 'GET'));
+  check('estado sem auth → 401', r.status === 401, `(status ${r.status})`);
+
+  r = await fetch(`${BASE}/estado/seed`, A({}));
+  let seeded = await r.json();
+  check('seed popula 20 produtos + vendas', r.status === 201 && seeded.products.length === 20 && seeded.sales.length > 0, `prod=${seeded.products?.length} sales=${seeded.sales?.length}`);
 } finally {
   server.kill();
   if (mongod) {

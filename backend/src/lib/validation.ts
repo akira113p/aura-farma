@@ -52,6 +52,55 @@ export const medSearchSchema = z.object({
   limit: z.coerce.number().int().min(1).max(50).default(12),
 });
 
+/* ---- Pharmacy data (stock, sales, requests, counts) ---- */
+
+const isoDate = z
+  .string()
+  .trim()
+  .regex(/^\d{4}-\d{2}-\d{2}/, 'Data invalida')
+  .optional()
+  .nullable();
+
+export const productCreateSchema = z.object({
+  name: z.string().trim().min(1, 'Informe o nome').max(200),
+  sku: z.string().trim().min(1, 'Informe o codigo').max(60),
+  cat: z.string().trim().min(1).max(60),
+  price: z.number().nonnegative().max(1_000_000),
+  cost: z.number().nonnegative().max(1_000_000),
+  stock: z.number().int().min(0).max(10_000_000),
+  min: z.number().int().min(0).max(10_000_000),
+  validade: isoDate,
+  principioAtivo: z.string().trim().max(200).optional().nullable(),
+  tags: z.array(z.string().trim().max(60)).max(20).optional(),
+});
+
+export const productUpdateSchema = productCreateSchema.partial();
+
+export const vendaSchema = z.object({
+  items: z
+    .array(z.object({ pid: z.string().min(1), qty: z.number().int().positive().max(100000) }))
+    .min(1)
+    .max(200),
+  payment: z.string().trim().max(20).default(''),
+});
+
+export const solicitacaoCreateSchema = z.object({
+  name: z.string().trim().min(1, 'Informe o item').max(200),
+  note: z.string().trim().max(500).optional().default(''),
+});
+
+export const solicitacaoUpdateSchema = z.object({
+  count: z.number().int().min(0).max(100000).optional(),
+  note: z.string().trim().max(500).optional(),
+});
+
+export const contagemSchema = z.object({
+  adjustments: z
+    .array(z.object({ pid: z.string().min(1), newStock: z.number().int().min(0).max(10_000_000) }))
+    .min(1)
+    .max(5000),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type GoogleCompleteInput = z.infer<typeof googleCompleteSchema>;

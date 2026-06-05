@@ -1,62 +1,52 @@
 import { useState } from 'react';
 import type { AppState, ProductRequest } from '../types';
 import { Badge, Button, Card, Empty, Field, Icon, Input, Modal } from '../components';
-import { CATEGORIES } from '../data/seed';
-import { todayISO } from '../lib/format';
+import { addRequest, bumpRequest, promoteRequest, removeRequest } from '../services/dados';
+import { ApiError } from '../lib/apiClient';
 
 interface ScreenProps {
   state: AppState;
   setState: React.Dispatch<React.SetStateAction<AppState>>;
+  flash: (msg: string) => void;
 }
 
-export function Solicitados({ state, setState }: ScreenProps) {
+const errMsg = (e: unknown) => (e instanceof ApiError ? e.message : 'Operação falhou. Tente novamente.');
+
+export function Solicitados({ state, setState, flash }: ScreenProps) {
   const [adding, setAdding] = useState(false);
   const [form, setForm] = useState({ name: '', note: '' });
 
-  function addRequest() {
+  async function handleAdd() {
     if (!form.name.trim()) return;
-    const existing = state.requests.find((r) => r.name.toLowerCase() === form.name.trim().toLowerCase());
-    if (existing) {
-      setState({
-        ...state,
-        requests: state.requests.map((r) =>
-          r.id === existing.id ? { ...r, count: r.count + 1, date: todayISO() } : r,
-        ),
-      });
-    } else {
-      const r: ProductRequest = {
-        id: 'r' + Date.now(),
-        name: form.name.trim(),
-        note: form.note.trim(),
-        count: 1,
-        date: todayISO(),
-      };
-      setState({ ...state, requests: [r, ...state.requests] });
+    try {
+      setState(await addRequest(state, form.name, form.note));
+      setForm({ name: '', note: '' });
+      setAdding(false);
+    } catch (e) {
+      flash(errMsg(e));
     }
-    setForm({ name: '', note: '' });
-    setAdding(false);
   }
-  function bump(id: string) {
-    setState({
-      ...state,
-      requests: state.requests.map((r) => (r.id === id ? { ...r, count: r.count + 1, date: todayISO() } : r)),
-    });
+  async function handleBump(id: string) {
+    try {
+      setState(await bumpRequest(state, id));
+    } catch (e) {
+      flash(errMsg(e));
+    }
   }
-  function remove(id: string) {
-    setState({ ...state, requests: state.requests.filter((r) => r.id !== id) });
+  async function handleRemove(id: string) {
+    try {
+      setState(await removeRequest(state, id));
+    } catch (e) {
+      flash(errMsg(e));
+    }
   }
-  function promote(req: ProductRequest) {
-    const id = 'p' + Date.now();
-    const p = { id, sku: 'novo-' + id.slice(-4), name: req.name, cat: CATEGORIES[0], price: 0, cost: 0, stock: 0, min: 3 };
-    setState({
-      ...state,
-      products: [...state.products, p],
-      requests: state.requests.filter((r) => r.id !== req.id),
-      activity: [
-        { id: 'a' + Date.now(), kind: 'promote', text: `Solicitado adicionado ao catálogo: ${req.name}`, ts: new Date().toISOString() },
-        ...state.activity,
-      ].slice(0, 50),
-    });
+  async function handlePromote(req: ProductRequest) {
+    try {
+      setState(await promoteRequest(state, req));
+      flash(`"${req.name}" adicionado ao catálogo`);
+    } catch (e) {
+      flash(errMsg(e));
+    }
   }
 
   const sorted = [...state.requests].sort((a, b) => b.count - a.count);
@@ -96,15 +86,15 @@ export function Solicitados({ state, setState }: ScreenProps) {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <Badge tone={r.count >= 5 ? 'warning' : r.count >= 3 ? 'info' : 'neutral'}>{r.count} pedido(s)</Badge>
-                  <button className="btn btn-ghost btn-sm" title="Mais um pedido" onClick={() => bump(r.id)}>
+                  <button className="btn btn-ghost btn-sm" title="Mais um pedido" onClick={() => handleBump(r.id)}>
                     <Icon name="plus" size={13} />
                   </button>
                 </div>
                 <div style={{ display: 'flex', gap: 4 }}>
-                  <Button kind="secondary" size="sm" onClick={() => promote(r)}>
+                  <Button kind="secondary" size="sm" onClick={() => handlePromote(r)}>
                     Adicionar ao catálogo
                   </Button>
-                  <button className="btn btn-ghost btn-sm" onClick={() => remove(r.id)} title="Remover">
+                  <button className="btn btn-ghost btn-sm" onClick={() => handleRemove(r.id)} title="Remover">
                     <Icon name="trash" size={13} />
                   </button>
                 </div>
@@ -123,7 +113,7 @@ export function Solicitados({ state, setState }: ScreenProps) {
             <Button kind="ghost" onClick={() => setAdding(false)}>
               Cancelar
             </Button>
-            <Button kind="primary" onClick={addRequest} disabled={!form.name.trim()}>
+            <Button kind="primary" onClick={handleAdd} disabled={!form.name.trim()}>
               Registrar
             </Button>
           </>

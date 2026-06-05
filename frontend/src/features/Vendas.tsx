@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import type { AppState, Payment, Product } from '../types';
 import { Badge, Button, Card, Empty, Icon } from '../components';
-import { applySale, seedState } from '../services/store';
+import { recordSale, seedData } from '../services/dados';
+import { ApiError } from '../lib/apiClient';
 import { BRL } from '../lib/format';
 
 interface ScreenProps {
@@ -76,15 +77,18 @@ export function Vendas({ state, setState, flash }: ScreenProps) {
     .filter((x): x is CartLine & { p: Product } => Boolean(x.p));
   const subtotal = items.reduce((a, it) => a + it.qty * it.p.price, 0);
 
-  function finalize() {
+  async function finalize() {
     if (items.length === 0) return;
     setFinishing(true);
-    setTimeout(() => {
-      setState(applySale(state, cart, payment));
+    try {
+      setState(await recordSale(state, cart, payment));
       setCart([]);
-      setFinishing(false);
       flash(`Venda finalizada · ${BRL(subtotal)} · ${items.length} item(ns) descontado(s) do estoque`);
-    }, 400);
+    } catch (e) {
+      flash(e instanceof ApiError ? e.message : 'Não foi possível finalizar a venda.');
+    } finally {
+      setFinishing(false);
+    }
   }
 
   if (!state.populated) {
@@ -95,7 +99,17 @@ export function Vendas({ state, setState, flash }: ScreenProps) {
           title="Adicione produtos para vender"
           sub="Você precisa de um catálogo antes de registrar vendas."
           action={
-            <Button kind="primary" icon="sparkle" onClick={() => setState(seedState())}>
+            <Button
+              kind="primary"
+              icon="sparkle"
+              onClick={async () => {
+                try {
+                  setState(await seedData());
+                } catch {
+                  flash('Não foi possível popular os dados.');
+                }
+              }}
+            >
               Popular com dados de exemplo
             </Button>
           }

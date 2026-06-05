@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { AppState, CountAdjustment } from '../types';
 import { Badge, Button, Card, Empty, Icon } from '../components';
+import { applyCount } from '../services/dados';
+import { ApiError } from '../lib/apiClient';
 
 interface ScreenProps {
   state: AppState;
@@ -33,30 +35,19 @@ export function Contagem({ state, setState, flash }: ScreenProps) {
     );
   }
 
-  function apply() {
+  async function apply() {
     if (!session) return;
     const adjustments: CountAdjustment[] = session.products
       .filter((x) => x.counted !== '' && !isNaN(parseInt(x.counted)))
       .map((x) => ({ pid: x.pid, newStock: parseInt(x.counted), diff: parseInt(x.counted) - x.expected }));
-    const adjMap = Object.fromEntries(adjustments.map((a) => [a.pid, a.newStock]));
-    const products = state.products.map((p) => (adjMap[p.id] !== undefined ? { ...p, stock: adjMap[p.id] } : p));
-    const totalDiff = adjustments.reduce((a, x) => a + x.diff, 0);
-    setState({
-      ...state,
-      products,
-      counts: [{ id: 'c' + Date.now(), ts: new Date().toISOString(), adjustments, total: adjustments.length }, ...state.counts],
-      activity: [
-        {
-          id: 'a' + Date.now(),
-          kind: 'count',
-          text: `Contagem aplicada — ${adjustments.length} ajuste(s), diferença ${totalDiff > 0 ? '+' : ''}${totalDiff}`,
-          ts: new Date().toISOString(),
-        },
-        ...state.activity,
-      ].slice(0, 50),
-    });
-    setSession(null);
-    flash(`Contagem aplicada · ${adjustments.length} ajuste(s) salvos`);
+    if (adjustments.length === 0) return;
+    try {
+      setState(await applyCount(state, adjustments));
+      setSession(null);
+      flash(`Contagem aplicada · ${adjustments.length} ajuste(s) salvos`);
+    } catch (e) {
+      flash(e instanceof ApiError ? e.message : 'Não foi possível aplicar a contagem.');
+    }
   }
 
   if (!state.populated) {

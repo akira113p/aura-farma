@@ -4,7 +4,7 @@ import { Icon, Sidebar } from './components';
 import { useAppState } from './hooks/useAppState';
 import { useTweaks } from './hooks/useTweaks';
 import { useAuth } from './context/AuthContext';
-import { clearState, seedState } from './services/store';
+import { seedData, resetData } from './services/dados';
 import { AuthScreen } from './features/auth/AuthScreen';
 import { TopBar } from './features/TopBar';
 import { Dashboard } from './features/Dashboard';
@@ -48,7 +48,7 @@ function routeSub(route: Route, state: AppState): string {
 export default function App() {
   const { user, loading, logout } = useAuth();
   const [tweaks, setTweak] = useTweaks();
-  const [state, setState] = useAppState();
+  const [state, setState, dataLoading] = useAppState();
   const [route, setRoute] = useState<Route>('dashboard');
   const [navOpen, setNavOpen] = useState(false);
   const [flashMsg, setFlashMsg] = useState<string | null>(null);
@@ -70,14 +70,21 @@ export default function App() {
 
   const lowStockCount = state.products.filter((p) => p.stock <= p.min).length;
 
-  function handleSeed() {
-    setState(seedState());
-    flash('Dados de exemplo carregados');
+  async function handleSeed() {
+    try {
+      setState(await seedData());
+      flash('Dados de exemplo carregados');
+    } catch {
+      flash('Não foi possível popular os dados — o servidor está no ar?');
+    }
   }
-  function handleReset() {
-    if (confirm('Limpar todos os produtos, vendas e solicitações? Esta ação não pode ser desfeita.')) {
-      setState(clearState());
+  async function handleReset() {
+    if (!confirm('Limpar todos os produtos, vendas e solicitações? Esta ação não pode ser desfeita.')) return;
+    try {
+      setState(await resetData());
       flash('Dados limpos');
+    } catch {
+      flash('Não foi possível limpar os dados.');
     }
   }
 
@@ -87,13 +94,13 @@ export default function App() {
       screen = <Dashboard state={state} setState={setState} />;
       break;
     case 'estoque':
-      screen = <Estoque state={state} setState={setState} />;
+      screen = <Estoque state={state} setState={setState} flash={flash} />;
       break;
     case 'vendas':
       screen = <Vendas state={state} setState={setState} flash={flash} />;
       break;
     case 'solicitados':
-      screen = <Solicitados state={state} setState={setState} />;
+      screen = <Solicitados state={state} setState={setState} flash={flash} />;
       break;
     case 'historico':
       screen = <Historico state={state} />;
@@ -135,7 +142,14 @@ export default function App() {
               <div className="page-sub">{routeSub(route, state)}</div>
             </div>
           </div>
-          {screen}
+          {dataLoading ? (
+            <div className="card" style={{ padding: 48, textAlign: 'center', color: 'var(--text-muted)' }}>
+              <span className="btn-spinner" style={{ display: 'block', margin: '0 auto 12px', color: 'var(--text-subtle)' }} />
+              <div>Carregando dados…</div>
+            </div>
+          ) : (
+            screen
+          )}
         </div>
       </div>
 
