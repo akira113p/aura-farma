@@ -56,7 +56,10 @@ app.use(
     cookie: {
       httpOnly: true, // invisible to JS — mitigates XSS token theft
       secure: env.isProd, // HTTPS-only in production
-      sameSite: 'lax',
+      // Cross-site in production (frontend on Vercel, API on Render = different
+      // domains): the cookie must be SameSite=None+Secure or the browser won't
+      // send it on cross-origin fetch. In dev (same localhost) Lax is fine.
+      sameSite: env.isProd ? 'none' : 'lax',
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
   }),

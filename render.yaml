@@ -1,0 +1,28 @@
+# Render Blueprint — deploy do backend (Node/Express + MongoDB).
+# No Render: New + > Blueprint > conecte o repo > ele lê este arquivo.
+# Depois preencha as envVars marcadas com sync:false (MONGODB_URI,
+# FRONTEND_ORIGIN, GOOGLE_CLIENT_ID) no painel do servico.
+services:
+  - type: web
+    name: aura-farma-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Segredo da sessao: o Render gera um valor aleatorio forte (>= 32 chars).
+      - key: SESSION_SECRET
+        generateValue: true
+      # Preencha no painel (Environment) — sao especificos/segredos:
+      - key: MONGODB_URI
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+    # O Render injeta PORT automaticamente; o backend ja le process.env.PORT.
