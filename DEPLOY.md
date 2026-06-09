@@ -60,13 +60,23 @@ Teste abrindo `…/api/health` → deve responder `{"ok":true}`.
 
 | Variável | Valor |
 | --- | --- |
-| `VITE_API_BASE_URL` | `https://aura-farma-backend.onrender.com/api` (URL do Render **+ `/api`**) |
+| `VITE_API_BASE_URL` | `/api` (caminho relativo — vai pelo proxy do `frontend/vercel.json`) |
 | `VITE_USE_MOCK` | `false` |
 
 4. Deploy. Anote a URL (ex.: `https://SEU-PROJETO.vercel.app`).
 
 > ⚠️ Variáveis `VITE_*` entram no build. Se mudar qualquer uma depois, faça
 > **Redeploy** (senão o valor antigo continua embutido).
+
+### Por que `/api` e não a URL do Render?
+
+O `frontend/vercel.json` tem um **rewrite** que encaminha `/api/*` para o backend
+no Render. Assim o navegador chama sempre o **mesmo domínio** (`SEU-PROJETO.vercel.app/api/...`),
+a Vercel repassa pro Render nos bastidores, e o **cookie de sessão vira
+first-party** — funciona em qualquer navegador. Se o front chamasse
+`onrender.com` direto, o cookie seria de **terceiros** e Safari/Firefox/Chrome o
+bloqueariam (o login nao "grudaria"). Edite o `destination` no `vercel.json` se a
+URL do backend mudar.
 
 ## Passo 4 — Conferir as URLs cruzadas
 
@@ -90,9 +100,11 @@ a página. Se o produto persistir, o front está falando com o Render + Atlas. �
 
 ## Problemas comuns
 
-- **Login não "gruda" / cai pro login ao recarregar:** cookie cross-site
-  bloqueado. Cheque: backend com `NODE_ENV=production` (ativa `SameSite=None` +
-  `Secure`), `FRONTEND_ORIGIN` exatamente igual à URL da Vercel, e ambos em HTTPS.
+- **Login não "gruda" / cai pro login ao recarregar:** cookie de terceiros
+  bloqueado pelo navegador. A correção e usar o proxy: `VITE_API_BASE_URL=/api`
+  na Vercel + o `frontend/vercel.json` (rewrite p/ o Render) — assim o cookie
+  fica first-party. Confirme tambem `NODE_ENV=production` no backend (ativa
+  `SameSite=None`+`Secure`).
 - **CORS error no console:** `FRONTEND_ORIGIN` no Render não bate com a origem do
   navegador (diferença de `https`, `www`, ou barra no final).
 - **Backend demora ~30s na 1ª chamada:** plano free do Render hiberna após
