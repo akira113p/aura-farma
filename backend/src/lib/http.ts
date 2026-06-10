@@ -4,12 +4,20 @@ import type { NextFunction, Request, Response } from 'express';
 export class AppError extends Error {
   status: number;
   details?: Record<string, string>;
+  /** Contexto livre para o log estruturado (não vai para a resposta do client). */
+  context?: Record<string, unknown>;
 
-  constructor(status: number, message: string, details?: Record<string, string>) {
+  constructor(
+    status: number,
+    message: string,
+    details?: Record<string, string>,
+    context?: Record<string, unknown>,
+  ) {
     super(message);
     this.name = 'AppError';
     this.status = status;
     this.details = details;
+    this.context = context;
   }
 }
 
