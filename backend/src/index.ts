@@ -4,6 +4,7 @@ import MongoStore from 'connect-mongo';
 import helmet from 'helmet';
 import cors from 'cors';
 import { env } from './config/env';
+import { logger } from './lib/logger';
 import { connectDb } from './db/mongoose';
 import { authLimiter } from './middleware/rateLimit';
 import { requireAuth } from './middleware/auth';
@@ -83,14 +84,17 @@ async function start() {
   try {
     await connectDb();
     const medCount = loadCatalog();
+    logger.info('catalog.loaded', { medCount });
     app.listen(env.port, () => {
-      console.log(`[api] farmaDimin ouvindo em http://localhost:${env.port}`);
-      console.log(`[api] CORS liberado para: ${env.frontendOrigins.join(', ')}`);
-      console.log(`[api] Google login: ${env.googleClientId ? 'configurado' : 'desativado (defina GOOGLE_CLIENT_ID)'}`);
-      console.log(`[catalog] ${medCount} medicamentos carregados`);
+      logger.info('api.listening', {
+        port: env.port,
+        url: `http://localhost:${env.port}`,
+        corsOrigins: env.frontendOrigins,
+        googleLogin: env.googleClientId ? 'configurado' : 'desativado',
+      });
     });
   } catch (err) {
-    console.error('[api] Falha ao iniciar:', err);
+    logger.error('api.boot_failed', { err: err instanceof Error ? err.message : String(err) });
     process.exit(1);
   }
 }

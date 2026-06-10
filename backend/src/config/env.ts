@@ -18,6 +18,15 @@ const frontendOrigins = (process.env.FRONTEND_ORIGIN ?? 'http://localhost:5173')
   .map((s) => s.trim())
   .filter(Boolean);
 
+const LOG_LEVELS = ['debug', 'info', 'warn', 'error'] as const;
+type LogLevel = (typeof LOG_LEVELS)[number];
+
+// Nível mínimo de log estruturado. Default 'info'; valor inválido cai para 'info'.
+const rawLogLevel = (process.env.LOG_LEVEL ?? 'info').trim().toLowerCase();
+const logLevel: LogLevel = (LOG_LEVELS as readonly string[]).includes(rawLogLevel)
+  ? (rawLogLevel as LogLevel)
+  : 'info';
+
 // Fail fast on weak/insecure production configuration instead of silently
 // shipping a guessable session secret or an unusable/insecure CORS allowlist.
 if (IS_PROD) {
@@ -62,6 +71,8 @@ export const env = {
   frontendOrigins,
   /** Public Google OAuth client id; empty string means "Google login disabled". */
   googleClientId: process.env.GOOGLE_CLIENT_ID ?? '',
+  /** Nível mínimo de log estruturado: debug < info < warn < error (default 'info'). */
+  logLevel,
 } as const;
 
 export const isGoogleEnabled = (): boolean => env.googleClientId.trim() !== '';
