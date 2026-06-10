@@ -1,6 +1,11 @@
 import Fuse from 'fuse.js';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { cacheGet, cacheSet } from '../lib/cache';
+
+// TTL curto para resultados de busca: o catálogo é read-only, então 60s é seguro
+// e ainda absorve a digitação repetida do mesmo termo.
+const SEARCH_TTL_MS = 60_000;
 
 /**
  * In-memory catalog of real medicines (ANVISA open data).
@@ -127,7 +132,13 @@ export function searchCatalog(q: string, limit = 12): CatalogMed[] {
   if (!fuse) loadCatalog();
   const nq = normalize(q);
   if (nq.length < 2) return [];
-  return fuse!
+  // Cache por (query normalizada + limit) no namespace 'catalog'. Em hit, devolve
+  // os resultados memorizados; em miss, roda o Fuse e armazena. A semântica dos
+  // resultados não muda — só evita reprocessar a mesma busca em janela curta.
+  const cacheKey = `${nq}|${limit}`;
+  const cached = cacheGet<CatalogMed[]>('catalog', cacheKey);
+  if (cached) return cached;
+  const results = fuse!
     .search(nq, { limit: Math.max(limit * 4, 40) })
     .map((r) => {
       const prefix = commonPrefixLen(nq, r.item._nome) / Math.max(nq.length, 1);
@@ -138,4 +149,6 @@ export function searchCatalog(q: string, limit = 12): CatalogMed[] {
     .sort((a, b) => a.score - b.score)
     .slice(0, limit)
     .map((x) => toPublic(x.item));
+  cacheSet('catalog', cacheKey, results, SEARCH_TTL_MS);
+  return results;
 }
