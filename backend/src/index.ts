@@ -8,6 +8,7 @@ import { connectDb } from './db/mongoose';
 import { authLimiter } from './middleware/rateLimit';
 import { requireAuth } from './middleware/auth';
 import { authRouter } from './routes/auth';
+import { healthRouter } from './routes/health';
 import { medicamentosRouter } from './routes/medicamentos';
 import { dadosRouter } from './routes/dados';
 import { loadCatalog } from './services/catalog';
@@ -65,7 +66,8 @@ app.use(
   }),
 );
 
-app.get('/api/health', (_req, res) => res.json({ ok: true }));
+// Health check (liveness + readiness) — sem auth; usado pelo Render como healthCheckPath.
+app.use('/api/health', healthRouter);
 
 // Rate-limit all auth endpoints (login/register/google) against brute force.
 app.use('/api/auth', authLimiter, authRouter);
