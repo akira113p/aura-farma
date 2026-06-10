@@ -62,6 +62,8 @@ export const env = {
   frontendOrigins,
   /** Public Google OAuth client id; empty string means "Google login disabled". */
   googleClientId: process.env.GOOGLE_CLIENT_ID ?? '',
+  /** Limite (ms) acima do qual uma query do Mongo é logada como `warn` (lenta). */
+  dbSlowMs: Number(process.env.DB_SLOW_MS ?? 200),
 } as const;
 
 export const isGoogleEnabled = (): boolean => env.googleClientId.trim() !== '';

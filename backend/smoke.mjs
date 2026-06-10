@@ -1,4 +1,8 @@
 // Ephemeral end-to-end smoke test for the auth API (in-memory MongoDB).
+// Observabilidade (Unit 5): o plugin de timing de queries (db/queryLogger.ts)
+// roda em todas as queries deste fluxo — o servidor emite linhas JSON `db.query`
+// no stdout (visíveis acima, via stdio:'inherit'). O essencial aqui é que o
+// plugin NÃO quebre nenhuma query: este smoke deve continuar 100% verde.
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { spawn } from 'node:child_process';
 
