@@ -52,6 +52,10 @@ try {
   }
   check('servidor sobe (/health)', up);
 
+  // toda resposta deve ecoar um X-Request-Id (gerado pelo middleware requestId)
+  let rid = await fetch(`${BASE}/health`);
+  check('resposta traz header x-request-id', Boolean(rid.headers.get('x-request-id')), `(header ${rid.headers.get('x-request-id')})`);
+
   const cred = { username: 'farmacia.central', pharmacyName: 'Farmácia Central', email: 'dono@farma.com', password: 'Senha@123' };
 
   // register
