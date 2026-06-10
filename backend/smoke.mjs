@@ -52,6 +52,18 @@ try {
   }
   check('servidor sobe (/health)', up);
 
+  // health detalhado (liveness) — 200 com uptime + mongo
+  let r0 = await fetch(`${BASE}/health`);
+  let health = await r0.json();
+  check('GET /health → 200', r0.status === 200, `(status ${r0.status})`);
+  check('/health expõe uptime', typeof health.uptime === 'number', JSON.stringify(health).slice(0, 120));
+  check('/health expõe mongo (readyState)', typeof health.mongo === 'number', JSON.stringify(health).slice(0, 120));
+
+  // readiness — 200 com Mongo conectado (in-memory já está pronto neste ponto)
+  r0 = await fetch(`${BASE}/health/ready`);
+  let ready = await r0.json();
+  check('GET /health/ready → 200 (mongo conectado)', r0.status === 200 && ready.ready === true, `(status ${r0.status}) ${JSON.stringify(ready)}`);
+
   const cred = { username: 'farmacia.central', pharmacyName: 'Farmácia Central', email: 'dono@farma.com', password: 'Senha@123' };
 
   // register
