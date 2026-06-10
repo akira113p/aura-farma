@@ -1,4 +1,7 @@
-// Ephemeral end-to-end smoke test for the auth API (in-memory MongoDB).
+// Suíte de REGRESSÃO end-to-end dos fluxos críticos (in-memory MongoDB).
+// Cobre auth, estoque CRUD, venda (baixa de estoque), solicitados e contagem.
+// Cada bloco verifica invariantes claras; o processo sai com código 1 se qualquer
+// assert falhar (o CI depende disso para barrar regressões).
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { spawn } from 'node:child_process';
 
@@ -147,23 +150,48 @@ try {
   let upd = await r.json();
   check('editar produto (PATCH) → preco atualizado', r.status === 200 && upd.product?.price === 11.5, JSON.stringify(upd.product));
 
-  r = await fetch(`${BASE}/vendas`, A({ items: [{ pid, qty: 4 }], payment: 'pix' }));
+  // --- venda: deve DECREMENTAR o estoque pela quantidade vendida e criar atividade ---
+  const stockBefore = est.products[0].stock; // 10 (criado acima)
+  const QTY = 4;
+  r = await fetch(`${BASE}/vendas`, A({ items: [{ pid, qty: QTY }], payment: 'pix' }));
   let venda = await r.json();
-  check('venda → 201 e estoque decrementado p/ 6', r.status === 201 && venda.updatedProducts?.[0]?.stock === 6, JSON.stringify(venda).slice(0, 120));
+  const stockAfter = venda.updatedProducts?.find((p) => p.id === pid)?.stock;
+  check('venda → 201', r.status === 201, `(status ${r.status})`);
+  check('venda decrementa estoque pela qtd vendida (10-4=6)', stockAfter === stockBefore - QTY, `antes=${stockBefore} depois=${stockAfter} qtd=${QTY}`);
+  check('venda registra item com a quantidade correta', venda.sale?.items?.[0]?.qty === QTY, JSON.stringify(venda.sale?.items));
+
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  est = await r.json();
+  check('venda persiste o estoque decrementado no estado', est.products[0].stock === stockBefore - QTY, `stock=${est.products[0]?.stock}`);
+  check('venda cria atividade kind=sale', est.activity?.some((a) => a.kind === 'sale'), JSON.stringify(est.activity?.map((a) => a.kind)));
 
   r = await fetch(`${BASE}/vendas`, A({ items: [{ pid, qty: 999 }], payment: 'pix' }));
   check('venda sem estoque → 409', r.status === 409, `(status ${r.status})`);
 
-  r = await fetch(`${BASE}/solicitados`, A({ name: 'Insulina NPH', note: 'cliente recorrente' }));
-  check('criar solicitacao → 201', r.status === 201, `(status ${r.status})`);
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  est = await r.json();
+  check('venda recusada NÃO altera o estoque (6)', est.products[0].stock === stockBefore - QTY, `stock=${est.products[0]?.stock}`);
 
-  r = await fetch(`${BASE}/contagem`, A({ adjustments: [{ pid, newStock: 20 }] }));
+  r = await fetch(`${BASE}/solicitados`, A({ name: 'Insulina NPH', note: 'cliente recorrente' }));
+  let sol = await r.json();
+  check('criar solicitacao → 201', r.status === 201, `(status ${r.status})`);
+  check('solicitacao começa com count=1', sol.request?.count === 1, JSON.stringify(sol.request));
+  // mesmo nome de novo → incrementa o contador, não duplica
+  r = await fetch(`${BASE}/solicitados`, A({ name: 'Insulina NPH', note: 'de novo' }));
+  let sol2 = await r.json();
+  check('solicitacao repetida incrementa count p/ 2', sol2.request?.count === 2, JSON.stringify(sol2.request));
+
+  // --- contagem: ajusta o estoque para o novo valor absoluto ---
+  const NEW_STOCK = 20;
+  r = await fetch(`${BASE}/contagem`, A({ adjustments: [{ pid, newStock: NEW_STOCK }] }));
   let cont = await r.json();
-  check('contagem ajusta estoque p/ 20', r.status === 201 && cont.updatedProducts?.[0]?.stock === 20, JSON.stringify(cont).slice(0, 120));
+  const counted = cont.updatedProducts?.find((p) => p.id === pid)?.stock;
+  check('contagem ajusta estoque p/ o novo valor (20)', r.status === 201 && counted === NEW_STOCK, JSON.stringify(cont).slice(0, 120));
 
   r = await fetch(`${BASE}/estado`, A(null, 'GET'));
   est = await r.json();
-  check('estado reflete venda+contagem (1 venda, 1 contagem, estoque 20)', est.sales.length === 1 && est.counts.length === 1 && est.products[0].stock === 20, `sales=${est.sales.length} counts=${est.counts.length} stock=${est.products[0]?.stock}`);
+  check('estado reflete venda+contagem (1 venda, 1 contagem, estoque 20)', est.sales.length === 1 && est.counts.length === 1 && est.products[0].stock === NEW_STOCK, `sales=${est.sales.length} counts=${est.counts.length} stock=${est.products[0]?.stock}`);
+  check('contagem cria atividade kind=count', est.activity?.some((a) => a.kind === 'count'), JSON.stringify(est.activity?.map((a) => a.kind)));
 
   r = await fetch(`${BASE}/estoque/${pid}`, A(null, 'DELETE'));
   check('remover produto → 204', r.status === 204, `(status ${r.status})`);
