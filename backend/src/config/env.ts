@@ -62,6 +62,12 @@ export const env = {
   frontendOrigins,
   /** Public Google OAuth client id; empty string means "Google login disabled". */
   googleClientId: process.env.GOOGLE_CLIENT_ID ?? '',
+  /** Threshold de alerta: p95 de latência (ms) acima do qual emite warn. */
+  alertP95Ms: Number(process.env.ALERT_P95_MS ?? 1000),
+  /** Threshold de alerta: taxa de erros 5xx (0–1) acima da qual emite warn. */
+  alertErrorRate: Number(process.env.ALERT_ERROR_RATE ?? 0.05),
+  /** Threshold de alerta: memória RSS em MB acima da qual emite warn. */
+  alertMemMb: Number(process.env.ALERT_MEM_MB ?? 400),
 } as const;
 
 export const isGoogleEnabled = (): boolean => env.googleClientId.trim() !== '';

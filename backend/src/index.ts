@@ -10,6 +10,8 @@ import { requireAuth } from './middleware/auth';
 import { authRouter } from './routes/auth';
 import { medicamentosRouter } from './routes/medicamentos';
 import { dadosRouter } from './routes/dados';
+import { metricsRouter } from './routes/metrics';
+import { metricsMiddleware } from './middleware/metrics';
 import { loadCatalog } from './services/catalog';
 import { errorHandler, notFound } from './middleware/error';
 
@@ -46,6 +48,9 @@ app.use(
 app.use(cors({ origin: env.frontendOrigins, credentials: true }));
 app.use(express.json({ limit: '10kb' }));
 
+// Mede latência/erros de todos os requests (cedo no pipeline) e dispara alertas.
+app.use(metricsMiddleware);
+
 app.use(
   session({
     name: 'sid',
@@ -75,6 +80,9 @@ app.use('/api/medicamentos', requireAuth, medicamentosRouter);
 
 // Per-pharmacy data (stock, sales, requests, counts) — all require a session.
 app.use('/api', requireAuth, dadosRouter);
+
+// Métricas de performance/saúde do processo (observabilidade) — requer sessão.
+app.use('/api/metrics', requireAuth, metricsRouter);
 
 app.use(notFound);
 app.use(errorHandler);
