@@ -174,6 +174,16 @@ try {
   r = await fetch(`${BASE}/estado/seed`, A({}));
   let seeded = await r.json();
   check('seed popula 20 produtos + vendas', r.status === 201 && seeded.products.length === 20 && seeded.sales.length > 0, `prod=${seeded.products?.length} sales=${seeded.sales?.length}`);
+
+  // --- métricas (observabilidade, requer auth) ---
+  r = await fetch(`${BASE}/metrics`, A(null, 'GET'));
+  let met = await r.json();
+  check('métricas autenticado → 200', r.status === 200, `(status ${r.status})`);
+  check('métricas trazem latency e memory', met.latency != null && met.memory != null, JSON.stringify(met).slice(0, 120));
+  check('métricas têm percentis p50/p95/p99', met.latency?.p50 != null && met.latency?.p95 != null && met.latency?.p99 != null, JSON.stringify(met.latency));
+
+  r = await fetch(`${BASE}/metrics`, j(null, null, 'GET'));
+  check('métricas sem auth → 401', r.status === 401, `(status ${r.status})`);
 } finally {
   server.kill();
   if (mongod) {
