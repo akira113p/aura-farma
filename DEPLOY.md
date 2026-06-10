@@ -112,3 +112,47 @@ a página. Se o produto persistir, o front está falando com o Render + Atlas. �
 - **Backend não sobe:** veja os logs no Render. Causas comuns: `MONGODB_URI`
   errada, Atlas sem `0.0.0.0/0`, ou `SESSION_SECRET`/`FRONTEND_ORIGIN` faltando
   (em produção o app falha de propósito se estiverem fracos/ausentes).
+
+---
+
+## Deploy monitorado + rollback
+
+### Gate de saúde no Render
+
+O `render.yaml` define `healthCheckPath: /api/health`. A cada deploy o Render só
+**promove** a nova versão depois que o health check responde OK. Se a versão nova
+não passar no health check (boot quebrado, Mongo inacessível, etc.), o Render
+**mantém a versão anterior no ar** e o deploy é marcado como falho — sem downtime.
+
+### CI antes do deploy
+
+O workflow `.github/workflows/ci.yml` roda em todo `push`/`pull_request` para
+`main`:
+
+- **Backend:** `npm --prefix backend run typecheck` (tsc `--noEmit`) +
+  `npm --prefix backend run smoke` (suíte de regressão e2e que sobe o server com
+  `mongodb-memory-server` — sem serviços externos — e exercita auth, estoque CRUD,
+  venda baixando estoque, solicitados e contagem). O smoke sai com código != 0 se
+  qualquer assert falhar, reprovando o job.
+- **Frontend:** `npm --prefix frontend run build` (typecheck + build do Vite).
+
+Recomendado: manter `autoDeploy: true` no `render.yaml` **e** ligar
+**branch protection** em `main` exigindo o CI verde antes do merge. Assim só vai
+para deploy o que passou em typecheck + smoke, barrando regressões dos fluxos
+críticos antes de chegar em produção.
+
+### Rollback manual
+
+Se um deploy passou no health check mas introduziu um bug, volte para a versão
+boa:
+
+- **Painel do Render:** serviço → aba **Events** (ou **Deploys**) → escolha um
+  deploy anterior que estava saudável → **Rollback to this deploy**. O Render
+  re-promove aquela build (sem rebuild).
+- **CLI:** `render rollback` (requer o [Render CLI](https://render.com/docs/cli)
+  instalado e autenticado, `render login`). Útil para automatizar/scriptar o
+  rollback.
+
+> Como o deploy é zero-downtime, prefira corrigir e dar push (o CI + health check
+> protegem) em vez de rollback; o rollback é o caminho rápido quando o bug já está
+> em produção e você precisa restaurar o serviço imediatamente.
