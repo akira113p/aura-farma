@@ -7,6 +7,7 @@ import { env } from './config/env';
 import { connectDb } from './db/mongoose';
 import { authLimiter } from './middleware/rateLimit';
 import { requireAuth } from './middleware/auth';
+import { requestId } from './middleware/requestId';
 import { authRouter } from './routes/auth';
 import { medicamentosRouter } from './routes/medicamentos';
 import { dadosRouter } from './routes/dados';
@@ -45,6 +46,10 @@ app.use(
 );
 app.use(cors({ origin: env.frontendOrigins, credentials: true }));
 app.use(express.json({ limit: '10kb' }));
+
+// Atribui/ecoa X-Request-Id e emite access log estruturado por request. Cedo na
+// cadeia (após o parse do body, antes de sessão/rotas) para cobrir tudo abaixo.
+app.use(requestId);
 
 app.use(
   session({
