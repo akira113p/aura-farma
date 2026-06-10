@@ -97,6 +97,12 @@ try {
   check('senha fraca → 400', r.status === 400, `(status ${r.status})`);
   check('400 indica campo password', weak.details?.password != null, JSON.stringify(weak.details));
 
+  // corpo de erro estruturado: request inválido (sem credenciais) → 401 com { error }
+  r = await fetch(`${BASE}/auth/login`, j(null, {}));
+  let errBody = await r.json();
+  check('erro retorna shape { error } (login sem credenciais → 4xx)', r.status >= 400 && r.status < 500 && typeof errBody.error === 'string' && errBody.error.length > 0, `(status ${r.status}) ${JSON.stringify(errBody)}`);
+  check('corpo de erro NÃO vaza stack', !('stack' in errBody), JSON.stringify(errBody).slice(0, 120));
+
   // google disabled
   r = await fetch(`${BASE}/auth/google/config`, j(null, null, 'GET'));
   let gc = await r.json();
