@@ -2,6 +2,7 @@ import { Router, type Request } from 'express';
 import { isValidObjectId } from 'mongoose';
 import { readLimiter, writeLimiter } from '../middleware/rateLimit';
 import { AppError, asyncHandler } from '../lib/http';
+import { cacheGet, cacheInvalidate, cacheSet } from '../lib/cache';
 import {
   contagemSchema,
   productCreateSchema,
@@ -34,6 +35,16 @@ const T = 5000; // maxTimeMS — caps how long a single DB op can run
 const uid = (req: Request): string => req.session.userId as string;
 const today = () => new Date().toISOString().slice(0, 10);
 const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// Cache curto do AppState por usuário. Absorve o GET /api/estado repetido logo
+// após mutações/navegação. A chave é SEMPRE o userId (namespace 'estado'), então
+// não há vazamento entre usuários. Toda mutação invalida a entrada do dono — ver
+// `bumpEstado` abaixo, chamado em cada rota de escrita.
+const ESTADO_TTL_MS = 5000;
+type Estado = Awaited<ReturnType<typeof loadEstado>>;
+
+/** Invalida o cache de estado do usuário. Chamar em TODA rota de mutação. */
+const bumpEstado = (u: string) => cacheInvalidate('estado', u);
 
 /** Keep only the most recent 50 activities for the user. */
 async function addActivity(u: string, kind: string, text: string): Promise<void> {
@@ -75,7 +86,15 @@ async function wipe(u: string): Promise<void> {
 dadosRouter.get(
   '/estado',
   asyncHandler(async (req, res) => {
-    res.json(await loadEstado(uid(req)));
+    const u = uid(req);
+    const cached = cacheGet<Estado>('estado', u);
+    if (cached) {
+      res.json(cached);
+      return;
+    }
+    const estado = await loadEstado(u);
+    cacheSet('estado', u, estado, ESTADO_TTL_MS);
+    res.json(estado);
   }),
 );
 
@@ -93,6 +112,7 @@ dadosRouter.post(
     await Sale.insertMany(buildSeedSales(refs).map((s) => ({ u, ts: s.ts, it: s.it, tot: s.tot, pay: s.pay })));
     await RequestModel.insertMany(SEED_REQUESTS.map((r) => ({ u, nm: r.name, nt: r.note, c: r.count, d: r.date })));
     await Activity.create({ u, k: 'import', tx: 'Catálogo populado com 20 produtos de exemplo', ts: new Date() });
+    bumpEstado(u);
     res.status(201).json(await loadEstado(u));
   }),
 );
@@ -101,7 +121,9 @@ dadosRouter.post(
 dadosRouter.post(
   '/estado/reset',
   asyncHandler(async (req, res) => {
-    await wipe(uid(req));
+    const u = uid(req);
+    await wipe(u);
+    bumpEstado(u);
     res.json({ populated: false, products: [], sales: [], requests: [], counts: [], activity: [] });
   }),
 );
@@ -114,6 +136,7 @@ dadosRouter.post(
     const data = productCreateSchema.parse(req.body);
     const doc = await Product.create(toStoredProduct(u, data));
     await addActivity(u, 'import', `Produto adicionado: ${data.name}`);
+    bumpEstado(u);
     res.status(201).json({ product: toApiProduct(doc.toObject()) });
   }),
 );
@@ -139,6 +162,7 @@ dadosRouter.patch(
     if (data.tags !== undefined) set.tg = data.tags;
     const doc = await Product.findOneAndUpdate({ _id: id, u }, { $set: set }, { new: true }).maxTimeMS(T).lean();
     if (!doc) throw new AppError(404, 'Produto nao encontrado');
+    bumpEstado(u);
     res.json({ product: toApiProduct(doc) });
   }),
 );
@@ -152,6 +176,7 @@ dadosRouter.delete(
     if (!isValidObjectId(id)) throw new AppError(404, 'Produto nao encontrado');
     const doc = await Product.findOneAndDelete({ _id: id, u }).maxTimeMS(T).lean();
     if (!doc) throw new AppError(404, 'Produto nao encontrado');
+    bumpEstado(u);
     res.status(204).end();
   }),
 );
@@ -183,6 +208,7 @@ dadosRouter.post(
     const sale = await Sale.create({ u, ts: new Date(), it: saleItems, tot: total, pay: payment });
     const updated = await Product.find({ u, _id: { $in: ids } }).maxTimeMS(T).lean();
     await addActivity(u, 'sale', `Venda finalizada — ${saleItems.length} item(ns), R$ ${total.toFixed(2)}`);
+    bumpEstado(u);
     res.status(201).json({ sale: toApiSale(sale.toObject()), updatedProducts: updated.map(toApiProduct) });
   }),
 );
@@ -198,10 +224,12 @@ dadosRouter.post(
       existing.set('count', (existing.get('count') as number) + 1);
       existing.set('date', today());
       await existing.save();
+      bumpEstado(u);
       res.json({ request: toApiRequest(existing.toObject()) });
       return;
     }
     const doc = await RequestModel.create({ u, nm: name, nt: note, c: 1, d: today() });
+    bumpEstado(u);
     res.status(201).json({ request: toApiRequest(doc.toObject()) });
   }),
 );
@@ -219,6 +247,7 @@ dadosRouter.patch(
     if (data.note !== undefined) set.nt = data.note;
     const doc = await RequestModel.findOneAndUpdate({ _id: id, u }, { $set: set }, { new: true }).maxTimeMS(T).lean();
     if (!doc) throw new AppError(404, 'Solicitacao nao encontrada');
+    bumpEstado(u);
     res.json({ request: toApiRequest(doc) });
   }),
 );
@@ -232,6 +261,7 @@ dadosRouter.delete(
     if (!isValidObjectId(id)) throw new AppError(404, 'Solicitacao nao encontrada');
     const doc = await RequestModel.findOneAndDelete({ _id: id, u }).maxTimeMS(T).lean();
     if (!doc) throw new AppError(404, 'Solicitacao nao encontrada');
+    bumpEstado(u);
     res.status(204).end();
   }),
 );
@@ -260,6 +290,7 @@ dadosRouter.post(
     const updated = await Product.find({ u, _id: { $in: ids } }).maxTimeMS(T).lean();
     const totalDiff = adj.reduce((s, x) => s + x.df, 0);
     await addActivity(u, 'count', `Contagem aplicada — ${adj.length} ajuste(s), diferença ${totalDiff > 0 ? '+' : ''}${totalDiff}`);
+    bumpEstado(u);
     res.status(201).json({ count: toApiCount(count.toObject()), updatedProducts: updated.map(toApiProduct) });
   }),
 );

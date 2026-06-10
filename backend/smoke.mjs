@@ -143,9 +143,21 @@ try {
   est = await r.json();
   check('estado agora populated:true com o produto', est.populated === true && est.products.length === 1 && est.products[0].id === pid);
 
+  // cache: dois GET /api/estado seguidos devem devolver o MESMO estado (cache hit no 2º)
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  const cache1 = await r.json();
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  const cache2 = await r.json();
+  check('cache: 2x GET /api/estado retornam estado idêntico', JSON.stringify(cache1) === JSON.stringify(cache2), JSON.stringify(cache1).slice(0, 80));
+
   r = await fetch(`${BASE}/estoque/${pid}`, A({ price: 11.5 }, 'PATCH'));
   let upd = await r.json();
   check('editar produto (PATCH) → preco atualizado', r.status === 200 && upd.product?.price === 11.5, JSON.stringify(upd.product));
+
+  // cache: após a mutação acima, o GET /api/estado deve refletir o novo preço (invalidação funcionou)
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  est = await r.json();
+  check('cache invalidado pós-mutação: estado reflete preço 11.5', est.products[0]?.price === 11.5, `price=${est.products[0]?.price}`);
 
   r = await fetch(`${BASE}/vendas`, A({ items: [{ pid, qty: 4 }], payment: 'pix' }));
   let venda = await r.json();
