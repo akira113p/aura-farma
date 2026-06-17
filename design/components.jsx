@@ -1,4 +1,4 @@
-// farmaDimin — shared UI components
+// auraFarma — shared UI components
 const { useState, useEffect, useRef, useMemo, useCallback, Fragment } = React;
 
 // --- Icons (inline, simple lucide-style strokes) ---
@@ -147,7 +147,7 @@ function Sidebar({ route, setRoute, requestCount, lowStockCount }) {
       <div className="sidebar-brand">
         <div className="brand-mark">f</div>
         <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
-          <span className="brand-name tighter">farmaDimin</span>
+          <span className="brand-name tighter">auraFarma</span>
           <span className="brand-sub">controle de estoque</span>
         </div>
       </div>

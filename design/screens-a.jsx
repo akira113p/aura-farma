@@ -1,4 +1,4 @@
-// farmaDimin — Dashboard, Produtos, Solicitados
+// auraFarma — Dashboard, Produtos, Solicitados
 const { useState, useEffect, useRef, useMemo, useCallback, Fragment } = React;
 
 // --- AI text generation (with claude.complete fallback to canned) ---

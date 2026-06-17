@@ -2,7 +2,7 @@
   "name": "euro-farma-prototipo",
   "version": "0.0.0",
   "private": true,
-  "description": "Protótipo farmaDimin — delega os comandos para o app em frontend/",
+  "description": "Protótipo auraFarma — delega os comandos para o app em frontend/",
   "scripts": {
     "dev": "npm --prefix frontend run dev",
     "dev:backend": "npm --prefix backend run dev",

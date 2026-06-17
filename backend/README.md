@@ -1,4 +1,4 @@
-# farmaDimin — Backend (API de autenticação)
+# auraFarma — Backend (API de autenticação)
 
 Node.js + Express + **MongoDB** (Mongoose), em TypeScript. Por enquanto cobre
 apenas **autenticação**: registro, login, logout e login com Google.

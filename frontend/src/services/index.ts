@@ -10,7 +10,7 @@
  * app is unaware of which one is in use. When the back end is ready, set
  * `VITE_USE_MOCK=false` and add the real implementations beside the mocks.
  *
- * Concrete services (e.g. for the entities in `farmaDimin.html`) will be added
+ * Concrete services (e.g. for the entities in `auraFarma.html`) will be added
  * here once the design is available.
  */
 export { apiClient, ApiError } from '../lib/apiClient';

@@ -10,7 +10,7 @@ import type { AppState, Product, Summary, TopProduct } from '../types';
 import { BRL } from '../lib/format';
 import { SEED_PRODUCTS, SEED_REQUESTS, buildSeedSales } from '../data/seed';
 
-const STORAGE_KEY = 'farmadimin.v1';
+const STORAGE_KEY = 'aurafarma.v1';
 
 export function emptyState(): AppState {
   return { populated: false, products: [], sales: [], requests: [], counts: [], activity: [] };

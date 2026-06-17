@@ -1,6 +1,6 @@
 # Euro Farma — Protótipo
 
-Protótipo da interface do projeto **farmaDimin**.
+Protótipo da interface do projeto **auraFarma**.
 
 ## Estado atual
 
@@ -11,7 +11,7 @@ Protótipo da interface do projeto **farmaDimin**.
 | Arquitetura preparada para MongoDB | ✅ camada de dados desacoplada (mock → API) |
 | Back end + banco de dados | ⏳ ainda não — planejado: Node + **MongoDB** |
 | Skills do Claude ativadas | ✅ instaladas em `.claude/skills/` |
-| Design `farmaDimin.html` | ✅ salvo em `design/` e implementado |
+| Design `auraFarma.html` | ✅ salvo em `design/` e implementado |
 
 ## Estrutura
 
@@ -42,7 +42,7 @@ iniciar uma nova sessão neste diretório:
 
 O link original do design retornava **HTTP 404** (autenticado por sessão / sem
 credenciais minhas). Os arquivos foram salvos manualmente em `design/`
-(`farmaDimin.html` + `app.jsx`, `components.jsx`, `screens-*.jsx`, `data.js`,
+(`auraFarma.html` + `app.jsx`, `components.jsx`, `screens-*.jsx`, `data.js`,
 `styles.css`) e portados para React + TypeScript em `frontend/`.
 
 O protótipo original era React 18 via Babel standalone com um único store em

@@ -1,4 +1,4 @@
-// farmaDimin — seed data + helpers + state store (plain JS, no react)
+// auraFarma — seed data + helpers + state store (plain JS, no react)
 
 const BRL = (n) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(n);
 const fmtInt = (n) => new Intl.NumberFormat("pt-BR").format(n);
@@ -82,7 +82,7 @@ function relDays(delta) {
 function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
 // --- Store ---
-const STORAGE_KEY = "farmadimin.v1";
+const STORAGE_KEY = "aurafarma.v1";
 
 function emptyState() {
   return {

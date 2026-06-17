@@ -1,6 +1,6 @@
 # Deploy — Frontend na Vercel + Backend no Render
 
-O farmaDimin tem dois apps que vão para hosts diferentes:
+O auraFarma tem dois apps que vão para hosts diferentes:
 
 - **Frontend** (`frontend/`) → **Vercel** (site estático Vite).
 - **Backend** (`backend/`) → **Render** (servidor Node persistente; a Vercel é
@@ -12,7 +12,7 @@ Como front e back ficam em **domínios diferentes**, o cookie de sessão usa
 
 > As URLs são previsíveis pelo nome do serviço:
 > - Render: `https://aura-farma-backend.onrender.com`
-> - Vercel: `https://SEU-PROJETO.vercel.app`
+> - Vercel: `https://aur.vercel.app`
 >
 > Dá para preencher as variáveis dos dois já com essas URLs e depois só ajustar
 > se o nome final mudar.

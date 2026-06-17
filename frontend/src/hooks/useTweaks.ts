@@ -8,7 +8,7 @@ export interface Tweaks {
   density: Density;
 }
 
-const STORAGE_KEY = 'farmadimin.tweaks.v1';
+const STORAGE_KEY = 'aurafarma.tweaks.v1';
 const DEFAULTS: Tweaks = { theme: 'light', density: 'regular' };
 
 function load(): Tweaks {

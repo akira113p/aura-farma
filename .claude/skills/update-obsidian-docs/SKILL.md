@@ -1,19 +1,19 @@
 ---
 name: update-obsidian-docs
-description: Keep the four farmaDimin Obsidian files in `obsidian/` (two mind-map .canvas + two .md texts) up to date. Use this AFTER implementing a new mechanic/feature, changing the data model or API endpoints, or making an architecture decision you judge important — so the project's mind maps and docs reflect reality. Do NOT use for trivial edits (typos, refactors, small fixes).
+description: Keep the four auraFarma Obsidian files in `obsidian/` (two mind-map .canvas + two .md texts) up to date. Use this AFTER implementing a new mechanic/feature, changing the data model or API endpoints, or making an architecture decision you judge important — so the project's mind maps and docs reflect reality. Do NOT use for trivial edits (typos, refactors, small fixes).
 ---
 
-# Update farmaDimin Obsidian docs
+# Update auraFarma Obsidian docs
 
 This project keeps a small set of living documentation in the `obsidian/` folder.
 There are **two perspectives, each in two formats**:
 
 | Arquivo (em `obsidian/`) | Perspectiva | Formato |
 | --- | --- | --- |
-| `farmaDimin - Mapa Mental.canvas` | Tecnica / projeto completo | mapa mental (JSON Canvas) |
-| `farmaDimin - Mapa Mental.md` | Tecnica / projeto completo | texto |
-| `farmaDimin - Como Funciona (mapa mental).canvas` | Nao-tecnica (leigo) | mapa mental (JSON Canvas) |
-| `farmaDimin - Como Funciona (texto).md` | Nao-tecnica (leigo) | texto |
+| `auraFarma - Mapa Mental.canvas` | Tecnica / projeto completo | mapa mental (JSON Canvas) |
+| `auraFarma - Mapa Mental.md` | Tecnica / projeto completo | texto |
+| `auraFarma - Como Funciona (mapa mental).canvas` | Nao-tecnica (leigo) | mapa mental (JSON Canvas) |
+| `auraFarma - Como Funciona (texto).md` | Nao-tecnica (leigo) | texto |
 
 Os `.md` e os `.canvas` se referenciam por wikilinks `[[...]]`.
 
@@ -53,10 +53,10 @@ NAO edite o JSON do canvas a mao (coordenadas/sobreposicao). Em vez disso:
 ## Como atualizar os textos (.md)
 
 Edite diretamente:
-- `obsidian/farmaDimin - Mapa Mental.md` — espelho textual do mapa tecnico
+- `obsidian/auraFarma - Mapa Mental.md` — espelho textual do mapa tecnico
   (objetivo, estado atual em tabela, arquitetura/persistencia, funcionalidades,
   compliance, base de medicamentos, roadmap).
-- `obsidian/farmaDimin - Como Funciona (texto).md` — espelho do mapa leigo.
+- `obsidian/auraFarma - Como Funciona (texto).md` — espelho do mapa leigo.
 
 Mantenha as secoes coerentes com o que voce mudou no mapa correspondente.
 

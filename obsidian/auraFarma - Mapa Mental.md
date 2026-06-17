@@ -1,14 +1,14 @@
 ---
-titulo: farmaDimin - Visao geral do projeto
+titulo: auraFarma - Visao geral do projeto
 tipo: documentacao
-mapa: "[[farmaDimin - Mapa Mental.canvas]]"
+mapa: "[[auraFarma - Mapa Mental.canvas]]"
 ---
 
-# farmaDimin - Visao geral do projeto
+# auraFarma - Visao geral do projeto
 
 Sistema de gestao para farmacias pequenas com foco em compliance burocratico e
 integracao de compras com a Eurofarma. Versao em texto do mapa mental
-[[farmaDimin - Mapa Mental.canvas]].
+[[auraFarma - Mapa Mental.canvas]].
 
 ---
 

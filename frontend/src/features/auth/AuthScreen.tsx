@@ -38,7 +38,7 @@ export function AuthScreen() {
         <div className="auth-brand">
           <div className="brand-mark">f</div>
           <div>
-            <h1 className="auth-title tighter">farmaDimin</h1>
+            <h1 className="auth-title tighter">auraFarma</h1>
             <div className="auth-sub">{mode === 'login' ? 'Entre na sua conta' : 'Crie sua conta'}</div>
           </div>
         </div>

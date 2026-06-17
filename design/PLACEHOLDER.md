@@ -2,7 +2,7 @@
 
 Salve aqui os arquivos do design para que eu possa implementá-los:
 
-- `farmaDimin.html`  ← o arquivo principal do design
+- `auraFarma.html`  ← o arquivo principal do design
 - o **README** do design (se houver), como `README.md` ou `design-readme.md`
 - quaisquer CSS/JS/assets que acompanhem o HTML
 

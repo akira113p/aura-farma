@@ -1,19 +1,19 @@
 ---
-titulo: farmaDimin - Como Funciona (para nao-tecnicos)
+titulo: auraFarma - Como Funciona (para nao-tecnicos)
 tipo: explicacao
-mapa: "[[farmaDimin - Como Funciona (mapa mental).canvas]]"
+mapa: "[[auraFarma - Como Funciona (mapa mental).canvas]]"
 ---
 
-# farmaDimin - Como Funciona (para nao programadores)
+# auraFarma - Como Funciona (para nao programadores)
 
 Explicacao em linguagem simples do que o sistema e e do que ele faz. Versao em
-texto do mapa mental [[farmaDimin - Como Funciona (mapa mental).canvas]].
+texto do mapa mental [[auraFarma - Como Funciona (mapa mental).canvas]].
 
 ---
 
 ## O que e e pra quem
 
-O farmaDimin e um sistema (site) para **farmacias pequenas** cuidarem do estoque,
+O auraFarma e um sistema (site) para **farmacias pequenas** cuidarem do estoque,
 das vendas e da burocracia. A ideia central e tirar das costas do farmaceutico a
 papelada obrigatoria e a desorganizacao do dia a dia.
 
@@ -99,5 +99,5 @@ E a funcionalidade mais util do dia a dia, na tela de Estoque.
 
 ---
 
-_Para a versao visual, abra [[farmaDimin - Como Funciona (mapa mental).canvas]]
-no Obsidian. Para a visao completa e tecnica, veja [[farmaDimin - Mapa Mental.md]]._
+_Para a versao visual, abra [[auraFarma - Como Funciona (mapa mental).canvas]]
+no Obsidian. Para a visao completa e tecnica, veja [[auraFarma - Mapa Mental.md]]._

@@ -1,5 +1,5 @@
 /**
- * Domain models for farmaDimin.
+ * Domain models for auraFarma.
  *
  * These mirror the shapes the future MongoDB collections / API responses will
  * return. They live in one place so components, hooks and the service layer all

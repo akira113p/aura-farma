@@ -33,7 +33,7 @@ src/
 
 ## Telas implementadas
 
-Porte completo do design `farmaDimin.html` para React + TypeScript:
+Porte completo do design `auraFarma.html` para React + TypeScript:
 
 - **Dashboard** — resumo por IA, KPIs (receita, lucro, ticket médio), gráfico de
   receita e listas de mais vendidos / repor com urgência.

@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Protótipo do **farmaDimin** — SaaS de gestão de estoque + compliance para farmácias pequenas. Monorepo informal com dois apps independentes (`frontend/` e `backend/`) e um `package.json` delegador. Todo o projeto está em **pt-BR**.
+Protótipo do **auraFarma** — SaaS de gestão de estoque + compliance para farmácias pequenas. Monorepo informal com dois apps independentes (`frontend/` e `backend/`) e um `package.json` delegador. Todo o projeto está em **pt-BR**.
 
 ## Estrutura do repositório
 
@@ -10,7 +10,7 @@ Protótipo do **farmaDimin** — SaaS de gestão de estoque + compliance para fa
 frontend/                 # React 19 + TypeScript + Vite (sem Tailwind/shadcn; CSS custom)
 backend/                  # Node + Express + TypeScript (ESM via tsx) + MongoDB/Mongoose
 sla mas ta aq/            # package.json raiz "delegador" (dev/build/lint/typecheck) + skills-lock
-design/                   # design original (farmaDimin.html + .jsx) portado para frontend/
+design/                   # design original (auraFarma.html + .jsx) portado para frontend/
 skill/, vibe-security-skill/   # repositórios-fonte das skills (referência)
 .claude/                  # skills ativadas no nível do projeto
 ```

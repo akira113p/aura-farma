@@ -1,4 +1,4 @@
-// farmaDimin — PDV (Vendas), Histórico, Contagem, Relatórios
+// auraFarma — PDV (Vendas), Histórico, Contagem, Relatórios
 const { useState, useEffect, useRef, useMemo, useCallback, Fragment } = React;
 
 // --- Vendas / PDV ---

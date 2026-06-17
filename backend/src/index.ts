@@ -84,7 +84,7 @@ async function start() {
     await connectDb();
     const medCount = loadCatalog();
     app.listen(env.port, () => {
-      console.log(`[api] farmaDimin ouvindo em http://localhost:${env.port}`);
+      console.log(`[api] auraFarma ouvindo em http://localhost:${env.port}`);
       console.log(`[api] CORS liberado para: ${env.frontendOrigins.join(', ')}`);
       console.log(`[api] Google login: ${env.googleClientId ? 'configurado' : 'desativado (defina GOOGLE_CLIENT_ID)'}`);
       console.log(`[catalog] ${medCount} medicamentos carregados`);

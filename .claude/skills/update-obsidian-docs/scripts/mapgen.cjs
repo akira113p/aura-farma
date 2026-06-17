@@ -69,7 +69,7 @@ function makeCanvas(root, file) {
 
 // =================== MAPA A: visao completa do projeto (tecnico) ===================
 const full = {
-  text: '# farmaDimin\n\nGestao + compliance para farmacias pequenas\ncom a Eurofarma integrada como fornecedor',
+  text: '# auraFarma\n\nGestao + compliance para farmacias pequenas\ncom a Eurofarma integrada como fornecedor',
   children: [
     { text: '**Objetivo & Negocio**', color: '6', children: [
       { text: 'Resolve burocracia + desorganizacao de farmacias pequenas' },
@@ -169,7 +169,7 @@ const full = {
 
 // =================== MAPA B: como funciona (nao-tecnico) ===================
 const easy = {
-  text: '# farmaDimin\n\nSistema para farmacias pequenas\ncuidarem do estoque, das vendas e da burocracia',
+  text: '# auraFarma\n\nSistema para farmacias pequenas\ncuidarem do estoque, das vendas e da burocracia',
   children: [
     { text: '**O que e e pra quem**', color: '6', children: [
       { text: 'Para farmacias pequenas' },
@@ -221,6 +221,6 @@ const easy = {
   ],
 };
 
-makeCanvas(full, 'obsidian/farmaDimin - Mapa Mental.canvas');
+makeCanvas(full, 'obsidian/auraFarma - Mapa Mental.canvas');
 idc = 0;
-makeCanvas(easy, 'obsidian/farmaDimin - Como Funciona (mapa mental).canvas');
+makeCanvas(easy, 'obsidian/auraFarma - Como Funciona (mapa mental).canvas');

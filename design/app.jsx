@@ -1,4 +1,4 @@
-// farmaDimin — App root
+// auraFarma — App root
 const { useState, useEffect, useRef, useMemo, useCallback, Fragment } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
