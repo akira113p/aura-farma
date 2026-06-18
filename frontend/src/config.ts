@@ -5,8 +5,17 @@
  * Never put secrets here — anything in the frontend bundle is public.
  */
 export const config = {
-  /** Base URL of the future backend API (Node/Express + MongoDB). */
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000/api',
+  /**
+   * Base URL of the backend API (Node/Express + MongoDB).
+   *
+   * In a production build we default to the relative `/api`, which the Vercel
+   * rewrite (see `frontend/vercel.json`) proxies to the Render backend as a
+   * first-party request — so the session cookie works and stock loads from any
+   * device. In dev we hit the local backend directly. `VITE_API_BASE_URL`
+   * overrides either default.
+   */
+  apiBaseUrl:
+    import.meta.env.VITE_API_BASE_URL ?? (import.meta.env.PROD ? '/api' : 'http://localhost:4000/api'),
 
   /**
    * When true, the app uses the in-memory localStorage mock and needs no backend.

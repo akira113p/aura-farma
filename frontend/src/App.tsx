@@ -53,7 +53,7 @@ function routeSub(route: Route, state: AppState): string {
 export default function App() {
   const { user, loading, logout } = useAuth();
   const [tweaks, setTweak] = useTweaks();
-  const [state, setState, dataLoading] = useAppState();
+  const [state, setState, dataLoading] = useAppState(user?.id ?? null);
   const [orders, setOrders] = usePedidos();
   const [route, setRoute] = useState<Route>('dashboard');
   const [navOpen, setNavOpen] = useState(false);
