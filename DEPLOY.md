@@ -12,7 +12,7 @@ Como front e back ficam em **domínios diferentes**, o cookie de sessão usa
 
 > As URLs são previsíveis pelo nome do serviço:
 > - Render: `https://aura-farma-backend.onrender.com`
-> - Vercel: `https://aur.vercel.app`
+> - Vercel: `https://aura-farma.vercel.app`
 >
 > Dá para preencher as variáveis dos dois já com essas URLs e depois só ajustar
 > se o nome final mudar.
