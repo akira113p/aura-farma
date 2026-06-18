@@ -3,12 +3,12 @@ import { Icon } from './Icon';
 import { useChatIA } from '../hooks/useChatIA';
 
 /**
- * Chat com a IA sobre a farmácia (EXPERIMENTAL / em teste).
+ * Chat com a IA sobre a farmácia, com histórico de conversas (EXPERIMENTAL).
  *
- * Componente autocontido: recebe um `contexto` (snapshot já calculado) e cuida
- * de tudo (histórico em localStorage via useChatIA, envio, loading, erro).
- * Pensado para ser fácil de remover ou trocar — é montado com uma linha só no
- * Dashboard e nos Relatórios.
+ * Autocontido: recebe um `contexto` (snapshot já calculado) e cuida de tudo —
+ * múltiplas conversas em localStorage (via useChatIA), envio, loading, erro e a
+ * lista de conversas antigas. Fácil de remover: tirar os mounts + apagar os
+ * arquivos de chat.
  */
 interface ChatIAProps {
   /** Snapshot da farmácia enviado à IA a cada pergunta (ver buildPharmaciaContexto). */
@@ -22,15 +22,22 @@ const SUGESTOES = [
   'Onde estou perdendo margem?',
 ];
 
+const fmtData = (iso: string): string =>
+  new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+
 export function ChatIA({ contexto, title = 'Converse com a IA' }: ChatIAProps) {
-  const { messages, loading, error, send, clear } = useChatIA();
+  const { conversations, active, loading, error, send, newConversation, selectConversation, deleteConversation } =
+    useChatIA();
   const [input, setInput] = useState('');
+  const [showHistory, setShowHistory] = useState(false);
   const bodyRef = useRef<HTMLDivElement>(null);
+
+  const messages = active?.messages ?? [];
 
   // Rola para a última mensagem quando a conversa cresce ou enquanto carrega.
   useEffect(() => {
     bodyRef.current?.scrollTo({ top: bodyRef.current.scrollHeight, behavior: 'smooth' });
-  }, [messages, loading]);
+  }, [messages.length, loading]);
 
   function submit() {
     const text = input;
@@ -45,22 +52,78 @@ export function ChatIA({ contexto, title = 'Converse com a IA' }: ChatIAProps) {
           <Icon name="sparkle" size={11} />
         </div>
         <span className="ai-title">{title}</span>
-        <span className="ai-tag">IA · experimental</span>
-        <div style={{ marginLeft: 'auto' }}>
-          {messages.length > 0 && (
-            <button className="btn btn-ghost btn-sm" onClick={clear} title="Limpar conversa">
-              <Icon name="trash" size={13} />
-              Limpar
-            </button>
-          )}
+        <span className="ai-tag">IA · em teste</span>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
+          <button
+            className={'btn btn-ghost btn-sm' + (showHistory ? ' active' : '')}
+            onClick={() => setShowHistory((v) => !v)}
+            title="Conversas anteriores"
+          >
+            <Icon name="history" size={13} />
+            Histórico{conversations.length > 0 ? ` (${conversations.length})` : ''}
+          </button>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => {
+              newConversation();
+              setShowHistory(false);
+            }}
+            title="Começar uma nova conversa"
+          >
+            <Icon name="plus" size={13} />
+            Nova
+          </button>
         </div>
       </div>
+
+      {showHistory && (
+        <div className="chat-history">
+          {conversations.length === 0 ? (
+            <div className="muted" style={{ padding: '12px 16px', fontSize: 12 }}>
+              Nenhuma conversa salva ainda. Suas conversas ficam só neste navegador.
+            </div>
+          ) : (
+            conversations.map((c) => {
+              const perguntas = c.messages.filter((m) => m.role === 'user').length;
+              return (
+                <div
+                  key={c.id}
+                  className={'chat-history-item' + (c.id === active?.id ? ' active' : '')}
+                  onClick={() => {
+                    selectConversation(c.id);
+                    setShowHistory(false);
+                  }}
+                >
+                  <div className="chat-history-main">
+                    <div className="chat-history-title">{c.title}</div>
+                    <div className="chat-history-date">
+                      {fmtData(c.updatedAt)} · {perguntas} pergunta{perguntas === 1 ? '' : 's'}
+                    </div>
+                  </div>
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    title="Apagar esta conversa"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteConversation(c.id);
+                    }}
+                  >
+                    <Icon name="trash" size={13} />
+                  </button>
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
 
       <div className="chat-ia-body" ref={bodyRef}>
         {messages.length === 0 ? (
           <div className="chat-ia-empty">
             <p className="muted" style={{ marginTop: 0 }}>
-              Pergunte sobre o desempenho, estoque e margens da sua farmácia. A IA usa os seus dados atuais.
+              {active
+                ? 'Conversa nova. Pergunte algo sobre a farmácia.'
+                : 'Pergunte sobre o desempenho, estoque e margens da sua farmácia. A IA usa os seus dados atuais.'}
             </p>
             <div className="chat-ia-suggest">
               {SUGESTOES.map((s) => (
