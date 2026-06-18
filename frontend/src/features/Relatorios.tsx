@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import type { AppState, SummaryPeriod } from '../types';
 import { AIBlock, Badge, Card, Empty, LineChart, Stat, Tabs } from '../components';
 import { summarize } from '../services/store';
-import { generateAISummary } from '../services/ai';
+import { generateAISummary, buildPharmaciaContexto } from '../services/ai';
+import { ChatIA } from '../components/ChatIA';
 import { buildSeries } from '../lib/series';
 import { BRL, fmtInt } from '../lib/format';
 
@@ -133,6 +134,8 @@ export function Relatorios({ state }: ScreenProps) {
           )}
         </Card>
       </div>
+
+      <ChatIA contexto={buildPharmaciaContexto(state, summary)} title="Pergunte à IA sobre os números" />
     </div>
   );
 }

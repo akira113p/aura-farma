@@ -66,3 +66,16 @@ export const readLimiter = rateLimit({
   keyGenerator: perUser,
   message: { error: 'Muitas requisicoes. Aguarde alguns segundos.' },
 });
+
+/**
+ * Limiter apertado para a IA: cada chamada gasta créditos do OpenRouter, então
+ * limitamos por usuário bem mais que as escritas comuns.
+ */
+export const iaLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20, // chamadas de IA por usuário por minuto
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: perUser,
+  message: { error: 'Muitas chamadas à IA em pouco tempo. Aguarde alguns segundos.' },
+});

@@ -62,6 +62,22 @@ export const env = {
   frontendOrigins,
   /** Public Google OAuth client id; empty string means "Google login disabled". */
   googleClientId: process.env.GOOGLE_CLIENT_ID ?? '',
+  /**
+   * OpenRouter (IA). Vazio = IA desativada (a rota /api/ia responde 503).
+   * A chave NUNCA vai para o frontend — só o backend fala com o OpenRouter.
+   */
+  openrouterApiKey: process.env.OPENROUTER_API_KEY ?? '',
+  /**
+   * Modelo do OpenRouter usado nas análises/cálculos. Padrão é um modelo capaz e
+   * GRATUITO (funciona sem créditos na conta). Com créditos, troque por um pago
+   * (ex.: openai/gpt-4o) via OPENROUTER_MODEL.
+   */
+  openrouterModel: process.env.OPENROUTER_MODEL ?? 'openai/gpt-oss-120b:free',
+  /** Headers recomendados pelo OpenRouter (ranking/limites por app). */
+  openrouterReferer: process.env.OPENROUTER_REFERER ?? (frontendOrigins[0] ?? 'http://localhost:5173'),
+  openrouterTitle: process.env.OPENROUTER_TITLE ?? 'auraFarma',
 } as const;
 
 export const isGoogleEnabled = (): boolean => env.googleClientId.trim() !== '';
+
+export const isIaEnabled = (): boolean => env.openrouterApiKey.trim() !== '';

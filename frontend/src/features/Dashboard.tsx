@@ -3,7 +3,8 @@ import type { AppState, ChartPeriod, SummaryPeriod } from '../types';
 import { AIBlock, Badge, Button, Card, Empty, LineChart, Stat, Tabs } from '../components';
 import { summarize } from '../services/store';
 import { seedData } from '../services/dados';
-import { generateAISummary } from '../services/ai';
+import { generateAISummary, buildPharmaciaContexto } from '../services/ai';
+import { ChatIA } from '../components/ChatIA';
 import { buildSeries } from '../lib/series';
 import { BRL, fmtInt } from '../lib/format';
 
@@ -173,6 +174,8 @@ export function Dashboard({ state, setState }: ScreenProps) {
           )}
         </Card>
       </div>
+
+      <ChatIA contexto={buildPharmaciaContexto(state, summary)} title="Converse com a IA sobre a farmácia" />
     </div>
   );
 }

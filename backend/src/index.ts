@@ -5,11 +5,12 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { env } from './config/env';
 import { connectDb } from './db/mongoose';
-import { authLimiter } from './middleware/rateLimit';
+import { authLimiter, iaLimiter } from './middleware/rateLimit';
 import { requireAuth } from './middleware/auth';
 import { authRouter } from './routes/auth';
 import { medicamentosRouter } from './routes/medicamentos';
 import { dadosRouter } from './routes/dados';
+import { iaRouter } from './routes/ia';
 import { loadCatalog } from './services/catalog';
 import { errorHandler, notFound } from './middleware/error';
 
@@ -72,6 +73,10 @@ app.use('/api/auth', authLimiter, authRouter);
 
 // Real-medicine catalog search (read-only reference for building stock).
 app.use('/api/medicamentos', requireAuth, medicamentosRouter);
+
+// IA (experimental): proxy autenticado para o OpenRouter. Montado ANTES do
+// `/api` genérico para não cair no dadosRouter. Limiter próprio (gasta créditos).
+app.use('/api/ia', requireAuth, iaLimiter, iaRouter);
 
 // Per-pharmacy data (stock, sales, requests, counts) — all require a session.
 app.use('/api', requireAuth, dadosRouter);

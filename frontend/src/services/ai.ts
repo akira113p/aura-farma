@@ -1,19 +1,51 @@
 /**
- * AI summary generation.
+ * Camada de IA do frontend.
  *
- * In the original prototype this tried `window.claude.complete` and fell back
- * to a canned summary. In this app there is no such global, so it always uses
- * the deterministic fallback. When a backend exists, point `generateAISummary`
- * at an API endpoint (e.g. `apiClient.post('/ai/summary', ctx)`) that calls the
- * Claude API server-side — never expose an API key in the client bundle.
+ * Tudo passa pelo backend (`/api/ia/*`), que fala com o OpenRouter com a chave
+ * guardada server-side — NUNCA expomos chave no bundle do cliente.
+ *
+ * - `generateAISummary`: o "texto pronto" (resumo do dia/semana/mês). Tenta a IA
+ *   real e, em qualquer falha (IA desativada, rede, etc.), cai no `cannedSummary`
+ *   determinístico — mesmo molde de antes.
+ * - `chatWithAI` + `buildPharmaciaContexto`: usados pelo chat (experimental).
  */
-import type { PeriodStats, Product, SummaryPeriod, TopProduct } from '../types';
+import type { AppState, PeriodStats, Product, Summary, SummaryPeriod, TopProduct } from '../types';
+import { apiClient } from '../lib/apiClient';
 import { BRL } from '../lib/format';
 
-declare global {
-  interface Window {
-    claude?: { complete?: (prompt: string) => Promise<string> };
-  }
+export interface ChatMsg {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+/** Snapshot compacto (números já calculados) que a IA usa para analisar/calcular. */
+export function buildPharmaciaContexto(state: AppState, summary: Summary) {
+  const round = (n: number) => Math.round(n * 100) / 100;
+  const periodo = (s: PeriodStats) => ({
+    receita: round(s.revenue),
+    custo: round(s.cost),
+    lucro: round(s.revenue - s.cost),
+    margem_pct: s.revenue > 0 ? round(((s.revenue - s.cost) / s.revenue) * 100) : 0,
+    vendas: s.sales,
+    itens: s.items,
+  });
+  return {
+    produtos_cadastrados: state.products.length,
+    solicitacoes_de_clientes: state.requests.length,
+    dia: periodo(summary.day),
+    semana: periodo(summary.week),
+    mes: periodo(summary.month),
+    baixo_estoque: summary.lowStock
+      .slice(0, 8)
+      .map((p) => ({ nome: p.name, estoque: p.stock, minimo: p.min, categoria: p.cat, custo: p.cost, preco: p.price })),
+    mais_vendidos_semana: summary.topProducts.slice(0, 6).map((t) => ({ nome: t.p.name, unidades: t.qty })),
+  };
+}
+
+/** Conversa multi-turno com a IA (chat). Lança em caso de falha (sem fallback). */
+export async function chatWithAI(messages: ChatMsg[], contexto: unknown): Promise<string> {
+  const { reply } = await apiClient.post<{ reply: string }>('/ia/chat', { messages, contexto });
+  return reply;
 }
 
 export async function generateAISummary(
@@ -36,7 +68,7 @@ export async function generateAISummary(
     mais_vendidos: topProducts.slice(0, 3).map((t) => `${t.p.name} (${t.qty} unidades)`).join('; '),
     pedidos_clientes: requestsCount,
   };
-  const prompt = `Você é um assistente para o dono de uma pequena farmácia. Escreva um resumo curto e amigável (mas profissional) em português brasileiro sobre o desempenho ${periodLabel}. Tom: como um colega contador conversando, sem firulas. Dados:
+  const prompt = `Escreva um resumo curto e amigável (mas profissional) em português brasileiro sobre o desempenho ${periodLabel} da farmácia. Tom: como um colega contador conversando, sem firulas. Dados:
 ${JSON.stringify(ctx, null, 2)}
 
 Estruture em 3 parágrafos curtos:
@@ -46,13 +78,11 @@ Estruture em 3 parágrafos curtos:
 
 Sem markdown, sem listas. Texto corrido. Máximo 110 palavras.`;
 
-  if (window.claude && typeof window.claude.complete === 'function') {
-    try {
-      const r = await window.claude.complete(prompt);
-      if (r && typeof r === 'string') return r.trim();
-    } catch {
-      /* fall through to canned summary */
-    }
+  try {
+    const reply = await chatWithAI([{ role: 'user', content: prompt }], ctx);
+    if (reply && reply.trim()) return reply.trim();
+  } catch {
+    /* IA indisponível/desativada — usa o resumo determinístico abaixo */
   }
   return cannedSummary(period, stats, lowStock, topProducts, requestsCount);
 }
