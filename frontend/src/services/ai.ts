@@ -18,7 +18,11 @@ export interface ChatMsg {
   content: string;
 }
 
-/** Snapshot compacto (números já calculados) que a IA usa para analisar/calcular. */
+/**
+ * Snapshot rico da farmácia (números já calculados) que vai no system prompt
+ * para a IA analisar/calcular. Quanto mais contexto aqui, melhores as respostas
+ * — a mensagem do usuário pode ser simples.
+ */
 export function buildPharmaciaContexto(state: AppState, summary: Summary) {
   const round = (n: number) => Math.round(n * 100) / 100;
   const periodo = (s: PeriodStats) => ({
@@ -28,17 +32,54 @@ export function buildPharmaciaContexto(state: AppState, summary: Summary) {
     margem_pct: s.revenue > 0 ? round(((s.revenue - s.cost) / s.revenue) * 100) : 0,
     vendas: s.sales,
     itens: s.items,
+    ticket_medio: round(s.sales > 0 ? s.revenue / s.sales : 0),
   });
+
+  const products = state.products;
+  const valorCusto = round(products.reduce((a, p) => a + p.cost * p.stock, 0));
+  const valorVenda = round(products.reduce((a, p) => a + p.price * p.stock, 0));
+
+  const catMap: Record<string, { itens: number; unidades: number; valor_custo: number }> = {};
+  for (const p of products) {
+    const c = (catMap[p.cat] ??= { itens: 0, unidades: 0, valor_custo: 0 });
+    c.itens += 1;
+    c.unidades += p.stock;
+    c.valor_custo += p.cost * p.stock;
+  }
+  const por_categoria = Object.entries(catMap)
+    .map(([categoria, v]) => ({ categoria, itens: v.itens, unidades: v.unidades, valor_custo: round(v.valor_custo) }))
+    .sort((a, b) => b.valor_custo - a.valor_custo);
+
   return {
-    produtos_cadastrados: state.products.length,
-    solicitacoes_de_clientes: state.requests.length,
-    dia: periodo(summary.day),
-    semana: periodo(summary.week),
-    mes: periodo(summary.month),
-    baixo_estoque: summary.lowStock
-      .slice(0, 8)
-      .map((p) => ({ nome: p.name, estoque: p.stock, minimo: p.min, categoria: p.cat, custo: p.cost, preco: p.price })),
-    mais_vendidos_semana: summary.topProducts.slice(0, 6).map((t) => ({ nome: t.p.name, unidades: t.qty })),
+    data: new Date().toISOString().slice(0, 10),
+    resumo_estoque: {
+      produtos_cadastrados: products.length,
+      esgotados: products.filter((p) => p.stock === 0).length,
+      abaixo_do_minimo: products.filter((p) => p.stock <= p.min).length,
+      valor_em_estoque_custo: valorCusto,
+      valor_em_estoque_venda: valorVenda,
+      margem_potencial_pct: valorVenda > 0 ? round(((valorVenda - valorCusto) / valorVenda) * 100) : 0,
+    },
+    por_categoria,
+    desempenho: { dia: periodo(summary.day), semana: periodo(summary.week), mes: periodo(summary.month) },
+    baixo_estoque: summary.lowStock.slice(0, 12).map((p) => ({
+      nome: p.name,
+      categoria: p.cat,
+      estoque: p.stock,
+      minimo: p.min,
+      custo: round(p.cost),
+      preco: round(p.price),
+    })),
+    mais_vendidos_semana: summary.topProducts.slice(0, 8).map((t) => ({
+      nome: t.p.name,
+      unidades: t.qty,
+      preco: round(t.p.price),
+      receita: round(t.qty * t.p.price),
+    })),
+    solicitacoes_de_clientes: [...state.requests]
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10)
+      .map((r) => ({ nome: r.name, pedidos: r.count })),
   };
 }
 
@@ -68,15 +109,8 @@ export async function generateAISummary(
     mais_vendidos: topProducts.slice(0, 3).map((t) => `${t.p.name} (${t.qty} unidades)`).join('; '),
     pedidos_clientes: requestsCount,
   };
-  const prompt = `Escreva um resumo curto e amigável (mas profissional) em português brasileiro sobre o desempenho ${periodLabel} da farmácia. Tom: como um colega contador conversando, sem firulas. Dados:
-${JSON.stringify(ctx, null, 2)}
-
-Estruture em 3 parágrafos curtos:
-1) Resumo do desempenho (receita, lucro, vendas)
-2) Atenção aos produtos em baixa e o que repor com urgência
-3) Recomendação: produtos pedidos por clientes que poderiam entrar no catálogo e o que está vendendo bem
-
-Sem markdown, sem listas. Texto corrido. Máximo 110 palavras.`;
+  // Mensagem do usuário simples: o contexto (ctx) vai pelo system (vide /api/ia/chat).
+  const prompt = `Escreva o resumo de desempenho ${periodLabel} da farmácia em 3 parágrafos curtos, texto corrido (sem listas/markdown), no máximo 110 palavras, tom de colega contador. Pode usar 1–2 emojis. Cubra: (1) desempenho — receita, lucro e vendas; (2) o que repor com urgência; (3) recomendações — solicitações de clientes que valem virar produto e o que vende bem.`;
 
   try {
     const reply = await chatWithAI([{ role: 'user', content: prompt }], ctx);
