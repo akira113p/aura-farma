@@ -94,6 +94,15 @@ const PATHS = {
       <path d="m8.5 8.5 7 7" />
     </>
   ),
+  truck: (
+    <>
+      <path d="M3 6h11v10H3z" />
+      <path d="M14 9h4l3 3v4h-7z" />
+      <circle cx="7" cy="18" r="1.6" />
+      <circle cx="17.5" cy="18" r="1.6" />
+      <path d="M8.6 18h7.3" />
+    </>
+  ),
 } satisfies Record<string, JSX.Element>;
 
 export type IconName = keyof typeof PATHS;

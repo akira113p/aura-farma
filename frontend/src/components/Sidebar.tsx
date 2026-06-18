@@ -7,6 +7,8 @@ interface SidebarProps {
   setRoute: (route: Route) => void;
   requestCount: number;
   lowStockCount: number;
+  /** Pedidos de reposição em andamento (a caminho). */
+  orderCount: number;
   /** Whether the mobile drawer is open (ignored on desktop, where it's a column). */
   open: boolean;
   /** Close the mobile drawer. */
@@ -23,11 +25,12 @@ interface NavItem {
   count?: number;
 }
 
-export function Sidebar({ route, setRoute, requestCount, lowStockCount, open, onClose, user, onLogout }: SidebarProps) {
+export function Sidebar({ route, setRoute, requestCount, lowStockCount, orderCount, open, onClose, user, onLogout }: SidebarProps) {
   const items: NavItem[] = [
     { id: 'estoque', label: 'Estoque', icon: 'box', count: lowStockCount },
     { id: 'vendas', label: 'Nova venda', icon: 'cart' },
     { id: 'solicitados', label: 'Solicitados', icon: 'bookmark', count: requestCount },
+    { id: 'pedidos', label: 'Pedidos', icon: 'truck', count: orderCount },
     { id: 'historico', label: 'Histórico', icon: 'history' },
     { id: 'contagem', label: 'Contagem', icon: 'list' },
     { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },

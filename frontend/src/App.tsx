@@ -3,6 +3,7 @@ import type { AppState, Route } from './types';
 import { Icon, Sidebar } from './components';
 import { useAppState } from './hooks/useAppState';
 import { useTweaks } from './hooks/useTweaks';
+import { usePedidos } from './hooks/usePedidos';
 import { useAuth } from './context/AuthContext';
 import { seedData, resetData } from './services/dados';
 import { AuthScreen } from './features/auth/AuthScreen';
@@ -11,6 +12,7 @@ import { Dashboard } from './features/Dashboard';
 import { Estoque } from './features/Estoque';
 import { Vendas } from './features/Vendas';
 import { Solicitados } from './features/Solicitados';
+import { Pedidos } from './features/Pedidos';
 import { Historico } from './features/Historico';
 import { Contagem } from './features/Contagem';
 import { Relatorios } from './features/Relatorios';
@@ -20,6 +22,7 @@ const PAGE_TITLES: Record<Route, string> = {
   estoque: 'Estoque',
   vendas: 'Nova venda',
   solicitados: 'Produtos solicitados',
+  pedidos: 'Pedidos de reposição',
   historico: 'Histórico de vendas',
   contagem: 'Contagem de estoque',
   relatorios: 'Relatórios',
@@ -36,6 +39,8 @@ function routeSub(route: Route, state: AppState): string {
       return 'Escaneie ou clique nos produtos para adicionar ao carrinho.';
     case 'solicitados':
       return 'Itens que clientes pediram e que você ainda não tem em estoque.';
+    case 'pedidos':
+      return 'Reposição de estoque junto ao distribuidor Eurofarma — logística do pedido ao recebimento.';
     case 'historico':
       return `${state.sales.length} venda(s) no histórico`;
     case 'contagem':
@@ -49,6 +54,7 @@ export default function App() {
   const { user, loading, logout } = useAuth();
   const [tweaks, setTweak] = useTweaks();
   const [state, setState, dataLoading] = useAppState();
+  const [orders, setOrders] = usePedidos();
   const [route, setRoute] = useState<Route>('dashboard');
   const [navOpen, setNavOpen] = useState(false);
   const [flashMsg, setFlashMsg] = useState<string | null>(null);
@@ -102,6 +108,9 @@ export default function App() {
     case 'solicitados':
       screen = <Solicitados state={state} setState={setState} flash={flash} />;
       break;
+    case 'pedidos':
+      screen = <Pedidos state={state} setState={setState} flash={flash} orders={orders} setOrders={setOrders} />;
+      break;
     case 'historico':
       screen = <Historico state={state} />;
       break;
@@ -120,6 +129,7 @@ export default function App() {
         setRoute={setRoute}
         requestCount={state.requests.length}
         lowStockCount={lowStockCount}
+        orderCount={orders.filter((o) => !o.received).length}
         open={navOpen}
         onClose={() => setNavOpen(false)}
         user={user}

@@ -1259,3 +1259,114 @@ input, textarea, select {
   margin: -4px 0 12px;
 }
 .med-meta-line { font-size: var(--font-sm); }
+
+/* ===== Pedidos (logística / reposição com o distribuidor) ===== */
+
+/* Chip do distribuidor no cabeçalho da sugestão */
+.supplier-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+.dot-lg {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  display: inline-block;
+  flex: none;
+}
+
+/* Variante grande do contador de quantidade (com input numérico) */
+.qty-stepper.lg { height: 32px; }
+.qty-stepper.lg button { width: 28px; font-size: 15px; }
+.qty-stepper.lg input {
+  width: 46px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.qty-stepper.lg input::-webkit-outer-spin-button,
+.qty-stepper.lg input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* Stepper de estágios da entrega */
+.ostep { display: flex; gap: 4px; }
+.ostep-node {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  position: relative;
+  padding-top: 2px;
+}
+.ostep-node::before {
+  content: '';
+  position: absolute;
+  top: 9px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+}
+.ostep-node:first-child::before { display: none; }
+.ostep-node.done::before,
+.ostep-node.current::before { background: var(--accent); }
+.ostep-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--accent-fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+.ostep-node.done .ostep-dot { background: var(--accent); border-color: var(--accent); }
+.ostep-node.current .ostep-dot {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.ostep-lbl { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+.ostep-node.done .ostep-lbl,
+.ostep-node.current .ostep-lbl { color: var(--text); }
+.ostep-hint {
+  font-size: 10.5px;
+  line-height: 1.25;
+  color: var(--text-subtle);
+  max-width: 14ch;
+}
+
+/* Barra de total / ações no rodapé dos cards de pedido */
+.order-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.ob-tot .v {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}

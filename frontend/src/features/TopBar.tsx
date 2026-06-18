@@ -18,6 +18,7 @@ const LABELS: Record<Route, { title: string; sub: string }> = {
   estoque: { title: 'Estoque', sub: 'Medicamentos e quantidades' },
   vendas: { title: 'Nova venda', sub: 'Registrar venda no PDV' },
   solicitados: { title: 'Solicitados', sub: 'Pedidos de clientes' },
+  pedidos: { title: 'Pedidos', sub: 'Reposição com o distribuidor' },
   historico: { title: 'Histórico', sub: 'Vendas anteriores' },
   contagem: { title: 'Contagem', sub: 'Conferir estoque físico' },
   relatorios: { title: 'Relatórios', sub: 'Análises e exportações' },

@@ -96,9 +96,39 @@ export interface CountRecord {
 
 export interface Activity {
   id: string;
-  kind: 'import' | 'sale' | 'promote' | 'count' | string;
+  kind: 'import' | 'sale' | 'promote' | 'count' | 'order' | string;
   text: string;
   ts: string;
+}
+
+/** A line in a replenishment order sent to the distributor. */
+export interface OrderItem {
+  /** Catalog product id, or `null` for a free/manual item not yet in the catalog. */
+  pid: string | null;
+  name: string;
+  qty: number;
+  cost: number;
+  /** True when the item isn't (yet) a catalog product. */
+  free?: boolean;
+}
+
+/**
+ * A replenishment order placed with the distributor (Eurofarma).
+ *
+ * This is an example "logistics" layer: orders live client-side (localStorage),
+ * separate from the backend AppState. Receiving an order DOES update the real
+ * stock through the normal product actions.
+ */
+export interface Order {
+  id: string;
+  placedAt: string;
+  supplier: string;
+  /** Index into `ORDER_STAGES` (0..3). */
+  stage: number;
+  received: boolean;
+  receivedAt?: string;
+  items: OrderItem[];
+  total: number;
 }
 
 /** The full application state — the unit persisted today (localStorage). */
@@ -140,6 +170,7 @@ export type Route =
   | 'estoque'
   | 'vendas'
   | 'solicitados'
+  | 'pedidos'
   | 'historico'
   | 'contagem'
   | 'relatorios';
