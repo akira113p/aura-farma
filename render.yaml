@@ -1,7 +1,7 @@
 # Render Blueprint — deploy do backend (Node/Express + MongoDB).
 # No Render: New + > Blueprint > conecte o repo > ele lê este arquivo.
 # Depois preencha as envVars marcadas com sync:false (MONGODB_URI,
-# FRONTEND_ORIGIN, GOOGLE_CLIENT_ID) no painel do servico.
+# FRONTEND_ORIGIN, GOOGLE_CLIENT_ID, OPENROUTER_API_KEY) no painel do servico.
 services:
   - type: web
     name: aura-farma-backend
@@ -25,4 +25,17 @@ services:
         sync: false
       - key: GOOGLE_CLIENT_ID
         sync: false
+      # IA (OpenRouter). A CHAVE e segredo: preencha no painel (sync:false).
+      # Vazia = IA desativada (a rota /api/ia responde 503).
+      - key: OPENROUTER_API_KEY
+        sync: false
+      # Modelos: defaults gratuitos. Troque por pagos (ex.: openai/gpt-4o) se
+      # houver creditos na conta do OpenRouter.
+      - key: OPENROUTER_MODEL
+        value: openai/gpt-oss-120b:free
+      - key: OPENROUTER_PLANNER_MODEL
+        value: openai/gpt-oss-20b:free
+      # Fallbacks (lista por virgula): tentados em ordem se o preferido cair.
+      - key: OPENROUTER_FALLBACK_MODELS
+        value: nvidia/nemotron-3-super-120b-a12b:free,meta-llama/llama-3.3-70b-instruct:free,qwen/qwen3-next-80b-a3b-instruct:free
     # O Render injeta PORT automaticamente; o backend ja le process.env.PORT.
