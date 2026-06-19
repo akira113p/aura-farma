@@ -286,8 +286,6 @@ export function AssistenteIA() {
   return (
     <div className="asst">
       <div className="asst-main">
-        <div className="asst-glow" />
-
         {showConvo ? (
           <>
             <div className="asst-convo">
