@@ -36,11 +36,17 @@ export interface RespostaIA {
 
 /**
  * Pergunta avulsa (1 mensagem, sem histórico de conversa) — fluxo de 2 estágios:
- * o backend usa uma IA pequena para decidir quais dados buscar (escopados pelo
- * usuário) e só então a IA principal responde. Devolve a resposta + um título.
+ * o backend usa uma IA pequena para decidir quais dados buscar (limitado ao
+ * `escopo` escolhido, escopados pelo usuário) e só então a IA principal responde.
+ * `pedidos` (opcional) carrega os pedidos do navegador quando o escopo é "pedidos"
+ * (esses dados não vivem no banco). Devolve a resposta + um título gerado por IA.
  */
-export async function perguntarIA(pergunta: string): Promise<RespostaIA> {
-  return apiClient.post<RespostaIA>('/ia/ask', { messages: [{ role: 'user', content: pergunta }] });
+export async function perguntarIA(pergunta: string, escopo?: string, pedidos?: unknown): Promise<RespostaIA> {
+  return apiClient.post<RespostaIA>('/ia/ask', {
+    messages: [{ role: 'user', content: pergunta }],
+    escopo,
+    pedidos,
+  });
 }
 
 export async function generateAISummary(

@@ -103,6 +103,14 @@ const PATHS = {
       <path d="M8.6 18h7.3" />
     </>
   ),
+  mic: (
+    <>
+      <rect x="9" y="2" width="6" height="11" rx="3" />
+      <path d="M5 10v1a7 7 0 0 0 14 0v-1M12 18v4M8 22h8" />
+    </>
+  ),
+  send: <path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z" />,
+  edit: <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />,
 } satisfies Record<string, JSX.Element>;
 
 export type IconName = keyof typeof PATHS;

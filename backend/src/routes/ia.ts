@@ -13,7 +13,7 @@ import { z } from 'zod';
 import { AppError, asyncHandler } from '../lib/http';
 import { env, isIaEnabled } from '../config/env';
 import { chatCompletion, type ChatMessage } from '../services/openrouter';
-import { runTool, TOOL_CATALOG, TOOL_NAMES, type ToolCall } from '../services/iaTools';
+import { catalogText, runTool, TOOL_NAMES, type ToolCall } from '../services/iaTools';
 
 export const iaRouter = Router();
 
@@ -64,7 +64,35 @@ const chatSchema = z.object({
   contexto: z.unknown().optional(),
 });
 
-const askSchema = z.object({ messages: messagesSchema });
+const askSchema = z.object({
+  messages: messagesSchema,
+  // Escopo escolhido no seletor: restringe ONDE a IA pode "olhar" (menos erro).
+  escopo: z.string().max(40).optional(),
+  // Dados client-side (ex.: pedidos de reposição vivem no navegador, não no banco).
+  pedidos: z.unknown().optional(),
+});
+
+/** Cada escopo libera só um subconjunto de ferramentas (camada extra de defesa/foco). */
+const SCOPE_TOOLS: Record<string, string[]> = {
+  estoque: ['estoque', 'buscar_produto'],
+  vendas: ['vendas_por_produto', 'resumo_financeiro'],
+  pedidos: [], // pedidos vêm do client (localStorage), não há ferramenta de banco
+  solicitacoes: ['solicitacoes'],
+  dashboard: ['resumo_financeiro', 'vendas_por_produto', 'estoque'],
+  historico: ['vendas_por_produto', 'resumo_financeiro'],
+  contagem: ['contagem'],
+  relatorios: ['resumo_financeiro', 'vendas_por_produto', 'estoque'],
+};
+const SCOPE_LABELS: Record<string, string> = {
+  estoque: 'Estoque',
+  vendas: 'Vendas',
+  pedidos: 'Pedidos',
+  solicitacoes: 'Solicitações',
+  dashboard: 'Dashboard',
+  historico: 'Histórico',
+  contagem: 'Contagem',
+  relatorios: 'Relatórios',
+};
 
 /** Diz ao frontend se a IA está ligada (para habilitar/desabilitar o chat). */
 iaRouter.get('/config', (_req, res) => {
@@ -108,21 +136,24 @@ iaRouter.post(
   asyncHandler(async (req, res) => {
     if (!isIaEnabled()) throw new AppError(503, 'IA desativada no servidor.');
     const u = req.session.userId as string;
-    const { messages } = askSchema.parse(req.body);
+    const { messages, escopo, pedidos } = askSchema.parse(req.body);
     const ultimaPergunta = [...messages].reverse().find((m) => m.role === 'user')?.content ?? '';
 
-    // --- Estágio 1: planejador (modelo barato) escolhe as consultas do cardápio ---
+    // Escopo do seletor: limita as ferramentas que a IA pode usar (menos erro).
+    const scopeKnown = escopo != null && escopo in SCOPE_TOOLS;
+    const allowed = scopeKnown ? SCOPE_TOOLS[escopo as string] : [...TOOL_NAMES];
+    const scopeLabel = scopeKnown ? SCOPE_LABELS[escopo as string] : null;
+
+    // --- Estágio 1: planejador escolhe as consultas (dentro do escopo) + título ---
     const plannerSystem: ChatMessage = {
       role: 'system',
       content:
         'Você é um ROTEADOR de dados de uma farmácia. Dada a pergunta do usuário: (1) crie um TÍTULO curto (2 a 5 ' +
-        'palavras) que resuma a pergunta; (2) escolha quais consultas são necessárias, SOMENTE a partir deste cardápio ' +
-        'fixo:\n' +
-        TOOL_CATALOG +
+        'palavras) que resuma a pergunta; (2) escolha quais consultas são necessárias, SOMENTE a partir deste cardápio:\n' +
+        (catalogText(allowed) || '(nenhuma consulta disponível para esta área)') +
         '\n\nResponda APENAS com JSON válido, no formato: ' +
         '{"titulo":"<resumo curto>","ferramentas":[{"nome":"...","params":{...}}]}. ' +
-        'Use só nomes do cardápio e o mínimo necessário (1 a 3). Se a pergunta não precisar de dados (saudação, ' +
-        'agradecimento, conversa fiada), responda com "ferramentas":[].',
+        'Use só nomes do cardápio e o mínimo necessário (1 a 3). Se não precisar de dados, use "ferramentas":[].',
     };
     let titulo: string | null = null;
     let calls: ToolCall[] = [];
@@ -136,16 +167,14 @@ iaRouter.post(
       });
       const parsed = parsePlan(plan);
       titulo = parsed.titulo;
-      calls = parsed.calls;
+      // Só ferramentas dentro do escopo (defesa contra plano fora da área).
+      calls = parsed.calls.filter((c) => allowed.includes(c.nome));
     } catch (e) {
-      console.error('[ia] planejador falhou; usando consultas padrão:', e instanceof Error ? e.message : e);
+      console.error('[ia] planejador falhou; usando consultas padrão do escopo:', e instanceof Error ? e.message : e);
     }
-    // Sem plano (ou falha): um conjunto padrão pequeno e útil para o dashboard.
-    if (calls.length === 0) {
-      calls = [
-        { nome: 'resumo_financeiro', params: { periodo: 'mes' } },
-        { nome: 'estoque', params: { filtro: 'baixo' } },
-      ];
+    // Sem plano: usa todas as ferramentas do escopo (determinístico).
+    if (calls.length === 0 && allowed.length > 0) {
+      calls = allowed.map((nome) => ({ nome }));
     }
 
     // Executa (escopado por userId; só nomes válidos chegam até aqui).
@@ -154,16 +183,24 @@ iaRouter.post(
       const periodo = c.params?.periodo ? `_${String(c.params.periodo)}` : '';
       dados[`${c.nome}${periodo}`] = await runTool(u, c);
     }
+    // Pedidos de reposição vivem no navegador — entram só quando o escopo é "pedidos".
+    if (escopo === 'pedidos' && pedidos !== undefined) {
+      dados.pedidos = pedidos;
+    }
 
     // --- Estágio 2: IA principal responde com os dados + histórico da conversa ---
     const dadosStr = JSON.stringify(dados).slice(0, 10000);
+    const focus = scopeLabel ? `O usuário está perguntando sobre a área "${scopeLabel}" — foque nesse tema. ` : '';
     const system: ChatMessage = {
       role: 'system',
       content:
         'Você é o assistente de IA de uma pequena farmácia. Português do Brasil, tom prático e acolhedor — pode usar ' +
-        'emojis com moderação. 💊 Responda à última pergunta do usuário usando SOMENTE os dados consultados abaixo (e o ' +
-        'histórico da conversa). Faça os cálculos necessários (margem, lucro, ticket médio, giro, reposição) mostrando o ' +
-        'número e a fórmula curta. Não invente dados fora do que veio; se faltar, diga o que falta. Até ~300 palavras.' +
+        'emojis com moderação. 💊 ' +
+        focus +
+        'Responda à última pergunta usando SOMENTE os dados consultados abaixo. Faça os cálculos necessários (margem, ' +
+        'lucro, ticket médio, giro, reposição) mostrando o número e a fórmula curta. Se a resposta for uma lista ou ' +
+        'comparação, use uma tabela em markdown (com cabeçalho usando |). Use **negrito** para os números-chave. Não ' +
+        'invente dados fora do que veio; se faltar, diga o que falta. Até ~300 palavras.' +
         `\n\nDados consultados agora (JSON):\n${dadosStr}`,
     };
 

@@ -14,6 +14,9 @@ export interface AskEntry {
   resposta: string;
   consultou: string[];
   createdAt: string;
+  /** Escopo escolhido no momento da pergunta. */
+  scope?: string;
+  scopeLabel?: string;
 }
 
 const STORAGE_KEY = 'aurafarma.ia.v1';
@@ -48,13 +51,13 @@ export function useAssistenteIA() {
   const active = entries.find((e) => e.id === activeId) ?? null;
 
   const ask = useCallback(
-    async (pergunta: string) => {
+    async (pergunta: string, escopo?: string, escopoLabel?: string, pedidos?: unknown) => {
       const clean = pergunta.trim();
       if (!clean || loading) return;
       setError(null);
       setLoading(true);
       try {
-        const { reply, titulo, consultou } = await perguntarIA(clean);
+        const { reply, titulo, consultou } = await perguntarIA(clean, escopo, pedidos);
         const entry: AskEntry = {
           id: newId(),
           titulo: titulo || clean.slice(0, 48),
@@ -62,6 +65,8 @@ export function useAssistenteIA() {
           resposta: reply,
           consultou: consultou ?? [],
           createdAt: new Date().toISOString(),
+          scope: escopo,
+          scopeLabel: escopoLabel,
         };
         setEntries((prev) => {
           const next = [entry, ...prev].slice(0, MAX);

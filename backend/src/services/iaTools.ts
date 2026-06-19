@@ -6,7 +6,7 @@
  * sessão, então a IA só enxerga os dados da conta logada. Retornos são compactos
  * (números já agregados) para gastar menos tokens na IA principal.
  */
-import { Product, RequestModel, Sale } from '../models/pharmacy';
+import { Count, Product, RequestModel, Sale } from '../models/pharmacy';
 
 const T = 5000; // maxTimeMS por consulta
 
@@ -29,23 +29,27 @@ function inicioPeriodo(periodo: string): Date {
   return d;
 }
 
-/** Nomes válidos — usados para validar o plano da IA 1. */
-export const TOOL_NAMES = new Set([
-  'vendas_por_produto',
-  'resumo_financeiro',
-  'estoque',
-  'buscar_produto',
-  'solicitacoes',
-]);
+/** Descrição de cada ferramenta (para montar o cardápio do planejador). */
+export const TOOL_DESCRIPTIONS: Record<string, string> = {
+  vendas_por_produto: 'vendas_por_produto { periodo: "hoje"|"semana"|"mes" } — unidades e receita por produto (use para "mais/menos vendido").',
+  resumo_financeiro: 'resumo_financeiro { periodo: "hoje"|"semana"|"mes" } — receita, custo, lucro, margem %, nº de vendas, ticket médio.',
+  estoque: 'estoque { filtro: "baixo"|"esgotado"|"todos", categoria?: string } — produtos em estoque (reposição/valor).',
+  buscar_produto: 'buscar_produto { termo: string } — procura um produto específico pelo nome.',
+  solicitacoes: 'solicitacoes {} — produtos que clientes pediram e não existem no catálogo.',
+  contagem: 'contagem {} — contagens de inventário recentes e seus ajustes/divergências.',
+};
 
-/** Cardápio (texto) injetado no prompt do planejador. */
-export const TOOL_CATALOG = [
-  '- vendas_por_produto { periodo: "hoje"|"semana"|"mes" } — unidades e receita por produto no período (use para "mais/menos vendido").',
-  '- resumo_financeiro { periodo: "hoje"|"semana"|"mes" } — receita, custo, lucro, margem %, nº de vendas, ticket médio.',
-  '- estoque { filtro: "baixo"|"esgotado"|"todos", categoria?: string } — produtos em estoque (reposição/valor).',
-  '- buscar_produto { termo: string } — procura um produto específico pelo nome.',
-  '- solicitacoes {} — produtos que clientes pediram e não existem no catálogo.',
-].join('\n');
+/** Nomes válidos — usados para validar o plano da IA 1. */
+export const TOOL_NAMES = new Set(Object.keys(TOOL_DESCRIPTIONS));
+
+/** Monta o texto do cardápio só com as ferramentas informadas. */
+export function catalogText(names: string[]): string {
+  return names
+    .map((n) => TOOL_DESCRIPTIONS[n])
+    .filter(Boolean)
+    .map((d) => `- ${d}`)
+    .join('\n');
+}
 
 export async function runTool(u: string, call: ToolCall): Promise<unknown> {
   const p = call.params ?? {};
@@ -147,6 +151,24 @@ export async function runTool(u: string, call: ToolCall): Promise<unknown> {
     case 'solicitacoes': {
       const docs = await RequestModel.find({ u }).sort({ c: -1 }).limit(20).maxTimeMS(T).lean();
       return { solicitacoes: docs.map((d) => ({ nome: d.nm as string, pedidos: d.c as number, nota: (d.nt as string) ?? '' })) };
+    }
+
+    case 'contagem': {
+      const [total, docs] = await Promise.all([
+        Count.countDocuments({ u }).maxTimeMS(T),
+        Count.find({ u }).sort({ ts: -1 }).limit(5).maxTimeMS(T).lean(),
+      ]);
+      return {
+        contagens_realizadas: total,
+        recentes: docs.map((d) => {
+          const adj = (d.adj as { pid: string; ns: number; df: number }[] | undefined) ?? [];
+          return {
+            data: (d.ts as Date).toISOString().slice(0, 10),
+            itens_ajustados: d.tot as number,
+            diferenca_total: adj.reduce((a, x) => a + x.df, 0),
+          };
+        }),
+      };
     }
 
     default:
