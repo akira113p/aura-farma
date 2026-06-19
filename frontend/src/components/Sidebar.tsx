@@ -35,6 +35,7 @@ export function Sidebar({ route, setRoute, requestCount, lowStockCount, orderCou
     { id: 'contagem', label: 'Contagem', icon: 'list' },
     { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
     { id: 'relatorios', label: 'Relatórios', icon: 'chart' },
+    { id: 'assistente', label: 'Assistente IA', icon: 'sparkle' },
   ];
 
   // Close the drawer with Escape while it's open (mobile).

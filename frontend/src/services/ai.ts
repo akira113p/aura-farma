@@ -4,12 +4,14 @@
  * Tudo passa pelo backend (`/api/ia/*`), que fala com o OpenRouter com a chave
  * guardada server-side — NUNCA expomos chave no bundle do cliente.
  *
- * - `generateAISummary`: o "texto pronto" (resumo do dia/semana/mês). Tenta a IA
- *   real e, em qualquer falha (IA desativada, rede, etc.), cai no `cannedSummary`
- *   determinístico — mesmo molde de antes.
- * - `chatWithAI` + `buildPharmaciaContexto`: usados pelo chat (experimental).
+ * - `generateAISummary` (via `chatWithAI`): o "texto pronto" (resumo do
+ *   dia/semana/mês). Tenta a IA real e, em qualquer falha (IA desativada, rede,
+ *   etc.), cai no `cannedSummary` determinístico — mesmo molde de antes.
+ * - `perguntarIA`: pergunta avulsa (tela Assistente IA) no fluxo de 2 estágios
+ *   (`/api/ia/ask`): IA pequena planeja → backend busca dados escopados → IA
+ *   principal responde. Retorna resposta + título gerado por IA.
  */
-import type { AppState, PeriodStats, Product, Summary, SummaryPeriod, TopProduct } from '../types';
+import type { PeriodStats, Product, SummaryPeriod, TopProduct } from '../types';
 import { apiClient } from '../lib/apiClient';
 import { BRL } from '../lib/format';
 
@@ -18,85 +20,27 @@ export interface ChatMsg {
   content: string;
 }
 
-/**
- * Snapshot rico da farmácia (números já calculados) que vai no system prompt
- * para a IA analisar/calcular. Quanto mais contexto aqui, melhores as respostas
- * — a mensagem do usuário pode ser simples.
- */
-export function buildPharmaciaContexto(state: AppState, summary: Summary) {
-  const round = (n: number) => Math.round(n * 100) / 100;
-  const periodo = (s: PeriodStats) => ({
-    receita: round(s.revenue),
-    custo: round(s.cost),
-    lucro: round(s.revenue - s.cost),
-    margem_pct: s.revenue > 0 ? round(((s.revenue - s.cost) / s.revenue) * 100) : 0,
-    vendas: s.sales,
-    itens: s.items,
-    ticket_medio: round(s.sales > 0 ? s.revenue / s.sales : 0),
-  });
-
-  const products = state.products;
-  const valorCusto = round(products.reduce((a, p) => a + p.cost * p.stock, 0));
-  const valorVenda = round(products.reduce((a, p) => a + p.price * p.stock, 0));
-
-  const catMap: Record<string, { itens: number; unidades: number; valor_custo: number }> = {};
-  for (const p of products) {
-    const c = (catMap[p.cat] ??= { itens: 0, unidades: 0, valor_custo: 0 });
-    c.itens += 1;
-    c.unidades += p.stock;
-    c.valor_custo += p.cost * p.stock;
-  }
-  const por_categoria = Object.entries(catMap)
-    .map(([categoria, v]) => ({ categoria, itens: v.itens, unidades: v.unidades, valor_custo: round(v.valor_custo) }))
-    .sort((a, b) => b.valor_custo - a.valor_custo);
-
-  return {
-    data: new Date().toISOString().slice(0, 10),
-    resumo_estoque: {
-      produtos_cadastrados: products.length,
-      esgotados: products.filter((p) => p.stock === 0).length,
-      abaixo_do_minimo: products.filter((p) => p.stock <= p.min).length,
-      valor_em_estoque_custo: valorCusto,
-      valor_em_estoque_venda: valorVenda,
-      margem_potencial_pct: valorVenda > 0 ? round(((valorVenda - valorCusto) / valorVenda) * 100) : 0,
-    },
-    por_categoria,
-    desempenho: { dia: periodo(summary.day), semana: periodo(summary.week), mes: periodo(summary.month) },
-    baixo_estoque: summary.lowStock.slice(0, 12).map((p) => ({
-      nome: p.name,
-      categoria: p.cat,
-      estoque: p.stock,
-      minimo: p.min,
-      custo: round(p.cost),
-      preco: round(p.price),
-    })),
-    mais_vendidos_semana: summary.topProducts.slice(0, 8).map((t) => ({
-      nome: t.p.name,
-      unidades: t.qty,
-      preco: round(t.p.price),
-      receita: round(t.qty * t.p.price),
-    })),
-    solicitacoes_de_clientes: [...state.requests]
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10)
-      .map((r) => ({ nome: r.name, pedidos: r.count })),
-  };
-}
-
-/** Conversa multi-turno com a IA (chat, contexto completo). Lança em caso de falha. */
+/** Usado pelo resumo (texto pronto): contexto completo num único turno. */
 export async function chatWithAI(messages: ChatMsg[], contexto: unknown): Promise<string> {
   const { reply } = await apiClient.post<{ reply: string }>('/ia/chat', { messages, contexto });
   return reply;
 }
 
+export interface RespostaIA {
+  reply: string;
+  /** Título curto da pergunta, gerado pela IA (estágio planejador). */
+  titulo: string;
+  /** Ferramentas de dados consultadas para responder. */
+  consultou: string[];
+}
+
 /**
- * Chat em 2 estágios (mais barato): o backend usa uma IA pequena para decidir
- * quais dados buscar (escopados pelo usuário) e só então a IA principal responde.
- * Não envia contexto — o servidor consulta o que precisa.
+ * Pergunta avulsa (1 mensagem, sem histórico de conversa) — fluxo de 2 estágios:
+ * o backend usa uma IA pequena para decidir quais dados buscar (escopados pelo
+ * usuário) e só então a IA principal responde. Devolve a resposta + um título.
  */
-export async function askAI(messages: ChatMsg[]): Promise<string> {
-  const { reply } = await apiClient.post<{ reply: string }>('/ia/ask', { messages });
-  return reply;
+export async function perguntarIA(pergunta: string): Promise<RespostaIA> {
+  return apiClient.post<RespostaIA>('/ia/ask', { messages: [{ role: 'user', content: pergunta }] });
 }
 
 export async function generateAISummary(

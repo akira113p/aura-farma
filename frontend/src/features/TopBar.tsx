@@ -22,6 +22,7 @@ const LABELS: Record<Route, { title: string; sub: string }> = {
   historico: { title: 'Histórico', sub: 'Vendas anteriores' },
   contagem: { title: 'Contagem', sub: 'Conferir estoque físico' },
   relatorios: { title: 'Relatórios', sub: 'Análises e exportações' },
+  assistente: { title: 'Assistente IA', sub: 'Perguntas sobre a farmácia' },
 };
 
 export function TopBar({ route, onReset, onSeed, populated, theme, setTheme, onMenu }: TopBarProps) {

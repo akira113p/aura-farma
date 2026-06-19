@@ -1493,3 +1493,14 @@ input, textarea, select {
   text-overflow: ellipsis;
 }
 .chat-history-date { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* Tela do Assistente IA: conteúdo + histórico ao lado */
+.ia-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .ia-grid { grid-template-columns: 1fr; }
+}

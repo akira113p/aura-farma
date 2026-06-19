@@ -4,7 +4,6 @@ import { AIBlock, Badge, Button, Card, Empty, LineChart, Stat, Tabs } from '../c
 import { summarize } from '../services/store';
 import { seedData } from '../services/dados';
 import { generateAISummary } from '../services/ai';
-import { ChatIA } from '../components/ChatIA';
 import { buildSeries } from '../lib/series';
 import { BRL, fmtInt } from '../lib/format';
 
@@ -174,8 +173,6 @@ export function Dashboard({ state, setState }: ScreenProps) {
           )}
         </Card>
       </div>
-
-      <ChatIA mode="ask" title="Converse com a IA sobre a farmácia" />
     </div>
   );
 }

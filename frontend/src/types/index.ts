@@ -173,7 +173,8 @@ export type Route =
   | 'pedidos'
   | 'historico'
   | 'contagem'
-  | 'relatorios';
+  | 'relatorios'
+  | 'assistente';
 
 export type SummaryPeriod = 'day' | 'week' | 'month';
 export type ChartPeriod = 'day' | 'week' | 'month' | 'year';

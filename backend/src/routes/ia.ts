@@ -27,27 +27,34 @@ const messagesSchema = z
   .min(1)
   .max(20);
 
-/** Extrai o plano (JSON) da IA 1, tolerante a texto/cercas ```json em volta. */
-function parsePlan(text: string): ToolCall[] {
-  const tryParse = (s: string): ToolCall[] => {
-    const obj = JSON.parse(s) as { ferramentas?: { nome?: unknown; params?: unknown }[] };
+interface Plan {
+  titulo: string | null;
+  calls: ToolCall[];
+}
+
+/** Extrai o plano (JSON) da IA 1 — título + ferramentas —, tolerante a cercas ```json. */
+function parsePlan(text: string): Plan {
+  const extract = (s: string): Plan => {
+    const obj = JSON.parse(s) as { titulo?: unknown; ferramentas?: { nome?: unknown; params?: unknown }[] };
     const arr = Array.isArray(obj.ferramentas) ? obj.ferramentas : [];
-    return arr
+    const calls = arr
       .filter((f) => f && typeof f.nome === 'string' && TOOL_NAMES.has(f.nome))
       .map((f) => ({ nome: f.nome as string, params: (f.params as Record<string, unknown>) ?? {} }));
+    const titulo = typeof obj.titulo === 'string' && obj.titulo.trim() ? obj.titulo.trim().slice(0, 60) : null;
+    return { titulo, calls };
   };
   try {
-    return tryParse(text);
+    return extract(text);
   } catch {
     const m = text.match(/\{[\s\S]*\}/);
     if (m) {
       try {
-        return tryParse(m[0]);
+        return extract(m[0]);
       } catch {
         /* desiste */
       }
     }
-    return [];
+    return { titulo: null, calls: [] };
   }
 }
 
@@ -108,13 +115,16 @@ iaRouter.post(
     const plannerSystem: ChatMessage = {
       role: 'system',
       content:
-        'Você é um ROTEADOR de dados de uma farmácia. Dada a pergunta do usuário, escolha quais consultas são ' +
-        'necessárias, SOMENTE a partir deste cardápio fixo:\n' +
+        'Você é um ROTEADOR de dados de uma farmácia. Dada a pergunta do usuário: (1) crie um TÍTULO curto (2 a 5 ' +
+        'palavras) que resuma a pergunta; (2) escolha quais consultas são necessárias, SOMENTE a partir deste cardápio ' +
+        'fixo:\n' +
         TOOL_CATALOG +
-        '\n\nResponda APENAS com JSON válido, no formato: {"ferramentas":[{"nome":"...","params":{...}}]}. ' +
+        '\n\nResponda APENAS com JSON válido, no formato: ' +
+        '{"titulo":"<resumo curto>","ferramentas":[{"nome":"...","params":{...}}]}. ' +
         'Use só nomes do cardápio e o mínimo necessário (1 a 3). Se a pergunta não precisar de dados (saudação, ' +
-        'agradecimento, conversa fiada), responda {"ferramentas":[]}.',
+        'agradecimento, conversa fiada), responda com "ferramentas":[].',
     };
+    let titulo: string | null = null;
     let calls: ToolCall[] = [];
     try {
       const plan = await chatCompletion([plannerSystem, { role: 'user', content: ultimaPergunta }], {
@@ -124,7 +134,9 @@ iaRouter.post(
         // JSON precisa caber depois. Com pouco, o content volta vazio.
         maxTokens: 800,
       });
-      calls = parsePlan(plan);
+      const parsed = parsePlan(plan);
+      titulo = parsed.titulo;
+      calls = parsed.calls;
     } catch (e) {
       console.error('[ia] planejador falhou; usando consultas padrão:', e instanceof Error ? e.message : e);
     }
@@ -156,6 +168,7 @@ iaRouter.post(
     };
 
     const reply = await chatCompletion([system, ...messages]);
-    res.json({ reply, consultou: calls.map((c) => c.nome) });
+    const tituloFinal = titulo ?? (ultimaPergunta.trim().slice(0, 48) || 'Pergunta');
+    res.json({ reply, titulo: tituloFinal, consultou: calls.map((c) => c.nome) });
   }),
 );

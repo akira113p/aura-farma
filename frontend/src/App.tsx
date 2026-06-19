@@ -16,6 +16,7 @@ import { Pedidos } from './features/Pedidos';
 import { Historico } from './features/Historico';
 import { Contagem } from './features/Contagem';
 import { Relatorios } from './features/Relatorios';
+import { AssistenteIA } from './features/AssistenteIA';
 
 const PAGE_TITLES: Record<Route, string> = {
   dashboard: 'Bom dia',
@@ -26,6 +27,7 @@ const PAGE_TITLES: Record<Route, string> = {
   historico: 'Histórico de vendas',
   contagem: 'Contagem de estoque',
   relatorios: 'Relatórios',
+  assistente: 'Assistente IA',
 };
 
 function routeSub(route: Route, state: AppState): string {
@@ -47,6 +49,8 @@ function routeSub(route: Route, state: AppState): string {
       return 'Conferência periódica do estoque físico vs sistema.';
     case 'relatorios':
       return 'Resumos gerados por IA e métricas do período.';
+    case 'assistente':
+      return 'Faça perguntas sobre a farmácia — a IA consulta seus dados para responder.';
   }
 }
 
@@ -119,6 +123,9 @@ export default function App() {
       break;
     case 'relatorios':
       screen = <Relatorios state={state} />;
+      break;
+    case 'assistente':
+      screen = <AssistenteIA />;
       break;
   }
 
