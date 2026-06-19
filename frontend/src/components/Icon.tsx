@@ -111,6 +111,13 @@ const PATHS = {
   ),
   send: <path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z" />,
   edit: <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />,
+  layers: (
+    <>
+      <path d="M12 2 2 7l10 5 10-5-10-5z" />
+      <path d="M2 17l10 5 10-5" />
+      <path d="M2 12l10 5 10-5" />
+    </>
+  ),
 } satisfies Record<string, JSX.Element>;
 
 export type IconName = keyof typeof PATHS;

@@ -19,8 +19,18 @@ interface Scope {
   suggestions: string[];
 }
 
-// Escopos do design, SEM o "Tudo" (removido por enquanto).
+// Escopos. "Tudo" libera todas as áreas para a IA cruzar/relacionar os dados.
 const SCOPES: Scope[] = [
+  {
+    key: 'todos',
+    label: 'Tudo',
+    icon: 'layers',
+    suggestions: [
+      'Como está a saúde geral da farmácia?',
+      'O que vendeu bem e preciso repor com urgência?',
+      'Algum item solicitado por clientes vale virar pedido?',
+    ],
+  },
   {
     key: 'estoque',
     label: 'Estoque',
@@ -220,7 +230,9 @@ export function AssistenteIA() {
     setDraft('');
     const sc = getScope(scope);
     setPending({ q, scopeLabel: sc.label });
-    const pedidosPayload = sc.key === 'pedidos' ? buildPedidosPayload(orders) : undefined;
+    // Pedidos vivem no navegador — enviados no escopo "pedidos" e também no "todos"
+    // (para a IA relacionar reposição com vendas/estoque).
+    const pedidosPayload = sc.key === 'pedidos' || sc.key === 'todos' ? buildPedidosPayload(orders) : undefined;
     await ask(q, sc.key, sc.label, pedidosPayload);
     setPending(null);
   }
@@ -277,8 +289,16 @@ export function AssistenteIA() {
         </button>
       </div>
       <div className="asst-help">
-        A IA vai consultar apenas os dados de <strong>{currentScope.label}</strong>. Cada pergunta é respondida sozinha. As
-        respostas ficam no histórico, só neste navegador.
+        {scope === 'todos' ? (
+          <>
+            A IA pode consultar <strong>todas as áreas</strong> e cruzar os dados entre elas.
+          </>
+        ) : (
+          <>
+            A IA vai consultar apenas os dados de <strong>{currentScope.label}</strong>.
+          </>
+        )}{' '}
+        Cada pergunta é respondida sozinha. As respostas ficam no histórico, só neste navegador.
       </div>
     </div>
   );

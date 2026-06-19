@@ -74,6 +74,8 @@ const askSchema = z.object({
 
 /** Cada escopo libera só um subconjunto de ferramentas (camada extra de defesa/foco). */
 const SCOPE_TOOLS: Record<string, string[]> = {
+  // "todos": libera TODAS as ferramentas para a IA cruzar dados entre as áreas.
+  todos: [...TOOL_NAMES],
   estoque: ['estoque', 'buscar_produto'],
   vendas: ['vendas_por_produto', 'resumo_financeiro'],
   pedidos: [], // pedidos vêm do client (localStorage), não há ferramenta de banco
@@ -84,6 +86,7 @@ const SCOPE_TOOLS: Record<string, string[]> = {
   relatorios: ['resumo_financeiro', 'vendas_por_produto', 'estoque'],
 };
 const SCOPE_LABELS: Record<string, string> = {
+  todos: 'Tudo',
   estoque: 'Estoque',
   vendas: 'Vendas',
   pedidos: 'Pedidos',
@@ -177,20 +180,29 @@ iaRouter.post(
       calls = allowed.map((nome) => ({ nome }));
     }
 
-    // Executa (escopado por userId; só nomes válidos chegam até aqui).
+    // Executa (escopado por userId; só nomes válidos chegam até aqui). No escopo
+    // "todos" damos mais folga de consultas para a IA conseguir cruzar áreas.
+    const maxCalls = escopo === 'todos' ? 6 : 4;
     const dados: Record<string, unknown> = {};
-    for (const c of calls.slice(0, 4)) {
+    for (const c of calls.slice(0, maxCalls)) {
       const periodo = c.params?.periodo ? `_${String(c.params.periodo)}` : '';
       dados[`${c.nome}${periodo}`] = await runTool(u, c);
     }
-    // Pedidos de reposição vivem no navegador — entram só quando o escopo é "pedidos".
-    if (escopo === 'pedidos' && pedidos !== undefined) {
+    // Pedidos de reposição vivem no navegador — entram quando o escopo é "pedidos"
+    // ou "todos" (para a IA relacionar reposição com vendas/estoque).
+    if ((escopo === 'pedidos' || escopo === 'todos') && pedidos !== undefined) {
       dados.pedidos = pedidos;
     }
 
     // --- Estágio 2: IA principal responde com os dados + histórico da conversa ---
     const dadosStr = JSON.stringify(dados).slice(0, 10000);
-    const focus = scopeLabel ? `O usuário está perguntando sobre a área "${scopeLabel}" — foque nesse tema. ` : '';
+    const focus =
+      escopo === 'todos'
+        ? 'O usuário quer uma visão GERAL da farmácia — cruze e relacione os dados das várias áreas ' +
+          '(estoque, vendas, solicitações, contagem e pedidos) para responder de forma conectada. '
+        : scopeLabel
+          ? `O usuário está perguntando sobre a área "${scopeLabel}" — foque nesse tema. `
+          : '';
     const system: ChatMessage = {
       role: 'system',
       content:
