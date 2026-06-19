@@ -11,24 +11,53 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { AppError, asyncHandler } from '../lib/http';
-import { isIaEnabled } from '../config/env';
+import { env, isIaEnabled } from '../config/env';
 import { chatCompletion, type ChatMessage } from '../services/openrouter';
+import { runTool, TOOL_CATALOG, TOOL_NAMES, type ToolCall } from '../services/iaTools';
 
 export const iaRouter = Router();
 
+const messagesSchema = z
+  .array(
+    z.object({
+      role: z.enum(['user', 'assistant']),
+      content: z.string().min(1).max(4000),
+    }),
+  )
+  .min(1)
+  .max(20);
+
+/** Extrai o plano (JSON) da IA 1, tolerante a texto/cercas ```json em volta. */
+function parsePlan(text: string): ToolCall[] {
+  const tryParse = (s: string): ToolCall[] => {
+    const obj = JSON.parse(s) as { ferramentas?: { nome?: unknown; params?: unknown }[] };
+    const arr = Array.isArray(obj.ferramentas) ? obj.ferramentas : [];
+    return arr
+      .filter((f) => f && typeof f.nome === 'string' && TOOL_NAMES.has(f.nome))
+      .map((f) => ({ nome: f.nome as string, params: (f.params as Record<string, unknown>) ?? {} }));
+  };
+  try {
+    return tryParse(text);
+  } catch {
+    const m = text.match(/\{[\s\S]*\}/);
+    if (m) {
+      try {
+        return tryParse(m[0]);
+      } catch {
+        /* desiste */
+      }
+    }
+    return [];
+  }
+}
+
 const chatSchema = z.object({
-  messages: z
-    .array(
-      z.object({
-        role: z.enum(['user', 'assistant']),
-        content: z.string().min(1).max(4000),
-      }),
-    )
-    .min(1)
-    .max(20),
+  messages: messagesSchema,
   // Snapshot compacto da farmácia (números já calculados no client). Opcional.
   contexto: z.unknown().optional(),
 });
+
+const askSchema = z.object({ messages: messagesSchema });
 
 /** Diz ao frontend se a IA está ligada (para habilitar/desabilitar o chat). */
 iaRouter.get('/config', (_req, res) => {
@@ -59,5 +88,74 @@ iaRouter.post(
 
     const reply = await chatCompletion([system, ...messages]);
     res.json({ reply });
+  }),
+);
+
+/**
+ * Chat em 2 estágios (mais barato): IA 1 (pequena) decide quais dados buscar →
+ * backend executa as consultas ESCOPADAS por userId → IA principal responde com
+ * o JSON + histórico. Gasta menos tokens que mandar todo o contexto sempre.
+ */
+iaRouter.post(
+  '/ask',
+  asyncHandler(async (req, res) => {
+    if (!isIaEnabled()) throw new AppError(503, 'IA desativada no servidor.');
+    const u = req.session.userId as string;
+    const { messages } = askSchema.parse(req.body);
+    const ultimaPergunta = [...messages].reverse().find((m) => m.role === 'user')?.content ?? '';
+
+    // --- Estágio 1: planejador (modelo barato) escolhe as consultas do cardápio ---
+    const plannerSystem: ChatMessage = {
+      role: 'system',
+      content:
+        'Você é um ROTEADOR de dados de uma farmácia. Dada a pergunta do usuário, escolha quais consultas são ' +
+        'necessárias, SOMENTE a partir deste cardápio fixo:\n' +
+        TOOL_CATALOG +
+        '\n\nResponda APENAS com JSON válido, no formato: {"ferramentas":[{"nome":"...","params":{...}}]}. ' +
+        'Use só nomes do cardápio e o mínimo necessário (1 a 3). Se a pergunta não precisar de dados (saudação, ' +
+        'agradecimento, conversa fiada), responda {"ferramentas":[]}.',
+    };
+    let calls: ToolCall[] = [];
+    try {
+      const plan = await chatCompletion([plannerSystem, { role: 'user', content: ultimaPergunta }], {
+        models: [env.openrouterPlannerModel, ...env.openrouterModels],
+        temperature: 0,
+        // Folga p/ modelos de reasoning (gpt-oss): o raciocínio consome tokens e o
+        // JSON precisa caber depois. Com pouco, o content volta vazio.
+        maxTokens: 800,
+      });
+      calls = parsePlan(plan);
+    } catch (e) {
+      console.error('[ia] planejador falhou; usando consultas padrão:', e instanceof Error ? e.message : e);
+    }
+    // Sem plano (ou falha): um conjunto padrão pequeno e útil para o dashboard.
+    if (calls.length === 0) {
+      calls = [
+        { nome: 'resumo_financeiro', params: { periodo: 'mes' } },
+        { nome: 'estoque', params: { filtro: 'baixo' } },
+      ];
+    }
+
+    // Executa (escopado por userId; só nomes válidos chegam até aqui).
+    const dados: Record<string, unknown> = {};
+    for (const c of calls.slice(0, 4)) {
+      const periodo = c.params?.periodo ? `_${String(c.params.periodo)}` : '';
+      dados[`${c.nome}${periodo}`] = await runTool(u, c);
+    }
+
+    // --- Estágio 2: IA principal responde com os dados + histórico da conversa ---
+    const dadosStr = JSON.stringify(dados).slice(0, 10000);
+    const system: ChatMessage = {
+      role: 'system',
+      content:
+        'Você é o assistente de IA de uma pequena farmácia. Português do Brasil, tom prático e acolhedor — pode usar ' +
+        'emojis com moderação. 💊 Responda à última pergunta do usuário usando SOMENTE os dados consultados abaixo (e o ' +
+        'histórico da conversa). Faça os cálculos necessários (margem, lucro, ticket médio, giro, reposição) mostrando o ' +
+        'número e a fórmula curta. Não invente dados fora do que veio; se faltar, diga o que falta. Até ~300 palavras.' +
+        `\n\nDados consultados agora (JSON):\n${dadosStr}`,
+    };
+
+    const reply = await chatCompletion([system, ...messages]);
+    res.json({ reply, consultou: calls.map((c) => c.nome) });
   }),
 );

@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Icon } from './Icon';
 import { useChatIA } from '../hooks/useChatIA';
+import { askAI, chatWithAI, type ChatMsg } from '../services/ai';
 
 /**
  * Chat com a IA sobre a farmácia, com histórico de conversas (EXPERIMENTAL).
@@ -11,8 +12,14 @@ import { useChatIA } from '../hooks/useChatIA';
  * arquivos de chat.
  */
 interface ChatIAProps {
-  /** Snapshot da farmácia enviado à IA a cada pergunta (ver buildPharmaciaContexto). */
-  contexto: unknown;
+  /**
+   * Estratégia de dados:
+   * - 'ask'  → backend decide e busca os dados (2 estágios, mais barato). Não usa `contexto`.
+   * - 'chat' → manda o `contexto` completo de uma vez.
+   */
+  mode?: 'ask' | 'chat';
+  /** Snapshot da farmácia (só no mode 'chat'; ver buildPharmaciaContexto). */
+  contexto?: unknown;
   title?: string;
 }
 
@@ -25,9 +32,14 @@ const SUGESTOES = [
 const fmtData = (iso: string): string =>
   new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 
-export function ChatIA({ contexto, title = 'Converse com a IA' }: ChatIAProps) {
+export function ChatIA({ mode = 'chat', contexto, title = 'Converse com a IA' }: ChatIAProps) {
+  // Define como falar com a IA: 'ask' (backend busca os dados) ou 'chat' (contexto completo).
+  const sender = useCallback(
+    (msgs: ChatMsg[]) => (mode === 'ask' ? askAI(msgs) : chatWithAI(msgs, contexto)),
+    [mode, contexto],
+  );
   const { conversations, active, loading, error, send, newConversation, selectConversation, deleteConversation } =
-    useChatIA();
+    useChatIA(sender);
   const [input, setInput] = useState('');
   const [showHistory, setShowHistory] = useState(false);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -42,7 +54,7 @@ export function ChatIA({ contexto, title = 'Converse com a IA' }: ChatIAProps) {
   function submit() {
     const text = input;
     setInput('');
-    void send(text, contexto);
+    void send(text);
   }
 
   return (
@@ -127,7 +139,7 @@ export function ChatIA({ contexto, title = 'Converse com a IA' }: ChatIAProps) {
             </p>
             <div className="chat-ia-suggest">
               {SUGESTOES.map((s) => (
-                <button key={s} className="chat-chip" onClick={() => void send(s, contexto)} disabled={loading}>
+                <button key={s} className="chat-chip" onClick={() => void send(s)} disabled={loading}>
                   {s}
                 </button>
               ))}

@@ -135,7 +135,7 @@ export function Relatorios({ state }: ScreenProps) {
         </Card>
       </div>
 
-      <ChatIA contexto={buildPharmaciaContexto(state, summary)} title="Pergunte à IA sobre os números" />
+      <ChatIA mode="chat" contexto={buildPharmaciaContexto(state, summary)} title="Pergunte à IA sobre os números" />
     </div>
   );
 }

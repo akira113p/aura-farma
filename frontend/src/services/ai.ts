@@ -83,9 +83,19 @@ export function buildPharmaciaContexto(state: AppState, summary: Summary) {
   };
 }
 
-/** Conversa multi-turno com a IA (chat). Lança em caso de falha (sem fallback). */
+/** Conversa multi-turno com a IA (chat, contexto completo). Lança em caso de falha. */
 export async function chatWithAI(messages: ChatMsg[], contexto: unknown): Promise<string> {
   const { reply } = await apiClient.post<{ reply: string }>('/ia/chat', { messages, contexto });
+  return reply;
+}
+
+/**
+ * Chat em 2 estágios (mais barato): o backend usa uma IA pequena para decidir
+ * quais dados buscar (escopados pelo usuário) e só então a IA principal responde.
+ * Não envia contexto — o servidor consulta o que precisa.
+ */
+export async function askAI(messages: ChatMsg[]): Promise<string> {
+  const { reply } = await apiClient.post<{ reply: string }>('/ia/ask', { messages });
   return reply;
 }
 

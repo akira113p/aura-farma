@@ -82,6 +82,11 @@ export const env = {
   /** Modelo preferido (1º da cadeia). Capaz e GRATUITO por padrão. */
   openrouterModel: primaryModel,
   /**
+   * Modelo PEQUENO/barato do estágio 1 (planejador): decide quais dados buscar.
+   * Gasta pouquíssimo. Gratuito por padrão.
+   */
+  openrouterPlannerModel: process.env.OPENROUTER_PLANNER_MODEL ?? 'openai/gpt-oss-20b:free',
+  /**
    * Cadeia de modelos (preferido + fallbacks). Se um falhar/limitar, o backend
    * tenta o próximo com o MESMO contexto. Configure com OPENROUTER_MODEL e
    * OPENROUTER_FALLBACK_MODELS (lista separada por vírgula).

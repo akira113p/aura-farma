@@ -1,6 +1,9 @@
 import { useCallback, useState } from 'react';
-import { chatWithAI, type ChatMsg } from '../services/ai';
+import { type ChatMsg } from '../services/ai';
 import { ApiError } from '../lib/apiClient';
+
+/** Quem realmente fala com a IA dado o histórico (define a estratégia: ask/chat). */
+export type ChatSender = (messages: ChatMsg[]) => Promise<string>;
 
 /**
  * Chat com a IA com HISTÓRICO de conversas (experimental).
@@ -54,7 +57,7 @@ const titleFrom = (text: string): string => {
 };
 const newId = (): string => 'c' + Date.now() + Math.floor(Math.random() * 1000);
 
-export function useChatIA() {
+export function useChatIA(sender: ChatSender) {
   const [store, setStore] = useState<ChatStore>(() => load());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -91,7 +94,7 @@ export function useChatIA() {
   );
 
   const send = useCallback(
-    async (text: string, contexto: unknown) => {
+    async (text: string) => {
       const clean = text.trim();
       if (!clean || loading) return;
       setError(null);
@@ -120,7 +123,7 @@ export function useChatIA() {
       persist(afterUser);
       setLoading(true);
       try {
-        const reply = await chatWithAI(userMsgs, contexto);
+        const reply = await sender(userMsgs);
         const withReply: ChatMsg[] = [...userMsgs, { role: 'assistant' as const, content: reply }].slice(-MAX_MSGS);
         const done: Conversation = { ...withUser, messages: withReply, updatedAt: new Date().toISOString() };
         persist({
@@ -134,7 +137,7 @@ export function useChatIA() {
         setLoading(false);
       }
     },
-    [store, loading, persist],
+    [store, loading, persist, sender],
   );
 
   return {
