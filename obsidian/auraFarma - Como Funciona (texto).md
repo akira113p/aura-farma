@@ -31,12 +31,13 @@ trabalho pesado.
 
 ## O que ja funciona hoje
 
-- **7 telas** prontas.
+- **9 telas** prontas.
 - **Entrar** com usuario e senha, ou com a conta do **Google**.
 - A **senha** e guardada de forma segura (ninguem consegue ler a original).
 - O **estoque e as vendas ficam salvos no servidor** (banco de dados), separados
   por farmacia - nao ficam mais presos a um so navegador.
 - Uma **busca** que ja procura entre 11.7 mil remedios reais.
+- Um **assistente de IA** que responde perguntas sobre a sua farmacia.
 
 ---
 
@@ -48,9 +49,11 @@ trabalho pesado.
 - **Nova venda (caixa)** - monta o carrinho e fecha a venda; o estoque baixa
   sozinho.
 - **Solicitados** - remedios que clientes pediram e que ainda faltam.
+- **Pedidos** - pedir reposicao para a Eurofarma e acompanhar a entrega.
 - **Historico** - todas as vendas ja feitas, para consulta.
 - **Contagem** - conferir o que esta na prateleira contra o que o sistema diz.
 - **Relatorios** - analises do periodo.
+- **Assistente IA** - faca uma pergunta e ele consulta seus dados para responder.
 
 ---
 
@@ -74,6 +77,21 @@ E a funcionalidade mais util do dia a dia, na tela de Estoque.
 - Eles **carregam rapido**, numa unica busca quando voce abre o sistema.
 - Antes ficavam apenas no navegador do computador; agora estao guardados de
   verdade e nao se perdem ao trocar de maquina.
+
+---
+
+## O assistente de IA
+
+E como ter um ajudante que conhece os numeros da sua farmacia.
+
+- Voce **escolhe a area** (estoque, vendas, pedidos...) e faz uma pergunta.
+- Ele olha **somente os seus dados daquela area** para responder - isso evita
+  que ele invente coisas.
+- Responde **uma pergunta por vez**, sem lembrar das anteriores.
+- As respostas ficam **guardadas so no seu navegador**, num historico para
+  consultar depois.
+- Ele tambem escreve **sozinho um resumo** do dia, da semana ou do mes no
+  Dashboard e nos Relatorios.
 
 ---
 

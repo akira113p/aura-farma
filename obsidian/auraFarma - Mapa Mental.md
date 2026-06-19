@@ -37,17 +37,19 @@ como fornecedor direto.
 
 | Item | Status |
 | --- | --- |
-| Frontend React + TypeScript (Vite) | Pronto - 7 telas |
+| Frontend React + TypeScript (Vite) | Pronto - 9 telas |
 | Autenticacao (login, registro, logout) + Google OAuth | Pronto |
 | bcrypt + sessao cookie httpOnly | Pronto |
 | MongoDB conectado | Pronto |
 | Base de medicamentos ANVISA (11.7k em memoria) | Pronto |
 | Busca inteligente (fuzzy com Fuse.js) | Pronto |
 | Estoque / vendas / solicitados / contagem no MongoDB (por usuario) | Pronto |
+| Pedidos - reposicao via Eurofarma (demo de logistica, no navegador) | Pronto |
+| Assistente IA (OpenRouter) + resumo automatico (Dashboard/Relatorios) | Pronto |
 | Controle de validade (campo existe; alertas) | Em andamento |
 | SNGPC | Planejado |
 | Importacao de estoque CSV / NF-e | Planejado |
-| Integracao Eurofarma | Planejado |
+| Integracao Eurofarma (API real) | Planejado |
 | Sistema de pagamento | Planejado |
 
 ---
@@ -62,6 +64,8 @@ como fornecedor direto.
 - **Autenticacao** - sessao via cookie httpOnly + bcrypt + Google OAuth.
 - **Busca de medicamentos** - catalogo em memoria no Node + Fuse.js (fuzzy).
 - **Dados da farmacia** - persistidos no MongoDB, escopados por usuario.
+- **IA** - OpenRouter, com a chave guardada apenas no backend; fluxo de 2
+  estagios e seletor de escopo (ver secao 6).
 - **Pagamentos** - gateway brasileiro (planejado, fora do escopo atual).
 
 ### Decisoes arquiteturais
@@ -71,7 +75,9 @@ como fornecedor direto.
 - Estoque/vendas/solicitados/contagem ficam no MongoDB; o front fala pela API.
 - Senhas com bcrypt; sessao via cookie httpOnly + Secure + SameSite.
 - Segredos apenas no .env do servidor; o cliente (variaveis VITE_) nunca recebe
-  segredo.
+  segredo - inclusive a chave da IA (OpenRouter) so existe no backend.
+- IA em 2 estagios para gastar pouco: uma IA pequena planeja quais dados buscar,
+  o backend roda as consultas escopadas por usuario, e a IA principal responde.
 
 ### Persistencia de dados (estoque e correlatos)
 
@@ -108,9 +114,10 @@ prototipo/
 - [x] Conectar o frontend ao backend (estoque/vendas/etc. via API).
 - [x] Busca inteligente de medicamentos no estoque.
 - [x] Controle de estoque persistido no MongoDB.
+- [x] Fluxo de pedido para a Eurofarma - demo de logistica (tela Pedidos).
+- [x] Assistente IA sobre os dados da farmacia + resumo automatico.
 - [ ] SNGPC - envio automatico de controlados para a ANVISA.
 - [ ] Controle de validade com alertas automaticos.
-- [ ] Fluxo de pedido para a Eurofarma (pode ser simulado).
 
 ### Produto real (pos-banca)
 
@@ -153,6 +160,37 @@ prototipo/
 - **Busca** - fuzzy via Fuse.js (tolerante a erro de digitacao), com
   re-ranking por prefixo.
 - **Atualizacao** - job semanal que baixa um novo CSV da ANVISA (planejado).
+
+---
+
+## 8.1. Assistente IA (OpenRouter)
+
+- **Provedor** - OpenRouter, com a chave guardada **apenas no backend**
+  (`OPENROUTER_API_KEY`); o frontend nunca a ve. Tudo passa por `/api/ia/*`.
+- **Resumo automatico** - o "texto pronto" do Dashboard e dos Relatorios e
+  gerado por IA; em qualquer falha, cai num resumo deterministico (mesmo molde).
+- **Tela Assistente** - uma pergunta por vez, **sem contexto das anteriores**;
+  o historico das respostas fica **so no navegador** (localStorage), nao no banco.
+  O titulo de cada pergunta tambem e gerado por IA.
+- **Fluxo de 2 estagios** (para gastar pouco):
+  1. uma IA pequena (planejador) decide quais consultas de dados fazer;
+  2. o backend roda essas consultas **escopadas por usuario**;
+  3. a IA principal responde com os dados certos.
+- **Seletor de escopo** - limita onde a IA pode "enxergar" (estoque, vendas,
+  pedidos, etc.), reduzindo a chance de erro/alucinacao; o backend so libera as
+  ferramentas daquele escopo (`SCOPE_TOOLS`).
+- **Fallback de modelos** - se um modelo falha, tenta o proximo da lista.
+- Os **Pedidos** (que vivem no navegador) so sao enviados a IA quando o escopo
+  escolhido e "pedidos".
+
+## 8.2. Pedidos (logistica Eurofarma)
+
+- **Demo** de reposicao com o distribuidor **Eurofarma** - exemplo de como
+  funcionaria a logistica usando a API da Eurofarma.
+- Sugere a quantidade a repor a partir do estoque minimo de cada produto.
+- Acompanha os estagios do pedido: aguardando, confirmado, em separacao, entregue.
+- Vive **so no navegador** (localStorage, `aurafarma.pedidos.v1`); ainda nao
+  persiste no banco nem chama uma API real.
 
 ---
 

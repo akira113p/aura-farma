@@ -19,16 +19,18 @@ skill/, vibe-security-skill/   # repositórios-fonte das skills (referência)
 
 ### `frontend/src`
 - `components/` — UI reutilizável tipada (Button, Card, Modal, Tabs, Icon, LineChart, StockBar…), reexportada por `components/index.ts`.
-- `features/` — as 7 telas (`Dashboard`, `Produtos`, `Vendas` (PDV), `Solicitados`, `Historico`, `Contagem`, `Relatorios`) + `TopBar`; auth em `features/auth/` (`Login`, `Register`, `GoogleButton`, `AuthScreen`, `CompleteProfileModal`).
-- `services/` — camada de dados. `dados.ts` (ações async de estado/estoque/vendas/solicitados/contagem — API ou mock), `store.ts` (mock localStorage + agregações `summarize`/`applySale`), `medicamentos.ts` (busca de catálogo), `auth.ts` (rotas de auth), `ai.ts`, reexport em `index.ts`.
+- `features/` — as 9 telas (`Dashboard`, `Produtos`, `Vendas` (PDV), `Solicitados`, `Pedidos`, `Historico`, `Contagem`, `Relatorios`, `AssistenteIA`) + `TopBar`; auth em `features/auth/` (`Login`, `Register`, `GoogleButton`, `AuthScreen`, `CompleteProfileModal`).
+- `services/` — camada de dados. `dados.ts` (ações async de estado/estoque/vendas/solicitados/contagem — API ou mock), `store.ts` (mock localStorage + agregações `summarize`/`applySale`), `medicamentos.ts` (busca de catálogo), `auth.ts` (rotas de auth), `ai.ts` (resumo + `perguntarIA`), `pedidos.ts` (logística/reposição Eurofarma, client-side), reexport em `index.ts`.
 - `lib/` — `apiClient.ts` (fetch tipado p/ o backend), `format.ts`, `series.ts`.
-- `hooks/` — `useAppState.ts` (carrega/persiste o `AppState`), `useTweaks.ts`.
+- `hooks/` — `useAppState.ts` (carrega/persiste o `AppState`, keyed por userId), `useAssistenteIA.ts` (perguntas + histórico no navegador), `usePedidos.ts` (pedidos no localStorage), `useTweaks.ts`.
 - `context/` — `AuthContext.tsx`.
 - `types/` — `index.ts` (AppState, Product, Sale, Summary, AuthUser…).
 - `data/seed.ts` — dados de exemplo. `config.ts` — config de runtime. `index.css` — estilos (tokens de tema/densidade).
 
 ### `backend/src`
 - `routes/auth.ts` — todas as rotas `/api/auth` (register, login, logout, me, google, google/complete, google/config).
+- `routes/ia.ts` — `/api/ia/*`: `chat` (resumo) e `ask` (fluxo de 2 estágios, escopado por usuário via `SCOPE_TOOLS`).
+- `services/openrouter.ts` — cliente do OpenRouter com fallback de modelos. `services/iaTools.ts` — catálogo de consultas de dados escopadas por `userId`.
 - `services/googleAuth.ts` — verificação do **ID token** do Google.
 - `models/User.ts` — schema Mongoose; `toSafeUser` remove `passwordHash`.
 - `middleware/` — `auth.ts`, `error.ts`, `rateLimit.ts`.
@@ -73,6 +75,8 @@ Equivalentes pelo delegador (rodando de dentro de `sla mas ta aq/`): `npm run de
 - `SESSION_SECRET` — **obrigatória**. Segredo do cookie de sessão (gere com `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`).
 - `FRONTEND_ORIGIN` — origem(ns) permitidas no CORS, separadas por vírgula (default `http://localhost:5173`).
 - `GOOGLE_CLIENT_ID` — Client ID público do Google. Vazio = login com Google desativado (backend responde 503, botão fica desabilitado).
+- `OPENROUTER_API_KEY` — chave do OpenRouter (server-side; **nunca** vai ao bundle). Vazia = IA desativada (resumo cai no determinístico; `/api/ia/ask` responde erro).
+- `OPENROUTER_MODEL` / `OPENROUTER_FALLBACK_MODELS` / `OPENROUTER_PLANNER_MODEL` — modelo principal, cadeia de fallback e modelo barato do planejador (2 estágios). `OPENROUTER_REFERER` / `OPENROUTER_TITLE` — metadados da chamada.
 
 ### Frontend (`frontend/src/config.ts`)
 - `VITE_USE_MOCK` — `'false'` (default) faz o app persistir no backend/Mongo; `'true'` usa o mock local em `localStorage` (dev sem backend).

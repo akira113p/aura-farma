@@ -4,7 +4,7 @@
       "id": "a1f0c2d3e4b00000",
       "type": "text",
       "x": 0,
-      "y": 1574,
+      "y": 1990,
       "width": 420,
       "height": 180,
       "text": "# auraFarma\n\nSistema para farmacias pequenas\ncuidarem do estoque, das vendas e da burocracia"
@@ -63,7 +63,7 @@
       "id": "a1f0c2d3e4b00006",
       "type": "text",
       "x": 540,
-      "y": 578,
+      "y": 630,
       "width": 340,
       "height": 92,
       "text": "**O que ja funciona hoje**",
@@ -76,7 +76,7 @@
       "y": 370,
       "width": 360,
       "height": 92,
-      "text": "7 telas prontas",
+      "text": "9 telas prontas",
       "color": "4"
     },
     {
@@ -122,222 +122,222 @@
     {
       "id": "a1f0c2d3e4b0000c",
       "type": "text",
+      "x": 980,
+      "y": 890,
+      "width": 360,
+      "height": 92,
+      "text": "Um assistente de IA que responde perguntas sobre a farmacia",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0000d",
+      "type": "text",
       "x": 540,
-      "y": 1202,
+      "y": 1410,
       "width": 340,
       "height": 92,
       "text": "**As telas**",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0000d",
+      "id": "a1f0c2d3e4b0000e",
       "type": "text",
       "x": 980,
-      "y": 890,
+      "y": 994,
       "width": 360,
       "height": 92,
       "text": "Dashboard",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0000e",
+      "id": "a1f0c2d3e4b0000f",
       "type": "text",
       "x": 1440,
-      "y": 890,
+      "y": 994,
       "width": 380,
       "height": 92,
       "text": "visao geral do dia: resumos e grafico",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0000f",
+      "id": "a1f0c2d3e4b00010",
       "type": "text",
       "x": 980,
-      "y": 994,
+      "y": 1098,
       "width": 360,
       "height": 92,
       "text": "Estoque",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00010",
+      "id": "a1f0c2d3e4b00011",
       "type": "text",
       "x": 1440,
-      "y": 994,
+      "y": 1098,
       "width": 380,
       "height": 92,
       "text": "lista de remedios: buscar, adicionar, editar",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00011",
+      "id": "a1f0c2d3e4b00012",
       "type": "text",
       "x": 980,
-      "y": 1098,
+      "y": 1202,
       "width": 360,
       "height": 92,
       "text": "Nova venda (caixa)",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00012",
+      "id": "a1f0c2d3e4b00013",
       "type": "text",
       "x": 1440,
-      "y": 1098,
+      "y": 1202,
       "width": 380,
       "height": 92,
       "text": "monta o carrinho; o estoque baixa sozinho",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00013",
+      "id": "a1f0c2d3e4b00014",
       "type": "text",
       "x": 980,
-      "y": 1202,
+      "y": 1306,
       "width": 360,
       "height": 92,
       "text": "Solicitados",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00014",
+      "id": "a1f0c2d3e4b00015",
       "type": "text",
       "x": 1440,
-      "y": 1202,
+      "y": 1306,
       "width": 380,
       "height": 92,
       "text": "remedios que clientes pediram e faltam",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00015",
+      "id": "a1f0c2d3e4b00016",
       "type": "text",
       "x": 980,
-      "y": 1306,
+      "y": 1410,
+      "width": 360,
+      "height": 92,
+      "text": "Pedidos",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00017",
+      "type": "text",
+      "x": 1440,
+      "y": 1410,
+      "width": 380,
+      "height": 92,
+      "text": "pedir reposicao para a Eurofarma e acompanhar a entrega",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00018",
+      "type": "text",
+      "x": 980,
+      "y": 1514,
       "width": 360,
       "height": 92,
       "text": "Historico",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00016",
+      "id": "a1f0c2d3e4b00019",
       "type": "text",
       "x": 1440,
-      "y": 1306,
+      "y": 1514,
       "width": 380,
       "height": 92,
       "text": "todas as vendas ja feitas",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00017",
+      "id": "a1f0c2d3e4b0001a",
       "type": "text",
       "x": 980,
-      "y": 1410,
+      "y": 1618,
       "width": 360,
       "height": 92,
       "text": "Contagem",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00018",
+      "id": "a1f0c2d3e4b0001b",
       "type": "text",
       "x": 1440,
-      "y": 1410,
+      "y": 1618,
       "width": 380,
       "height": 92,
       "text": "conferir a prateleira vs o sistema",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00019",
+      "id": "a1f0c2d3e4b0001c",
       "type": "text",
       "x": 980,
-      "y": 1514,
+      "y": 1722,
       "width": 360,
       "height": 92,
       "text": "Relatorios",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0001a",
+      "id": "a1f0c2d3e4b0001d",
       "type": "text",
       "x": 1440,
-      "y": 1514,
+      "y": 1722,
       "width": 380,
       "height": 92,
       "text": "analises do periodo",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0001b",
+      "id": "a1f0c2d3e4b0001e",
+      "type": "text",
+      "x": 980,
+      "y": 1826,
+      "width": 360,
+      "height": 92,
+      "text": "Assistente IA",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0001f",
+      "type": "text",
+      "x": 1440,
+      "y": 1826,
+      "width": 380,
+      "height": 92,
+      "text": "pergunte e ele consulta seus dados pra responder",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00020",
       "type": "text",
       "x": 540,
-      "y": 1774,
+      "y": 2086,
       "width": 340,
       "height": 92,
       "text": "**Busca inteligente de remedios**",
       "color": "3"
     },
     {
-      "id": "a1f0c2d3e4b0001c",
-      "type": "text",
-      "x": 980,
-      "y": 1618,
-      "width": 360,
-      "height": 92,
-      "text": "Catalogo real da ANVISA (11.7k remedios)",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b0001d",
-      "type": "text",
-      "x": 980,
-      "y": 1722,
-      "width": 360,
-      "height": 92,
-      "text": "Aceita erro de digitacao",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b0001e",
-      "type": "text",
-      "x": 1440,
-      "y": 1722,
-      "width": 380,
-      "height": 92,
-      "text": "digitar 'amoxalina' acha 'AMOXICILINA'",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b0001f",
-      "type": "text",
-      "x": 980,
-      "y": 1826,
-      "width": 360,
-      "height": 92,
-      "text": "Acha por nome, principio ativo e categoria",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b00020",
+      "id": "a1f0c2d3e4b00021",
       "type": "text",
       "x": 980,
       "y": 1930,
       "width": 360,
       "height": 92,
-      "text": "Preenche o cadastro sozinho ao escolher",
+      "text": "Catalogo real da ANVISA (11.7k remedios)",
       "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b00021",
-      "type": "text",
-      "x": 540,
-      "y": 2190,
-      "width": 340,
-      "height": 92,
-      "text": "**Onde os dados ficam**",
-      "color": "2"
     },
     {
       "id": "a1f0c2d3e4b00022",
@@ -346,144 +346,254 @@
       "y": 2034,
       "width": 360,
       "height": 92,
-      "text": "Agora: no servidor (banco de dados), por farmacia",
-      "color": "2"
+      "text": "Aceita erro de digitacao",
+      "color": "3"
     },
     {
       "id": "a1f0c2d3e4b00023",
       "type": "text",
+      "x": 1440,
+      "y": 2034,
+      "width": 380,
+      "height": 92,
+      "text": "digitar 'amoxalina' acha 'AMOXICILINA'",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b00024",
+      "type": "text",
       "x": 980,
       "y": 2138,
+      "width": 360,
+      "height": 92,
+      "text": "Acha por nome, principio ativo e categoria",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b00025",
+      "type": "text",
+      "x": 980,
+      "y": 2242,
+      "width": 360,
+      "height": 92,
+      "text": "Preenche o cadastro sozinho ao escolher",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b00026",
+      "type": "text",
+      "x": 540,
+      "y": 2502,
+      "width": 340,
+      "height": 92,
+      "text": "**Onde os dados ficam**",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00027",
+      "type": "text",
+      "x": 980,
+      "y": 2346,
+      "width": 360,
+      "height": 92,
+      "text": "Agora: no servidor (banco de dados), por farmacia",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00028",
+      "type": "text",
+      "x": 980,
+      "y": 2450,
       "width": 360,
       "height": 92,
       "text": "Carregam rapido numa unica chamada",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b00024",
+      "id": "a1f0c2d3e4b00029",
       "type": "text",
       "x": 980,
-      "y": 2242,
+      "y": 2554,
       "width": 360,
       "height": 92,
       "text": "Antes ficavam so no navegador",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b00025",
+      "id": "a1f0c2d3e4b0002a",
       "type": "text",
       "x": 980,
-      "y": 2346,
+      "y": 2658,
       "width": 360,
       "height": 92,
       "text": "Cada conta enxerga so os seus dados",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b00026",
+      "id": "a1f0c2d3e4b0002b",
       "type": "text",
       "x": 540,
-      "y": 2658,
+      "y": 2970,
+      "width": 340,
+      "height": 92,
+      "text": "**O assistente de IA**",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0002c",
+      "type": "text",
+      "x": 980,
+      "y": 2762,
+      "width": 360,
+      "height": 92,
+      "text": "Voce escolhe a area (estoque, vendas...) e faz uma pergunta",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0002d",
+      "type": "text",
+      "x": 980,
+      "y": 2866,
+      "width": 360,
+      "height": 92,
+      "text": "Ele olha so os seus dados daquela area pra responder",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0002e",
+      "type": "text",
+      "x": 980,
+      "y": 2970,
+      "width": 360,
+      "height": 92,
+      "text": "Responde uma pergunta por vez, sem lembrar das anteriores",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0002f",
+      "type": "text",
+      "x": 980,
+      "y": 3074,
+      "width": 360,
+      "height": 92,
+      "text": "As respostas ficam guardadas so no seu navegador",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00030",
+      "type": "text",
+      "x": 980,
+      "y": 3178,
+      "width": 360,
+      "height": 92,
+      "text": "Tambem escreve um resumo do dia/semana/mes sozinho",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00031",
+      "type": "text",
+      "x": 540,
+      "y": 3490,
       "width": 340,
       "height": 92,
       "text": "**A burocracia que vai resolver**",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b00027",
+      "id": "a1f0c2d3e4b00032",
       "type": "text",
       "x": 980,
-      "y": 2450,
+      "y": 3282,
       "width": 360,
       "height": 92,
       "text": "SNGPC: avisa a ANVISA sobre controlados automaticamente",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b00028",
+      "id": "a1f0c2d3e4b00033",
       "type": "text",
       "x": 980,
-      "y": 2554,
+      "y": 3386,
       "width": 360,
       "height": 92,
       "text": "Validade: avisa antes do remedio vencer",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b00029",
+      "id": "a1f0c2d3e4b00034",
       "type": "text",
       "x": 980,
-      "y": 2658,
+      "y": 3490,
       "width": 360,
       "height": 92,
       "text": "NF-e: lanca a mercadoria pela nota fiscal",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b0002a",
+      "id": "a1f0c2d3e4b00035",
       "type": "text",
       "x": 980,
-      "y": 2762,
+      "y": 3594,
       "width": 360,
       "height": 92,
       "text": "Alvaras: avisa quando licencas vao vencer",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b0002b",
+      "id": "a1f0c2d3e4b00036",
       "type": "text",
       "x": 980,
-      "y": 2866,
+      "y": 3698,
       "width": 360,
       "height": 92,
       "text": "Relatorios para o Conselho de Farmacia",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b0002c",
+      "id": "a1f0c2d3e4b00037",
       "type": "text",
       "x": 540,
-      "y": 3126,
+      "y": 3958,
       "width": 340,
       "height": 92,
       "text": "**Login e seguranca**",
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b0002d",
+      "id": "a1f0c2d3e4b00038",
       "type": "text",
       "x": 980,
-      "y": 2970,
+      "y": 3802,
       "width": 360,
       "height": 92,
       "text": "Cadastro: usuario, farmacia, e-mail e senha",
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b0002e",
+      "id": "a1f0c2d3e4b00039",
       "type": "text",
       "x": 980,
-      "y": 3074,
+      "y": 3906,
       "width": 360,
       "height": 92,
       "text": "Senha embaralhada (ninguem le a original)",
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b0002f",
+      "id": "a1f0c2d3e4b0003a",
       "type": "text",
       "x": 980,
-      "y": 3178,
+      "y": 4010,
       "width": 360,
       "height": 92,
       "text": "Cracha seguro mantem voce logado",
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00030",
+      "id": "a1f0c2d3e4b0003b",
       "type": "text",
       "x": 980,
-      "y": 3282,
+      "y": 4114,
       "width": 360,
       "height": 92,
       "text": "Opcao de entrar com o Google",
@@ -492,7 +602,7 @@
   ],
   "edges": [
     {
-      "id": "a1f0c2d3e4b00031",
+      "id": "a1f0c2d3e4b0003c",
       "fromNode": "a1f0c2d3e4b00001",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00002",
@@ -500,7 +610,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00032",
+      "id": "a1f0c2d3e4b0003d",
       "fromNode": "a1f0c2d3e4b00001",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00003",
@@ -508,7 +618,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00033",
+      "id": "a1f0c2d3e4b0003e",
       "fromNode": "a1f0c2d3e4b00001",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00004",
@@ -516,7 +626,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00034",
+      "id": "a1f0c2d3e4b0003f",
       "fromNode": "a1f0c2d3e4b00001",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00005",
@@ -524,7 +634,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00035",
+      "id": "a1f0c2d3e4b00040",
       "fromNode": "a1f0c2d3e4b00000",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00001",
@@ -532,7 +642,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00036",
+      "id": "a1f0c2d3e4b00041",
       "fromNode": "a1f0c2d3e4b00006",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00007",
@@ -540,7 +650,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00037",
+      "id": "a1f0c2d3e4b00042",
       "fromNode": "a1f0c2d3e4b00006",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00008",
@@ -548,7 +658,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00038",
+      "id": "a1f0c2d3e4b00043",
       "fromNode": "a1f0c2d3e4b00006",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00009",
@@ -556,7 +666,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00039",
+      "id": "a1f0c2d3e4b00044",
       "fromNode": "a1f0c2d3e4b00006",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0000a",
@@ -564,7 +674,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b0003a",
+      "id": "a1f0c2d3e4b00045",
       "fromNode": "a1f0c2d3e4b00006",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0000b",
@@ -572,7 +682,15 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b0003b",
+      "id": "a1f0c2d3e4b00046",
+      "fromNode": "a1f0c2d3e4b00006",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0000c",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00047",
       "fromNode": "a1f0c2d3e4b00000",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00006",
@@ -580,7 +698,15 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b0003c",
+      "id": "a1f0c2d3e4b00048",
+      "fromNode": "a1f0c2d3e4b0000e",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0000f",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00049",
       "fromNode": "a1f0c2d3e4b0000d",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0000e",
@@ -588,290 +714,362 @@
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0003d",
-      "fromNode": "a1f0c2d3e4b0000c",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0000d",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b0003e",
-      "fromNode": "a1f0c2d3e4b0000f",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00010",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b0003f",
-      "fromNode": "a1f0c2d3e4b0000c",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0000f",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b00040",
-      "fromNode": "a1f0c2d3e4b00011",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00012",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b00041",
-      "fromNode": "a1f0c2d3e4b0000c",
+      "id": "a1f0c2d3e4b0004a",
+      "fromNode": "a1f0c2d3e4b00010",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00011",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00042",
-      "fromNode": "a1f0c2d3e4b00013",
+      "id": "a1f0c2d3e4b0004b",
+      "fromNode": "a1f0c2d3e4b0000d",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00014",
+      "toNode": "a1f0c2d3e4b00010",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00043",
-      "fromNode": "a1f0c2d3e4b0000c",
+      "id": "a1f0c2d3e4b0004c",
+      "fromNode": "a1f0c2d3e4b00012",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00013",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00044",
-      "fromNode": "a1f0c2d3e4b00015",
+      "id": "a1f0c2d3e4b0004d",
+      "fromNode": "a1f0c2d3e4b0000d",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00016",
+      "toNode": "a1f0c2d3e4b00012",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00045",
-      "fromNode": "a1f0c2d3e4b0000c",
+      "id": "a1f0c2d3e4b0004e",
+      "fromNode": "a1f0c2d3e4b00014",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00015",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00046",
-      "fromNode": "a1f0c2d3e4b00017",
+      "id": "a1f0c2d3e4b0004f",
+      "fromNode": "a1f0c2d3e4b0000d",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00018",
+      "toNode": "a1f0c2d3e4b00014",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00047",
-      "fromNode": "a1f0c2d3e4b0000c",
+      "id": "a1f0c2d3e4b00050",
+      "fromNode": "a1f0c2d3e4b00016",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00017",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00048",
-      "fromNode": "a1f0c2d3e4b00019",
+      "id": "a1f0c2d3e4b00051",
+      "fromNode": "a1f0c2d3e4b0000d",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0001a",
+      "toNode": "a1f0c2d3e4b00016",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00049",
-      "fromNode": "a1f0c2d3e4b0000c",
+      "id": "a1f0c2d3e4b00052",
+      "fromNode": "a1f0c2d3e4b00018",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00019",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0004a",
-      "fromNode": "a1f0c2d3e4b00000",
+      "id": "a1f0c2d3e4b00053",
+      "fromNode": "a1f0c2d3e4b0000d",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0000c",
+      "toNode": "a1f0c2d3e4b00018",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0004b",
-      "fromNode": "a1f0c2d3e4b0001b",
+      "id": "a1f0c2d3e4b00054",
+      "fromNode": "a1f0c2d3e4b0001a",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0001c",
+      "toNode": "a1f0c2d3e4b0001b",
       "toSide": "left",
-      "color": "3"
+      "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0004c",
-      "fromNode": "a1f0c2d3e4b0001d",
+      "id": "a1f0c2d3e4b00055",
+      "fromNode": "a1f0c2d3e4b0000d",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0001e",
+      "toNode": "a1f0c2d3e4b0001a",
       "toSide": "left",
-      "color": "3"
+      "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0004d",
-      "fromNode": "a1f0c2d3e4b0001b",
+      "id": "a1f0c2d3e4b00056",
+      "fromNode": "a1f0c2d3e4b0001c",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0001d",
       "toSide": "left",
-      "color": "3"
+      "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0004e",
-      "fromNode": "a1f0c2d3e4b0001b",
+      "id": "a1f0c2d3e4b00057",
+      "fromNode": "a1f0c2d3e4b0000d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0001c",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00058",
+      "fromNode": "a1f0c2d3e4b0001e",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0001f",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b00059",
+      "fromNode": "a1f0c2d3e4b0000d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0001e",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0005a",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0000d",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0005b",
+      "fromNode": "a1f0c2d3e4b00020",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00021",
       "toSide": "left",
       "color": "3"
     },
     {
-      "id": "a1f0c2d3e4b0004f",
-      "fromNode": "a1f0c2d3e4b0001b",
+      "id": "a1f0c2d3e4b0005c",
+      "fromNode": "a1f0c2d3e4b00022",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00023",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0005d",
+      "fromNode": "a1f0c2d3e4b00020",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00022",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0005e",
+      "fromNode": "a1f0c2d3e4b00020",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00024",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0005f",
+      "fromNode": "a1f0c2d3e4b00020",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00025",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b00060",
+      "fromNode": "a1f0c2d3e4b00000",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00020",
       "toSide": "left",
       "color": "3"
     },
     {
-      "id": "a1f0c2d3e4b00050",
-      "fromNode": "a1f0c2d3e4b00000",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0001b",
-      "toSide": "left",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b00051",
-      "fromNode": "a1f0c2d3e4b00021",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00022",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b00052",
-      "fromNode": "a1f0c2d3e4b00021",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00023",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b00053",
-      "fromNode": "a1f0c2d3e4b00021",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00024",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b00054",
-      "fromNode": "a1f0c2d3e4b00021",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00025",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b00055",
-      "fromNode": "a1f0c2d3e4b00000",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00021",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b00056",
+      "id": "a1f0c2d3e4b00061",
       "fromNode": "a1f0c2d3e4b00026",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00027",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b00057",
+      "id": "a1f0c2d3e4b00062",
       "fromNode": "a1f0c2d3e4b00026",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00028",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b00058",
+      "id": "a1f0c2d3e4b00063",
       "fromNode": "a1f0c2d3e4b00026",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00029",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b00059",
+      "id": "a1f0c2d3e4b00064",
       "fromNode": "a1f0c2d3e4b00026",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0002a",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b0005a",
-      "fromNode": "a1f0c2d3e4b00026",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0002b",
-      "toSide": "left",
-      "color": "1"
-    },
-    {
-      "id": "a1f0c2d3e4b0005b",
+      "id": "a1f0c2d3e4b00065",
       "fromNode": "a1f0c2d3e4b00000",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00026",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b0005c",
-      "fromNode": "a1f0c2d3e4b0002c",
+      "id": "a1f0c2d3e4b00066",
+      "fromNode": "a1f0c2d3e4b0002b",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0002c",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00067",
+      "fromNode": "a1f0c2d3e4b0002b",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0002d",
       "toSide": "left",
-      "color": "6"
+      "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b0005d",
-      "fromNode": "a1f0c2d3e4b0002c",
+      "id": "a1f0c2d3e4b00068",
+      "fromNode": "a1f0c2d3e4b0002b",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0002e",
       "toSide": "left",
-      "color": "6"
+      "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b0005e",
-      "fromNode": "a1f0c2d3e4b0002c",
+      "id": "a1f0c2d3e4b00069",
+      "fromNode": "a1f0c2d3e4b0002b",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0002f",
       "toSide": "left",
-      "color": "6"
+      "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b0005f",
-      "fromNode": "a1f0c2d3e4b0002c",
+      "id": "a1f0c2d3e4b0006a",
+      "fromNode": "a1f0c2d3e4b0002b",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00030",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0006b",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0002b",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0006c",
+      "fromNode": "a1f0c2d3e4b00031",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00032",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0006d",
+      "fromNode": "a1f0c2d3e4b00031",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00033",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0006e",
+      "fromNode": "a1f0c2d3e4b00031",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00034",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0006f",
+      "fromNode": "a1f0c2d3e4b00031",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00035",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00070",
+      "fromNode": "a1f0c2d3e4b00031",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00036",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00071",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00031",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00072",
+      "fromNode": "a1f0c2d3e4b00037",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00038",
       "toSide": "left",
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00060",
+      "id": "a1f0c2d3e4b00073",
+      "fromNode": "a1f0c2d3e4b00037",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00039",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00074",
+      "fromNode": "a1f0c2d3e4b00037",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0003a",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00075",
+      "fromNode": "a1f0c2d3e4b00037",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0003b",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00076",
       "fromNode": "a1f0c2d3e4b00000",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0002c",
+      "toNode": "a1f0c2d3e4b00037",
       "toSide": "left",
       "color": "6"
     }
