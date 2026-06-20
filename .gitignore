@@ -10,3 +10,9 @@ dados remedio/
 
 # Credenciais de produção — nunca commitar
 env-render.txt
+
+# Design sync — artefatos gerados/temporários (durable files em .design-sync/ SÃO commitados)
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/

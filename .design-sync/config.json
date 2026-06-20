@@ -1,0 +1,14 @@
+{
+  "projectId": "6de90dcb-be05-4eb3-a1fc-59f58b3959ba",
+  "shape": "package",
+  "pkg": "frontend",
+  "globalName": "auraFarma",
+  "srcDir": "src/components",
+  "cssEntry": "src/index.css",
+  "tsconfig": "tsconfig.app.json",
+  "runtimeFontPrefixes": ["Geist", "Geist Mono", "Inter", "JetBrains Mono"],
+  "overrides": {
+    "Modal": { "cardMode": "single", "primaryStory": "Aberto" }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}
