@@ -1,4 +1,13 @@
 import { config } from '../config';
+import { clientLog } from './clientLog';
+
+/** Gera um identificador de requisição para rastreio fim-a-fim (regra 1). */
+function newRequestId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
 
 /** Error thrown when the API responds with a non-2xx status. */
 export class ApiError extends Error {
@@ -24,15 +33,33 @@ type RequestOptions = Omit<RequestInit, 'body'> & { body?: unknown };
  */
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { body, headers, ...rest } = options;
-  const response = await fetch(`${config.apiBaseUrl}${path}`, {
-    ...rest,
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers,
-    },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
+  const method = (rest.method ?? 'GET').toUpperCase();
+  const requestId = newRequestId();
+  const url = `${config.apiBaseUrl}${path}`;
+  const start = performance.now();
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      ...rest,
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        // Rastreio fim-a-fim: o backend propaga este id de volta na resposta (regra 1).
+        'X-Request-Id': requestId,
+        ...headers,
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+  } catch (err) {
+    // Falha de rede (offline, DNS, CORS bloqueado) — nunca chegou uma resposta.
+    const ms = Math.round(performance.now() - start);
+    const message = err instanceof Error ? err.message : String(err);
+    clientLog.error('falha de rede na requisição', { requestId, method, url, ms, error: message });
+    throw err;
+  }
+
+  const ms = Math.round(performance.now() - start);
 
   if (!response.ok) {
     let message = `Request to ${path} failed (${response.status})`;
@@ -44,8 +71,18 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     } catch {
       /* non-JSON error body */
     }
+    clientLog.error('resposta da API não-2xx', {
+      requestId,
+      method,
+      url,
+      status: response.status,
+      ms,
+      error: message,
+    });
     throw new ApiError(response.status, message, details);
   }
+
+  clientLog.debug('requisição ok', { requestId, method, url, status: response.status, ms });
 
   if (response.status === 204) return undefined as T;
   return (await response.json()) as T;

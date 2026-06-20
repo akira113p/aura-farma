@@ -11,3 +11,4 @@ export { Tabs } from './Tabs';
 export { AIBlock } from './AIBlock';
 export { Stat } from './Stat';
 export { LineChart } from './LineChart';
+export { ErrorBoundary } from './ErrorBoundary';
