@@ -12,6 +12,9 @@ import { medicamentosRouter } from './routes/medicamentos';
 import { dadosRouter } from './routes/dados';
 import { loadCatalog } from './services/catalog';
 import { errorHandler, notFound } from './middleware/error';
+import { requestContext } from './middleware/requestContext';
+import { healthRouter } from './routes/health';
+import { logger } from './lib/logger';
 
 const app = express();
 
@@ -46,6 +49,10 @@ app.use(
 app.use(cors({ origin: env.frontendOrigins, credentials: true }));
 app.use(express.json({ limit: '10kb' }));
 
+// Contexto de observabilidade o mais cedo possível (após body parser, antes
+// das rotas): request ID, logs estruturados, latência, métricas e alertas.
+app.use(requestContext);
+
 app.use(
   session({
     name: 'sid',
@@ -65,7 +72,7 @@ app.use(
   }),
 );
 
-app.get('/api/health', (_req, res) => res.json({ ok: true }));
+app.use('/api/health', healthRouter);
 
 // Rate-limit all auth endpoints (login/register/google) against brute force.
 app.use('/api/auth', authLimiter, authRouter);
@@ -84,13 +91,18 @@ async function start() {
     await connectDb();
     const medCount = loadCatalog();
     app.listen(env.port, () => {
-      console.log(`[api] auraFarma ouvindo em http://localhost:${env.port}`);
-      console.log(`[api] CORS liberado para: ${env.frontendOrigins.join(', ')}`);
-      console.log(`[api] Google login: ${env.googleClientId ? 'configurado' : 'desativado (defina GOOGLE_CLIENT_ID)'}`);
-      console.log(`[catalog] ${medCount} medicamentos carregados`);
+      logger.info('servidor iniciado', {
+        url: `http://localhost:${env.port}`,
+        cors: env.frontendOrigins,
+        googleLogin: env.googleClientId ? 'configurado' : 'desativado',
+        medicamentosCarregados: medCount,
+      });
     });
   } catch (err) {
-    console.error('[api] Falha ao iniciar:', err);
+    logger.error('falha ao iniciar o servidor', {
+      message: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+    });
     process.exit(1);
   }
 }
