@@ -63,9 +63,14 @@ try {
   check('user retornado SEM passwordHash', bodyReg.user && !('passwordHash' in bodyReg.user), JSON.stringify(bodyReg.user));
   check('user tem pharmacyName', bodyReg.user?.pharmacyName === 'Farmácia Central');
 
-  // me (authed)
+  // me (authed) — confirma que /me reflete o usuário registrado, não só o status
   r = await fetch(`${BASE}/auth/me`, j(cookie, null, 'GET'));
+  let bodyMe = await r.json();
   check('me autenticado → 200', r.status === 200, `(status ${r.status})`);
+  check('me reflete o usuário (username/email/pharmacyName)',
+    bodyMe.user?.username === 'farmacia.central' && bodyMe.user?.email === 'dono@farma.com' && bodyMe.user?.pharmacyName === 'Farmácia Central',
+    JSON.stringify(bodyMe.user));
+  check('me NÃO expõe passwordHash', bodyMe.user && !('passwordHash' in bodyMe.user) && !('usernameLower' in bodyMe.user), JSON.stringify(bodyMe.user));
 
   // logout
   r = await fetch(`${BASE}/auth/logout`, j(cookie, null, 'POST'));
@@ -74,6 +79,11 @@ try {
   // me after logout
   r = await fetch(`${BASE}/auth/me`, j(cookie, null, 'GET'));
   check('me após logout → 401', r.status === 401, `(status ${r.status})`);
+
+  // --- regressão: logout invalida a sessão para rotas de dados protegidas ---
+  // O cookie antigo não deve mais acessar nenhuma rota autenticada (não só /me).
+  r = await fetch(`${BASE}/estado`, j(cookie, null, 'GET'));
+  check('estado com cookie pós-logout → 401', r.status === 401, `(status ${r.status})`);
 
   // login by email
   r = await fetch(`${BASE}/auth/login`, j(null, { identifier: 'dono@farma.com', password: 'Senha@123' }));
@@ -147,19 +157,48 @@ try {
   let upd = await r.json();
   check('editar produto (PATCH) → preco atualizado', r.status === 200 && upd.product?.price === 11.5, JSON.stringify(upd.product));
 
+  // --- regressão: venda baixa estoque (N=10, vende k=4 → N-k=6) ---
   r = await fetch(`${BASE}/vendas`, A({ items: [{ pid, qty: 4 }], payment: 'pix' }));
   let venda = await r.json();
   check('venda → 201 e estoque decrementado p/ 6', r.status === 201 && venda.updatedProducts?.[0]?.stock === 6, JSON.stringify(venda).slice(0, 120));
+  check('venda registra item com qty e total corretos',
+    venda.sale?.items?.[0]?.qty === 4 && venda.sale?.total === 4 * 11.5 && venda.sale?.payment === 'pix',
+    JSON.stringify(venda.sale));
+  // a baixa de estoque precisa estar persistida (N-k=6), não só no payload da venda
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  est = await r.json();
+  check('GET /estado confirma estoque persistido em 6 (N-k)', est.products?.[0]?.stock === 6, `stock=${est.products?.[0]?.stock}`);
 
+  // venda além do estoque é rejeitada (409) E não altera o estoque (continua 6)
   r = await fetch(`${BASE}/vendas`, A({ items: [{ pid, qty: 999 }], payment: 'pix' }));
   check('venda sem estoque → 409', r.status === 409, `(status ${r.status})`);
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  est = await r.json();
+  check('venda rejeitada não mexeu no estoque (segue 6)', est.products?.[0]?.stock === 6 && est.sales.length === 1, `stock=${est.products?.[0]?.stock} sales=${est.sales.length}`);
 
+  // venda de produto inexistente é rejeitada (400) — pid válido mas de outro/ausente
+  r = await fetch(`${BASE}/vendas`, A({ items: [{ pid: '0123456789abcdef01234567', qty: 1 }], payment: 'pix' }));
+  check('venda de produto inexistente → 400', r.status === 400, `(status ${r.status})`);
+
+  // --- regressão: solicitados idempotente (mesmo nome 2x incrementa, não duplica) ---
   r = await fetch(`${BASE}/solicitados`, A({ name: 'Insulina NPH', note: 'cliente recorrente' }));
+  let sol1 = await r.json();
   check('criar solicitacao → 201', r.status === 201, `(status ${r.status})`);
+  check('solicitacao nova começa com count=1', sol1.request?.count === 1, JSON.stringify(sol1.request));
+  // mesmo nome de novo (case-insensitive) → 200 e count incrementado, sem duplicar
+  r = await fetch(`${BASE}/solicitados`, A({ name: 'insulina nph' }));
+  let sol2 = await r.json();
+  check('solicitacao repetida → 200 (não 201)', r.status === 200, `(status ${r.status})`);
+  check('solicitacao repetida incrementa count p/ 2', sol2.request?.count === 2 && sol2.request?.id === sol1.request?.id, JSON.stringify(sol2.request));
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  est = await r.json();
+  check('estado tem 1 solicitacao (não duplicada) com count=2', est.requests?.length === 1 && est.requests?.[0]?.count === 2, `requests=${est.requests?.length}`);
 
+  // --- regressão: contagem ajusta estoque (6 → 20, diff +14) ---
   r = await fetch(`${BASE}/contagem`, A({ adjustments: [{ pid, newStock: 20 }] }));
   let cont = await r.json();
   check('contagem ajusta estoque p/ 20', r.status === 201 && cont.updatedProducts?.[0]?.stock === 20, JSON.stringify(cont).slice(0, 120));
+  check('contagem registra diff correto (20-6 = +14)', cont.count?.adjustments?.[0]?.diff === 14 && cont.count?.adjustments?.[0]?.newStock === 20, JSON.stringify(cont.count));
 
   r = await fetch(`${BASE}/estado`, A(null, 'GET'));
   est = await r.json();
@@ -171,9 +210,22 @@ try {
   r = await fetch(`${BASE}/estado`, j(null, null, 'GET'));
   check('estado sem auth → 401', r.status === 401, `(status ${r.status})`);
 
+  // --- regressão: seed popula e reset zera os dados do usuário ---
   r = await fetch(`${BASE}/estado/seed`, A({}));
   let seeded = await r.json();
   check('seed popula 20 produtos + vendas', r.status === 201 && seeded.products.length === 20 && seeded.sales.length > 0, `prod=${seeded.products?.length} sales=${seeded.sales?.length}`);
+  check('seed retorna populated:true e solicitacoes', seeded.populated === true && Array.isArray(seeded.requests) && seeded.requests.length > 0, `populated=${seeded.populated} requests=${seeded.requests?.length}`);
+  // o seed também precisa estar persistido (não só no payload de resposta)
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  est = await r.json();
+  check('GET /estado após seed confirma 20 produtos persistidos', est.populated === true && est.products.length === 20, `prod=${est.products?.length}`);
+
+  r = await fetch(`${BASE}/estado/reset`, A({}));
+  let resetBody = await r.json();
+  check('reset → 200 e payload vazio (populated:false)', r.status === 200 && resetBody.populated === false && resetBody.products.length === 0, JSON.stringify(resetBody).slice(0, 80));
+  r = await fetch(`${BASE}/estado`, A(null, 'GET'));
+  est = await r.json();
+  check('GET /estado após reset zera tudo do usuário', est.populated === false && est.products.length === 0 && est.sales.length === 0 && est.requests.length === 0 && est.counts.length === 0, `prod=${est.products?.length} sales=${est.sales?.length} req=${est.requests?.length} counts=${est.counts?.length}`);
 } finally {
   server.kill();
   if (mongod) {
