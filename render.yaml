@@ -2,6 +2,38 @@
 # No Render: New + > Blueprint > conecte o repo > ele lê este arquivo.
 # Depois preencha as envVars marcadas com sync:false (MONGODB_URI,
 # FRONTEND_ORIGIN, GOOGLE_CLIENT_ID) no painel do servico.
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# MONITORAMENTO + ROLLBACK (regra de observabilidade 10)
+# ─────────────────────────────────────────────────────────────────────────────
+# Como o deploy fica monitorado e como reverter esta documentado em detalhe em
+# docs/observabilidade-deploy.md. Resumo das chaves usadas aqui:
+#
+#  - healthCheckPath: /api/health
+#      O Render faz DEPLOY HEALTH-GATED. Apos o build, ele chama esse caminho na
+#      versao nova ANTES de mandar trafego pra ela. Se o health check NAO passar
+#      (timeout/erro), o Render marca o deploy como "failed" e MANTEM a versao
+#      antiga no ar. Ou seja: deploy quebrado nao derruba producao — isso e o
+#      rollback AUTOMATICO (health-gated). O endpoint /api/health responde
+#      { ok: true } (ver backend/src/index.ts).
+#
+#  - autoDeploy: true
+#      Cada push na branch conectada dispara um novo deploy automaticamente
+#      (push -> build -> health check -> vai ao ar so se saudavel). Se preferir
+#      promover manualmente cada versao, troque para `autoDeploy: false` e use o
+#      botao "Manual Deploy" no dashboard.
+#
+# ROLLBACK MANUAL (quando a versao nova sobe saudavel no health check mas se
+# comporta mal — ex.: latencia alta, erros 500, bug funcional):
+#   No dashboard do Render > servico aura-farma-backend > aba "Events" (ou
+#   "Deploys") > escolha um deploy anterior que estava bom > clique em
+#   "Rollback to this deploy". O Render reativa aquele build imediatamente,
+#   sem rebuildar. Passo a passo em docs/observabilidade-deploy.md.
+#
+# NAO adicione chaves nao suportadas pelo Render Blueprint aqui (ex.: nao existe
+# uma chave "rollback:" no spec). O rollback automatico ja vem do healthCheckPath;
+# o rollback manual e uma acao no dashboard, nao uma chave deste arquivo.
+# ─────────────────────────────────────────────────────────────────────────────
 services:
   - type: web
     name: aura-farma-backend
@@ -10,7 +42,9 @@ services:
     rootDir: backend
     buildCommand: npm install
     startCommand: npm start
+    # Health check que torna o deploy health-gated (rollback automatico se falhar).
     healthCheckPath: /api/health
+    # Push na branch conectada dispara deploy automatico (build -> health -> live).
     autoDeploy: true
     envVars:
       - key: NODE_ENV
