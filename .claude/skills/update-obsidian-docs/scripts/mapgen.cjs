@@ -69,23 +69,24 @@ function makeCanvas(root, file) {
 
 // =================== MAPA A: visao completa do projeto (tecnico) ===================
 const full = {
-  text: '# auraFarma\n\nGestao + compliance para farmacias pequenas\ncom a Eurofarma integrada como fornecedor',
+  text: '# auraFarma\n\nGestao + compliance para farmacias pequenas\ncom integracao de compras via distribuidora',
   children: [
     { text: '**Objetivo & Negocio**', color: '6', children: [
       { text: 'Resolve burocracia + desorganizacao de farmacias pequenas' },
       { text: 'Modelo SaaS: mensalidade por farmacia' },
-      { text: 'Clientes: farmacias pequenas' },
-      { text: 'Eurofarma (parceria escolar)', children: [
-        { text: 'fornecedor integrado na plataforma' },
-        { text: 'ganha canal de venda digital' },
-        { text: 'farmacia nao troca fornecedor; e opcao a mais' },
+      { text: 'Clientes: farmacias pequenas (foco em genericos)' },
+      { text: 'Modelo de dois lados', children: [
+        { text: 'Farmacia: gestao completa + compra facil integrada' },
+        { text: 'Distribuidora: canal de venda digital + visibilidade da demanda' },
       ]},
-      { text: 'Outros fornecedores no futuro' },
+      { text: 'Eurofarma: parceria escolar, valor de marca; papel tecnico secundario' },
+      { text: 'Integracao de pedidos mira a distribuidora, nao a Eurofarma diretamente' },
     ]},
     { text: '**Arquitetura**', color: '4', children: [
       { text: 'Frontend: React + TS + Vite' },
       { text: 'Backend: Node + Express' },
-      { text: 'Banco: MongoDB (Atlas)' },
+      { text: 'Banco principal: MongoDB Atlas (auth, estoque, vendas, contagem)' },
+      { text: 'Banco de compliance: PostgreSQL Neon (SNGPC, controlados, lotes, receitas)' },
       { text: 'Auth: cookie httpOnly + bcrypt + Google' },
       { text: 'Busca: em memoria no Node + Fuse.js' },
       { text: 'Dados (estoque/vendas/...): 1 doc por produto no Mongo, campos curtos (alias)' },
@@ -94,6 +95,8 @@ const full = {
       { text: 'Decisoes', children: [
         { text: 'CSV ANVISA em memoria (nao sobe pro Mongo)' },
         { text: 'estoque/vendas no Mongo; front fala pela API' },
+        { text: 'compliance (SNGPC) no PostgreSQL: precisa de integridade relacional e ACID' },
+        { text: 'dois bancos convivem: migrar tudo custaria 5-8 semanas; adicionar Postgres custa 2-3' },
         { text: 'segredos so no .env (VITE_ nunca recebe segredo)' },
         { text: 'cookie httpOnly + Secure + SameSite' },
         { text: 'IA: chave so no backend; 2 estagios (planeja -> consulta dados escopados -> responde)' },
@@ -107,16 +110,19 @@ const full = {
         { text: 'MongoDB conectado' },
         { text: 'Base ANVISA 11.7k + busca fuzzy (Fuse.js)' },
         { text: 'Estoque/vendas/solicitados/contagem no MongoDB (por usuario)' },
-        { text: 'Pedidos: reposicao via Eurofarma (demo de logistica, no navegador)' },
         { text: 'Assistente IA (OpenRouter) + resumo automatico no Dashboard/Relatorios' },
+        { text: 'Observabilidade de producao: logs JSON, request-ID, health detalhado, metricas, alertas' },
+      ]},
+      { text: 'Divida tecnica', children: [
+        { text: 'Pedidos: demo de logistica so em localStorage; precisa persistir no banco antes do beta' },
       ]},
       { text: 'Em andamento', children: [
         { text: 'Alertas de validade (campo ja existe no produto)' },
       ]},
       { text: 'Planejado', children: [
-        { text: 'SNGPC' },
+        { text: 'SNGPC (PostgreSQL Neon)' },
         { text: 'Importacao CSV / NF-e' },
-        { text: 'Integracao Eurofarma' },
+        { text: 'Integracao distribuidora (API real)' },
         { text: 'Sistema de pagamento' },
       ]},
     ]},
@@ -125,13 +131,14 @@ const full = {
         { text: 'Conectar frontend ao backend (feito)' },
         { text: 'Busca inteligente no estoque (feito)' },
         { text: 'Controle de estoque no Mongo (feito)' },
-        { text: 'SNGPC: controlados -> ANVISA' },
         { text: 'Controle de validade com alertas' },
-        { text: 'Pedido pra Eurofarma: demo de logistica (feito)' },
+        { text: 'Pedido para distribuidora: demo de logistica (feito, so no navegador)' },
         { text: 'Assistente IA sobre os dados da farmacia (feito)' },
+        { text: 'SNGPC: controlados -> ANVISA (PostgreSQL)' },
       ]},
       { text: 'Produto real (pos-banca)', children: [
-        { text: 'API real com Eurofarma' },
+        { text: 'Persistir Pedidos no banco (divida tecnica)' },
+        { text: 'API real com distribuidora' },
         { text: 'Importar estoque via CSV' },
         { text: 'Importar NF-e (XML)' },
         { text: 'Outros fornecedores' },
@@ -141,8 +148,18 @@ const full = {
         { text: 'Relatorios para o CRF' },
       ]},
     ]},
-    { text: '**Compliance (burocracia resolvida)**', color: '1', children: [
-      { text: 'SNGPC', children: [ { text: 'envio automatico de controlados; evita multa por atraso' } ]},
+    { text: '**SNGPC (planejado)**', color: '1', children: [
+      { text: 'Nao e API de tempo real: farmacia gera XML e envia periodicamente para a ANVISA' },
+      { text: 'Campo listaPortaria344 no produto (A1/A2/B1/B2/C1...) define fluxo e relatorio' },
+      { text: 'Venda de controlado precisa: lote, CRM medico, numero receita, CPF/RG comprador, endereco' },
+      { text: 'Implementacao em 3 camadas', children: [
+        { text: '1. Formularios de entrada/saida (Postgres)' },
+        { text: '2. Gerador de XML no formato ANVISA' },
+        { text: '3. Envio automatico (ultimo; homologacao burocratica)' },
+      ]},
+      { text: 'Venda normal continua como esta; venda de controlado ganha documento separado' },
+    ]},
+    { text: '**Compliance (outros)**', color: '1', children: [
       { text: 'Controle de validade', children: [ { text: 'alertas de vencimento; vencido na prateleira e infracao grave' } ]},
       { text: 'NF-e XML', children: [ { text: 'entrada automatica de mercadoria por nota fiscal' } ]},
       { text: 'Alvaras e licencas', children: [ { text: 'painel de vencimento (sanitario, CRF, funcionamento)' } ]},
@@ -170,22 +187,35 @@ const full = {
       { text: 'Seletor de escopo limita onde a IA enxerga (menos erro)' },
       { text: 'Fallback de modelos: troca de modelo se um falhar' },
     ]},
-    { text: '**Pedidos (logistica Eurofarma)**', color: '2', children: [
-      { text: 'Demo de reposicao com o distribuidor Eurofarma' },
+    { text: '**Pedidos (logistica distribuidora)**', color: '2', children: [
+      { text: 'Demo de reposicao com o distribuidor (Eurofarma como exemplo)' },
       { text: 'Sugere quantidade a repor a partir do estoque minimo' },
       { text: 'Estagios do pedido: aguardando, confirmado, separacao, entregue' },
-      { text: 'Vive so no navegador (localStorage) - exemplo de como a API real funcionaria' },
+      { text: 'DIVIDA TECNICA: vive so no navegador (localStorage) - precisa persistir no banco' },
     ]},
-    { text: '**Roadmap & Banca**', color: '6', children: [
-      { text: 'Mes 1-2: fechar MVP escolar' },
-      { text: 'Mes 3-4: validar com donos de farmacias reais' },
-      { text: 'Mes 5-6: Eurofarma (se validado) ou MVP pra banca' },
+    { text: '**Observabilidade & Monitoramento**', color: '4', children: [
+      { text: 'Request-ID unico por requisicao (cabecalho X-Request-Id), propagado front->back' },
+      { text: 'Logs estruturados em JSON (1 linha por evento); nivel via LOG_LEVEL' },
+      { text: 'Erros com stack trace completo + contexto no log; nunca na resposta HTTP' },
+      { text: '/api/health detalhado: ok, status, banco, uptime, memoria, versao' },
+      { text: 'Metricas de performance: tempo (media/p95), memoria, CPU, contadores por status' },
+      { text: 'Query logging com tempo no Mongoose + marca de query lenta' },
+      { text: 'Cache em memoria com tracking de hit/miss' },
+      { text: 'Alertas configuraveis por threshold com cooldown' },
+      { text: 'Deploy health-gated no Render + rollback documentado' },
+    ]},
+    { text: '**Roadmap & Proximos passos**', color: '6', children: [
+      { text: 'Imediato: controle de validade com alertas' },
+      { text: 'Depois: SNGPC (maior trabalho, PostgreSQL Neon)' },
+      { text: 'Depois: persistir Pedidos no banco (divida tecnica)' },
+      { text: 'Validacao: mostrar para donos de farmacias reais (meses 3-4)' },
       { text: 'Banca (~6 meses): mostrar que a ideia funciona' },
       { text: 'Diferenciais', children: [
         { text: 'autenticacao nivel profissional' },
         { text: 'base real da ANVISA' },
-        { text: 'compliance burocratico' },
-        { text: 'parceria Eurofarma' },
+        { text: 'compliance burocratico (SNGPC)' },
+        { text: 'integracao com distribuidora' },
+        { text: 'parceria Eurofarma (credibilidade)' },
       ]},
     ]},
   ],
@@ -199,7 +229,8 @@ const easy = {
       { text: 'Para farmacias pequenas' },
       { text: 'Resolve a burocracia e a desorganizacao' },
       { text: 'E alugado por mensalidade (SaaS)' },
-      { text: 'Eurofarma entra como fornecedor dentro do sistema' },
+      { text: 'Integra pedidos com a distribuidora dentro do proprio sistema' },
+      { text: 'Eurofarma: parceria escolar que da credibilidade ao projeto' },
     ]},
     { text: '**O que ja funciona hoje**', color: '4', children: [
       { text: '9 telas prontas' },
@@ -208,6 +239,7 @@ const easy = {
       { text: 'Estoque e vendas ficam salvos no servidor (banco), por farmacia' },
       { text: 'Busca em 11.7k remedios reais' },
       { text: 'Um assistente de IA que responde perguntas sobre a farmacia' },
+      { text: 'Uma "tela de saude" que mostra se o sistema esta bem' },
     ]},
     { text: '**As telas**', color: '5', children: [
       { text: 'Dashboard', children: [ { text: 'visao geral do dia: resumos e grafico' } ]},
@@ -251,6 +283,13 @@ const easy = {
       { text: 'Senha embaralhada (ninguem le a original)' },
       { text: 'Cracha seguro mantem voce logado' },
       { text: 'Opcao de entrar com o Google' },
+    ]},
+    { text: '**De olho na saude do sistema**', color: '4', children: [
+      { text: 'Uma tela de saude diz se esta tudo bem (verde), meio ruim (amarelo) ou fora do ar (vermelho)' },
+      { text: 'Cada pedido ao sistema ganha um numero de protocolo, pra achar problemas depois' },
+      { text: 'O sistema anota tudo o que faz num registro organizado (os "logs")' },
+      { text: 'Avisa sozinho quando algo sai do normal: lentidao, falta de memoria, muitos erros' },
+      { text: 'Se uma atualizacao nasce com defeito, ele volta para a versao boa sozinho' },
     ]},
   ],
 };

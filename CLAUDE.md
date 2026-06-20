@@ -2,27 +2,25 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Protótipo do **auraFarma** — SaaS de gestão de estoque + compliance para farmácias pequenas. Monorepo informal com dois apps independentes (`frontend/` e `backend/`) e um `package.json` delegador. Todo o projeto está em **pt-BR**.
+Protótipo do **auraFarma** — SaaS de gestão de estoque + compliance para farmácias pequenas. Modelo de dois lados: farmácias pequenas (clientes SaaS) e distribuidoras (alvo da integração de pedidos). A Eurofarma entra como parceira escolar de credibilidade; a integração mira a distribuidora, não a indústria diretamente. Monorepo informal com dois apps independentes (`frontend/` e `backend/`) e um `package.json` delegador na raiz. Todo o projeto está em **pt-BR**.
 
 ## Estrutura do repositório
 
 ```
 frontend/                 # React 19 + TypeScript + Vite (sem Tailwind/shadcn; CSS custom)
 backend/                  # Node + Express + TypeScript (ESM via tsx) + MongoDB/Mongoose
-sla mas ta aq/            # package.json raiz "delegador" (dev/build/lint/typecheck) + skills-lock
+package.json              # delegador raiz (dev/build/lint/typecheck) — na raiz desde c6f2efe
 design/                   # design original (auraFarma.html + .jsx) portado para frontend/
 skill/, vibe-security-skill/   # repositórios-fonte das skills (referência)
 .claude/                  # skills ativadas no nível do projeto
 ```
 
-> Atenção: o `package.json` delegador **não está na raiz** do repositório — está em `sla mas ta aq/`. Os comandos delegadores (`npm run dev`, `build`, `lint`, etc.) só funcionam de dentro dessa pasta. Na prática, prefira os comandos por-app abaixo, que são equivalentes e sempre funcionam.
-
 ### `frontend/src`
 - `components/` — UI reutilizável tipada (Button, Card, Modal, Tabs, Icon, LineChart, StockBar…), reexportada por `components/index.ts`.
 - `features/` — as 9 telas (`Dashboard`, `Produtos`, `Vendas` (PDV), `Solicitados`, `Pedidos`, `Historico`, `Contagem`, `Relatorios`, `AssistenteIA`) + `TopBar`; auth em `features/auth/` (`Login`, `Register`, `GoogleButton`, `AuthScreen`, `CompleteProfileModal`).
-- `services/` — camada de dados. `dados.ts` (ações async de estado/estoque/vendas/solicitados/contagem — API ou mock), `store.ts` (mock localStorage + agregações `summarize`/`applySale`), `medicamentos.ts` (busca de catálogo), `auth.ts` (rotas de auth), `ai.ts` (resumo + `perguntarIA`), `pedidos.ts` (logística/reposição Eurofarma, client-side), reexport em `index.ts`.
+- `services/` — camada de dados. `dados.ts` (ações async de estado/estoque/vendas/solicitados/contagem — API ou mock), `store.ts` (mock localStorage + agregações `summarize`/`applySale`), `medicamentos.ts` (busca de catálogo), `auth.ts` (rotas de auth), `ai.ts` (resumo + `perguntarIA`), `pedidos.ts` (**dívida técnica**: logística/reposição com distribuidora, armazena **só em localStorage** — precisa persistir no banco), reexport em `index.ts`.
 - `lib/` — `apiClient.ts` (fetch tipado p/ o backend), `format.ts`, `series.ts`.
-- `hooks/` — `useAppState.ts` (carrega/persiste o `AppState`, keyed por userId), `useAssistenteIA.ts` (perguntas + histórico no navegador), `usePedidos.ts` (pedidos no localStorage), `useTweaks.ts`.
+- `hooks/` — `useAppState.ts` (carrega/persiste o `AppState`, keyed por userId), `useAssistenteIA.ts` (perguntas + histórico no navegador), `usePedidos.ts` (**dívida técnica**: pedidos só em localStorage), `useTweaks.ts`.
 - `context/` — `AuthContext.tsx`.
 - `types/` — `index.ts` (AppState, Product, Sale, Summary, AuthUser…).
 - `data/seed.ts` — dados de exemplo. `config.ts` — config de runtime. `index.css` — estilos (tokens de tema/densidade).
@@ -93,8 +91,13 @@ O frontend acessa dados pela camada de serviços, com o ponto único de troca em
 - **Estoque, vendas, solicitados e contagem persistem no MongoDB** (escopados por usuário): `GET /api/estado` carga tudo numa chamada; CRUD em `/api/estoque`, `/api/vendas` (baixa estoque no servidor), `/api/solicitados`, `/api/contagem`, `/api/estado/seed|reset`. Auth também é real (`/api/auth/*`).
 - No banco os campos vão com **nomes curtos** (alias do Mongoose: `n/sku/ct/p/...`) para caber no cluster free de 500MB; os `toApi*` em `models/pharmacy.ts` remapeiam para os nomes completos na resposta. Rotas de mutação têm `writeLimiter` (120/min por usuário); leitura tem `readLimiter`.
 - **Pagamento/gateway fica fora** (o rótulo do método na venda é só texto). Importação por CSV/NF-e é planejada.
+- **Pedidos é dívida técnica** — a tela existe e funciona, mas persiste só em `localStorage` (`aurafarma.pedidos.v1`). Deve migrar para o banco antes do beta.
 
 ## Decisões arquiteturais não óbvias
+
+- **Dois bancos de propósito específico:** MongoDB Atlas (auth, estoque, vendas, solicitados, contagem — o que já funciona) + **PostgreSQL Neon** (planejado, somente para o módulo SNGPC/compliance). Migrar tudo para Postgres custaria 5-8 semanas; adicionar Postgres só para compliance custa 2-3 semanas sem risco. Múltiplos bancos de propósito específico é padrão da indústria, não gambiarra.
+
+- **SNGPC requer schema estendido:** o campo `controlado: boolean` no produto é insuficiente. É necessário `listaPortaria344: string` (A1/A2/A3/B1/B2/C1...) porque cada lista tem regras de receita distintas e formatos de XML diferentes. Venda de controlado também precisa capturar: número do lote, CRM do médico, número da receita, CPF/RG e endereço do comprador — dados que o schema atual de `Sale` não tem. A implementação prevista é em 3 camadas: (1) formulários coleta dados, (2) gerador de XML, (3) envio automático.
 
 - **Sessão + cookie httpOnly, não JWT no client.** Sessões persistidas no Mongo (`connect-mongo`); o token nunca é lido por JS. Logout destrói a sessão de fato. Cookie `httpOnly` + `SameSite=Lax` + `Secure` em produção (`backend/src/index.ts`).
 - **Login com Google via ID token** (`google-auth-library` `verifyIdToken`), não authorization-code. O frontend manda o `credential` (JWT do Google Identity Services); o backend valida assinatura/audience/expiração. **O client secret do Google NÃO é usado** neste fluxo.

@@ -7,7 +7,7 @@ mapa: "[[auraFarma - Mapa Mental.canvas]]"
 # auraFarma - Visao geral do projeto
 
 Sistema de gestao para farmacias pequenas com foco em compliance burocratico e
-integracao de compras com a Eurofarma. Versao em texto do mapa mental
+integracao de compras com distribuidoras. Versao em texto do mapa mental
 [[auraFarma - Mapa Mental.canvas]].
 
 ---
@@ -15,25 +15,26 @@ integracao de compras com a Eurofarma. Versao em texto do mapa mental
 ## 1. Objetivo
 
 Resolver a burocracia pesada e a desorganizacao operacional de farmacias
-pequenas, oferecendo um sistema de gestao completo com a Eurofarma integrada
-como fornecedor direto.
+pequenas, oferecendo um sistema de gestao completo com integracao de pedidos
+diretamente com a distribuidora.
 
-## 2. Parceiros
+## 2. Parceiros e modelo de negocio
 
-- **Eurofarma** - parceria escolar; fornecedor integrado na plataforma.
-- **Farmacias pequenas** - clientes finais (modelo SaaS).
+- **Distribuidoras** - alvo da integracao de pedidos; ganham canal de venda
+  digital e visibilidade da demanda das farmacias que atendem.
+- **Farmacias pequenas** - clientes finais; foco em genericos, onde a margem
+  importa mais. Modelo SaaS: mensalidade por farmacia.
+- **Eurofarma** - parceria escolar que da credibilidade ao projeto; papel tecnico
+  secundario (a integracao mira a distribuidora, nao a industria diretamente).
 
-## 3. Modelo de negocio
+### Modelo de dois lados
 
-- SaaS - mensalidade por farmacia.
-- Eurofarma ganha um canal de venda digital.
-- Outros fornecedores podem ser adicionados no futuro.
-- A farmacia nao precisa trocar o fornecedor atual: a Eurofarma entra como
-  opcao a mais.
+- Farmacia ganha: gestao completa + compra facil integrada.
+- Distribuidora ganha: canal de venda digital + visibilidade da demanda.
 
 ---
 
-## 4. Estado atual
+## 3. Estado atual
 
 | Item | Status |
 | --- | --- |
@@ -44,40 +45,50 @@ como fornecedor direto.
 | Base de medicamentos ANVISA (11.7k em memoria) | Pronto |
 | Busca inteligente (fuzzy com Fuse.js) | Pronto |
 | Estoque / vendas / solicitados / contagem no MongoDB (por usuario) | Pronto |
-| Pedidos - reposicao via Eurofarma (demo de logistica, no navegador) | Pronto |
 | Assistente IA (OpenRouter) + resumo automatico (Dashboard/Relatorios) | Pronto |
-| Controle de validade (campo existe; alertas) | Em andamento |
-| SNGPC | Planejado |
+| Observabilidade de producao (logs JSON, request-ID, health, metricas, alertas) | Pronto |
+| Pedidos - demo de logistica com distribuidora | Divida tecnica (so em localStorage) |
+| Controle de validade com alertas | Em andamento |
+| SNGPC (PostgreSQL Neon) | Planejado |
 | Importacao de estoque CSV / NF-e | Planejado |
-| Integracao Eurofarma (API real) | Planejado |
+| Integracao distribuidora (API real) | Planejado |
 | Sistema de pagamento | Planejado |
 
 ---
 
-## 5. Arquitetura
+## 4. Arquitetura
 
 ### Stack
 
 - **Frontend** - React + TypeScript + Vite.
 - **Backend** - Node.js + Express.
-- **Banco de dados** - MongoDB (Atlas).
+- **Banco principal** - MongoDB Atlas (auth, estoque, vendas, solicitados, contagem).
+- **Banco de compliance** - PostgreSQL Neon (SNGPC, controlados, lotes, receitas).
 - **Autenticacao** - sessao via cookie httpOnly + bcrypt + Google OAuth.
 - **Busca de medicamentos** - catalogo em memoria no Node + Fuse.js (fuzzy).
-- **Dados da farmacia** - persistidos no MongoDB, escopados por usuario.
 - **IA** - OpenRouter, com a chave guardada apenas no backend; fluxo de 2
-  estagios e seletor de escopo (ver secao 6).
+  estagios e seletor de escopo (ver secao 7).
 - **Pagamentos** - gateway brasileiro (planejado, fora do escopo atual).
+
+### Por que dois bancos
+
+- Migrar tudo para PostgreSQL custaria 5-8 semanas reescrevendo o que ja funciona.
+- Adicionar Postgres so para o modulo de compliance custa 2-3 semanas sem risco.
+- MongoDB permanece para o que ja esta testado; PostgreSQL entra apenas para
+  SNGPC, que precisa de integridade relacional e transacoes ACID.
+- Multiplos bancos de proposito especifico e padrao da industria, nao gambiarra.
 
 ### Decisoes arquiteturais
 
 - O CSV da ANVISA fica em memoria no Node; nao sobe para o MongoDB.
 - A busca de medicamentos roda no backend, nao no frontend.
 - Estoque/vendas/solicitados/contagem ficam no MongoDB; o front fala pela API.
+- Compliance (SNGPC) vai para PostgreSQL Neon quando implementado.
 - Senhas com bcrypt; sessao via cookie httpOnly + Secure + SameSite.
 - Segredos apenas no .env do servidor; o cliente (variaveis VITE_) nunca recebe
   segredo - inclusive a chave da IA (OpenRouter) so existe no backend.
-- IA em 2 estagios para gastar pouco: uma IA pequena planeja quais dados buscar,
-  o backend roda as consultas escopadas por usuario, e a IA principal responde.
+- IA em 2 estagios: uma IA pequena planeja quais dados buscar, o backend roda as
+  consultas escopadas por usuario, e a IA principal responde.
 
 ### Persistencia de dados (estoque e correlatos)
 
@@ -88,10 +99,8 @@ como fornecedor direto.
 - **Carga rapida**: `GET /api/estado` traz todo o estado numa unica chamada.
   Mutacoes: `/api/estoque` (CRUD), `/api/vendas` (baixa estoque no servidor),
   `/api/solicitados`, `/api/contagem`, `/api/estado/seed|reset`.
-- **Rate-limit ("tickets")**: 120 escritas/min por usuario; leitura mais
-  folgada; `maxTimeMS` como timeout de banco.
-- **Tamanho medido**: 600 farmacias x 500 produtos (+ vendas) ~= 107MB sem
-  compressao (~43MB com snappy), de 500MB.
+- **Rate-limit**: 120 escritas/min por usuario; leitura mais folgada;
+  `maxTimeMS` como timeout de banco.
 
 ### Estrutura de pastas (resumo)
 
@@ -107,24 +116,28 @@ prototipo/
 
 ---
 
-## 6. Funcionalidades
+## 5. Funcionalidades
 
 ### MVP escolar (prioridade)
 
 - [x] Conectar o frontend ao backend (estoque/vendas/etc. via API).
 - [x] Busca inteligente de medicamentos no estoque.
 - [x] Controle de estoque persistido no MongoDB.
-- [x] Fluxo de pedido para a Eurofarma - demo de logistica (tela Pedidos).
+- [x] Demo de pedido para distribuidora (tela Pedidos, so no navegador).
 - [x] Assistente IA sobre os dados da farmacia + resumo automatico.
-- [ ] SNGPC - envio automatico de controlados para a ANVISA.
 - [ ] Controle de validade com alertas automaticos.
+- [ ] SNGPC - envio automatico de controlados para a ANVISA.
+
+### Divida tecnica (antes do beta)
+
+- [ ] Persistir Pedidos no banco (hoje so em localStorage).
 
 ### Produto real (pos-banca)
 
-- [ ] Integracao real via API com a Eurofarma.
+- [ ] Integracao real via API com distribuidora.
 - [ ] Importacao de estoque via CSV.
 - [ ] Importacao de estoque via NF-e (XML).
-- [ ] Outros fornecedores alem da Eurofarma.
+- [ ] Outros fornecedores alem da distribuidora principal.
 - [ ] Sistema de pagamento integrado.
 - [ ] Controle de psicotropicos por lote com rastreabilidade.
 - [ ] Painel de vencimento de alvaras e licencas.
@@ -132,10 +145,26 @@ prototipo/
 
 ---
 
-## 7. Compliance e burocracia resolvida
+## 6. Compliance e burocracia
 
-- **SNGPC** - envio automatico dos controlados para a ANVISA. Elimina a
-  obrigacao manual do farmaceutico e o risco de multa por atraso.
+### SNGPC (planejado - PostgreSQL)
+
+Nao e uma API de tempo real. A farmacia gera um arquivo XML no formato exigido
+pela ANVISA com as movimentacoes do periodo e envia periodicamente.
+
+- **Campo `listaPortaria344`** no produto (A1/A2/A3/B1/B2/C1...) determina o
+  fluxo de venda e o tipo de relatorio. Nao basta `controlado: boolean` - cada
+  lista tem regras de receita distintas.
+- **Venda de controlado** precisa capturar: numero do lote, CRM do medico,
+  numero da receita, CPF/RG do comprador, endereco do comprador.
+- **Implementacao em 3 camadas:**
+  1. Formularios de entrada/saida coletando os dados obrigatorios (Postgres).
+  2. Gerador de XML no formato ANVISA.
+  3. Envio automatico (por ultimo; processo de homologacao e burocrático).
+- Venda normal continua como esta; venda de controlado ganha documento separado.
+
+### Outros itens de compliance
+
 - **Controle de validade** - alertas de medicamentos proximos do vencimento.
   Produto vencido na prateleira e infracao grave.
 - **NF-e XML** - entrada automatica de mercadoria pela nota fiscal; concilia o
@@ -149,69 +178,87 @@ prototipo/
 
 ---
 
-## 8. Base de medicamentos
+## 7. Base de medicamentos
 
 - **Fonte** - ANVISA (dados abertos).
-- **Total** - 11.759 medicamentos (catalogo de busca).
+- **Total** - 11.759 medicamentos ativos (catalogo de busca).
 - **Campos** - nome do produto, principio ativo, classe terapeutica, empresa
-  fabricante (a base ampla da ANVISA tambem traz situacao do registro e
-  vencimento).
-- **Armazenamento** - em memoria no Node.js.
+  fabricante.
+- **Armazenamento** - em memoria no Node.js (nao no MongoDB).
 - **Busca** - fuzzy via Fuse.js (tolerante a erro de digitacao), com
   re-ranking por prefixo.
 - **Atualizacao** - job semanal que baixa um novo CSV da ANVISA (planejado).
 
 ---
 
-## 8.1. Assistente IA (OpenRouter)
+## 8. Assistente IA (OpenRouter)
 
 - **Provedor** - OpenRouter, com a chave guardada **apenas no backend**
   (`OPENROUTER_API_KEY`); o frontend nunca a ve. Tudo passa por `/api/ia/*`.
 - **Resumo automatico** - o "texto pronto" do Dashboard e dos Relatorios e
-  gerado por IA; em qualquer falha, cai num resumo deterministico (mesmo molde).
+  gerado por IA; em qualquer falha, cai num resumo deterministico.
 - **Tela Assistente** - uma pergunta por vez, **sem contexto das anteriores**;
-  o historico das respostas fica **so no navegador** (localStorage), nao no banco.
-  O titulo de cada pergunta tambem e gerado por IA.
+  o historico das respostas fica **so no navegador** (localStorage).
 - **Fluxo de 2 estagios** (para gastar pouco):
   1. uma IA pequena (planejador) decide quais consultas de dados fazer;
   2. o backend roda essas consultas **escopadas por usuario**;
   3. a IA principal responde com os dados certos.
 - **Seletor de escopo** - limita onde a IA pode "enxergar" (estoque, vendas,
-  pedidos, etc.), reduzindo a chance de erro/alucinacao; o backend so libera as
-  ferramentas daquele escopo (`SCOPE_TOOLS`).
+  pedidos, etc.), reduzindo a chance de erro/alucinacao.
 - **Fallback de modelos** - se um modelo falha, tenta o proximo da lista.
-- Os **Pedidos** (que vivem no navegador) so sao enviados a IA quando o escopo
-  escolhido e "pedidos".
-
-## 8.2. Pedidos (logistica Eurofarma)
-
-- **Demo** de reposicao com o distribuidor **Eurofarma** - exemplo de como
-  funcionaria a logistica usando a API da Eurofarma.
-- Sugere a quantidade a repor a partir do estoque minimo de cada produto.
-- Acompanha os estagios do pedido: aguardando, confirmado, em separacao, entregue.
-- Vive **so no navegador** (localStorage, `aurafarma.pedidos.v1`); ainda nao
-  persiste no banco nem chama uma API real.
 
 ---
 
-## 9. Roadmap
+## 9. Pedidos (logistica distribuidora)
 
-- **Mes 1-2** - fechar o MVP escolar: conectar frontend ao backend (feito),
-  busca de medicamentos (feito), SNGPC, controle de validade.
-- **Mes 3-4** - validar com donos de farmacias reais.
-- **Mes 5-6** - se validado, conversa formal com a Eurofarma sobre a API real;
-  se nao, entregar um MVP excelente para a banca.
+- **Demo** de reposicao com distribuidora - exemplo de como funcionaria a
+  logistica usando uma API real.
+- Sugere a quantidade a repor a partir do estoque minimo de cada produto.
+- Acompanha os estagios do pedido: aguardando, confirmado, em separacao, entregue.
+- **DIVIDA TECNICA:** vive **so no navegador** (localStorage, `aurafarma.pedidos.v1`);
+  precisa persistir no banco antes do beta.
 
-## 10. Apresentacao para a banca
+---
+
+## 10. Observabilidade e monitoramento (producao)
+
+- **Request-ID unico** - cada requisicao recebe um ID no cabecalho `X-Request-Id`,
+  propagado do frontend ao backend.
+- **Logs estruturados em JSON** - uma linha JSON por evento; nivel controlado por
+  `LOG_LEVEL`. Campos sensiveis sao redigidos.
+- **Erros com contexto** - stack trace completo + contexto no log; a resposta HTTP
+  nunca expoe a stack.
+- **Health check detalhado** - `GET /api/health`: `ok`, `status`, `banco`,
+  `uptime`, `memoria`, `versao`.
+- **Metricas de performance** - tempo de resposta (media e p95), memoria, CPU,
+  contadores por faixa de status.
+- **Query logging** - cada consulta ao Mongoose loga colecao, operacao e tempo.
+- **Cache com hit/miss** - catalogo de busca e (opcional) OpenRouter.
+- **Alertas configuraveis** - thresholds por env com cooldown.
+- **Deploy health-gated** no Render com rollback documentado.
+
+---
+
+## 11. Roadmap
+
+- **Imediato** - controle de validade com alertas.
+- **Seguinte** - SNGPC (PostgreSQL Neon; maior trabalho).
+- **Antes do beta** - persistir Pedidos no banco.
+- **Meses 3-4** - validar com donos de farmacias reais (pagariam? quanto?).
+- **Meses 5-6** - se validado, iniciar conversa formal com distribuidora sobre
+  API real; se nao, entregar MVP excelente para a banca.
+
+## 12. Apresentacao para a banca
 
 - Prazo - aproximadamente 6 meses.
 - O que importa - demonstrar que a ideia funciona, nao que esta em producao.
 - Diferenciais - autenticacao segura de nivel profissional, base real da ANVISA,
-  compliance burocratico e a parceria com a Eurofarma.
+  compliance burocratico (SNGPC), integracao com distribuidora, parceria Eurofarma.
+- Quantificar a pesquisa em numeros inteiros ("8 de 10 farmacias" em vez de "80%").
 
 ---
 
-## 11. Referencias
+## 13. Referencias
 
 - [Portal ANVISA Dados Abertos](https://www.gov.br/anvisa/pt-br/acessoainformacao/dadosabertos)
 - [Consulta de Medicamentos ANVISA](https://consultas.anvisa.gov.br/#/medicamentos/)

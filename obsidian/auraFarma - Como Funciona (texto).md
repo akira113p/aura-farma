@@ -20,8 +20,9 @@ papelada obrigatoria e a desorganizacao do dia a dia.
 - E feito para **farmacias pequenas**.
 - Resolve a **burocracia** e a **desorganizacao**.
 - E **alugado por mensalidade** (modelo chamado SaaS).
-- A **Eurofarma** entra como fornecedor dentro do proprio sistema - a farmacia
-  pode comprar dela sem largar os fornecedores que ja tem.
+- A **Eurofarma** entra como parceira que da nome e credibilidade ao projeto.
+  A integracao de compras mira a **distribuidora** - quem de fato entrega o
+  remedio na porta da farmacia.
 
 Uma forma simples de pensar: o sistema tem uma parte que voce ve e usa (as telas)
 e uma parte de bastidores (o servidor) que guarda os dados com seguranca e faz o
@@ -38,6 +39,7 @@ trabalho pesado.
   por farmacia - nao ficam mais presos a um so navegador.
 - Uma **busca** que ja procura entre 11.7 mil remedios reais.
 - Um **assistente de IA** que responde perguntas sobre a sua farmacia.
+- Uma **"tela de saude"** que mostra, a qualquer momento, se o sistema esta bem.
 
 ---
 
@@ -49,7 +51,8 @@ trabalho pesado.
 - **Nova venda (caixa)** - monta o carrinho e fecha a venda; o estoque baixa
   sozinho.
 - **Solicitados** - remedios que clientes pediram e que ainda faltam.
-- **Pedidos** - pedir reposicao para a Eurofarma e acompanhar a entrega.
+- **Pedidos** - pedir reposicao para a distribuidora e acompanhar a entrega
+  (demo no navegador; ainda nao salva no banco).
 - **Historico** - todas as vendas ja feitas, para consulta.
 - **Contagem** - conferir o que esta na prateleira contra o que o sistema diz.
 - **Relatorios** - analises do periodo.
@@ -105,6 +108,28 @@ E como ter um ajudante que conhece os numeros da sua farmacia.
 - **NF-e** - lanca a mercadoria no sistema direto pela nota fiscal.
 - **Alvaras** - avisa quando alvaras e licencas estao perto de vencer.
 - **Relatorios** - gera os relatorios pedidos pelo Conselho de Farmacia.
+
+---
+
+## De olho na saude do sistema
+
+Pense num painel de carro: ele mostra se o motor esta bem e acende uma luz
+quando algo precisa de atencao. O auraFarma ganhou algo parecido nos bastidores.
+
+- Existe uma **tela de saude** que diz, na hora, se esta tudo bem (verde), meio
+  ruim (amarelo) ou fora do ar (vermelho).
+- Cada acao no sistema recebe um **numero de protocolo** (como o de um banco):
+  se algo der errado, esse numero ajuda a achar exatamente o que aconteceu.
+- O sistema **anota tudo o que faz** num registro organizado (os "logs"), pra
+  facilitar descobrir a causa de um problema.
+- Ele **avisa sozinho** quando algo sai do normal: lentidao, falta de memoria ou
+  erros demais.
+- Se uma **atualizacao** nasce com defeito, o sistema **volta para a versao boa
+  sozinho**, evitando deixar a farmacia na mao.
+
+Para o passo a passo de como acompanhar tudo isso, veja
+[[auraFarma - Monitoramento (leigos).md]] (bem simples) e
+[[auraFarma - Monitoramento (intermediario).md]] (um pouco mais detalhado).
 
 ---
 

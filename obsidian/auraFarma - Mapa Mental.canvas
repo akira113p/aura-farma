@@ -4,10 +4,10 @@
       "id": "a1f0c2d3e4b00000",
       "type": "text",
       "x": 0,
-      "y": 4005,
+      "y": 5084,
       "width": 420,
       "height": 180,
-      "text": "# auraFarma\n\nGestao + compliance para farmacias pequenas\ncom a Eurofarma integrada como fornecedor"
+      "text": "# auraFarma\n\nGestao + compliance para farmacias pequenas\ncom integracao de compras via distribuidora"
     },
     {
       "id": "a1f0c2d3e4b00001",
@@ -46,17 +46,17 @@
       "y": 162,
       "width": 360,
       "height": 92,
-      "text": "Clientes: farmacias pequenas",
+      "text": "Clientes: farmacias pequenas (foco em genericos)",
       "color": "6"
     },
     {
       "id": "a1f0c2d3e4b00005",
       "type": "text",
       "x": 980,
-      "y": 370,
+      "y": 318,
       "width": 360,
       "height": 92,
-      "text": "Eurofarma (parceria escolar)",
+      "text": "Modelo de dois lados",
       "color": "6"
     },
     {
@@ -66,7 +66,7 @@
       "y": 266,
       "width": 380,
       "height": 92,
-      "text": "fornecedor integrado na plataforma",
+      "text": "Farmacia: gestao completa + compra facil integrada",
       "color": "6"
     },
     {
@@ -76,17 +76,17 @@
       "y": 370,
       "width": 380,
       "height": 92,
-      "text": "ganha canal de venda digital",
+      "text": "Distribuidora: canal de venda digital + visibilidade da demanda",
       "color": "6"
     },
     {
       "id": "a1f0c2d3e4b00008",
       "type": "text",
-      "x": 1440,
+      "x": 980,
       "y": 474,
-      "width": 380,
+      "width": 360,
       "height": 92,
-      "text": "farmacia nao troca fornecedor; e opcao a mais",
+      "text": "Eurofarma: parceria escolar, valor de marca; papel tecnico secundario",
       "color": "6"
     },
     {
@@ -96,14 +96,14 @@
       "y": 578,
       "width": 360,
       "height": 92,
-      "text": "Outros fornecedores no futuro",
+      "text": "Integracao de pedidos mira a distribuidora, nao a Eurofarma diretamente",
       "color": "6"
     },
     {
       "id": "a1f0c2d3e4b0000a",
       "type": "text",
       "x": 540,
-      "y": 1202,
+      "y": 1306,
       "width": 340,
       "height": 92,
       "text": "**Arquitetura**",
@@ -136,7 +136,7 @@
       "y": 890,
       "width": 360,
       "height": 92,
-      "text": "Banco: MongoDB (Atlas)",
+      "text": "Banco principal: MongoDB Atlas (auth, estoque, vendas, contagem)",
       "color": "4"
     },
     {
@@ -146,7 +146,7 @@
       "y": 994,
       "width": 360,
       "height": 92,
-      "text": "Auth: cookie httpOnly + bcrypt + Google",
+      "text": "Banco de compliance: PostgreSQL Neon (SNGPC, controlados, lotes, receitas)",
       "color": "4"
     },
     {
@@ -156,7 +156,7 @@
       "y": 1098,
       "width": 360,
       "height": 92,
-      "text": "Busca: em memoria no Node + Fuse.js",
+      "text": "Auth: cookie httpOnly + bcrypt + Google",
       "color": "4"
     },
     {
@@ -166,7 +166,7 @@
       "y": 1202,
       "width": 360,
       "height": 92,
-      "text": "Dados (estoque/vendas/...): 1 doc por produto no Mongo, campos curtos (alias)",
+      "text": "Busca: em memoria no Node + Fuse.js",
       "color": "4"
     },
     {
@@ -176,7 +176,7 @@
       "y": 1306,
       "width": 360,
       "height": 92,
-      "text": "Carga: GET /api/estado (1 chamada) + rate-limit por usuario",
+      "text": "Dados (estoque/vendas/...): 1 doc por produto no Mongo, campos curtos (alias)",
       "color": "4"
     },
     {
@@ -186,27 +186,27 @@
       "y": 1410,
       "width": 360,
       "height": 92,
-      "text": "IA: OpenRouter, chave server-side, fluxo de 2 estagios + seletor de escopo",
+      "text": "Carga: GET /api/estado (1 chamada) + rate-limit por usuario",
       "color": "4"
     },
     {
       "id": "a1f0c2d3e4b00013",
       "type": "text",
       "x": 980,
-      "y": 1722,
+      "y": 1514,
       "width": 360,
       "height": 92,
-      "text": "Decisoes",
+      "text": "IA: OpenRouter, chave server-side, fluxo de 2 estagios + seletor de escopo",
       "color": "4"
     },
     {
       "id": "a1f0c2d3e4b00014",
       "type": "text",
-      "x": 1440,
-      "y": 1514,
-      "width": 380,
+      "x": 980,
+      "y": 1930,
+      "width": 360,
       "height": 92,
-      "text": "CSV ANVISA em memoria (nao sobe pro Mongo)",
+      "text": "Decisoes",
       "color": "4"
     },
     {
@@ -216,7 +216,7 @@
       "y": 1618,
       "width": 380,
       "height": 92,
-      "text": "estoque/vendas no Mongo; front fala pela API",
+      "text": "CSV ANVISA em memoria (nao sobe pro Mongo)",
       "color": "4"
     },
     {
@@ -226,7 +226,7 @@
       "y": 1722,
       "width": 380,
       "height": 92,
-      "text": "segredos so no .env (VITE_ nunca recebe segredo)",
+      "text": "estoque/vendas no Mongo; front fala pela API",
       "color": "4"
     },
     {
@@ -236,7 +236,7 @@
       "y": 1826,
       "width": 380,
       "height": 92,
-      "text": "cookie httpOnly + Secure + SameSite",
+      "text": "compliance (SNGPC) no PostgreSQL: precisa de integridade relacional e ACID",
       "color": "4"
     },
     {
@@ -246,57 +246,57 @@
       "y": 1930,
       "width": 380,
       "height": 92,
-      "text": "IA: chave so no backend; 2 estagios (planeja -> consulta dados escopados -> responde)",
+      "text": "dois bancos convivem: migrar tudo custaria 5-8 semanas; adicionar Postgres custa 2-3",
       "color": "4"
     },
     {
       "id": "a1f0c2d3e4b00019",
       "type": "text",
+      "x": 1440,
+      "y": 2034,
+      "width": 380,
+      "height": 92,
+      "text": "segredos so no .env (VITE_ nunca recebe segredo)",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0001a",
+      "type": "text",
+      "x": 1440,
+      "y": 2138,
+      "width": 380,
+      "height": 92,
+      "text": "cookie httpOnly + Secure + SameSite",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0001b",
+      "type": "text",
+      "x": 1440,
+      "y": 2242,
+      "width": 380,
+      "height": 92,
+      "text": "IA: chave so no backend; 2 estagios (planeja -> consulta dados escopados -> responde)",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0001c",
+      "type": "text",
       "x": 540,
-      "y": 2762,
+      "y": 3126,
       "width": 340,
       "height": 92,
       "text": "**Estado atual**",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0001a",
+      "id": "a1f0c2d3e4b0001d",
       "type": "text",
       "x": 980,
-      "y": 2398,
+      "y": 2710,
       "width": 360,
       "height": 92,
       "text": "Pronto",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b0001b",
-      "type": "text",
-      "x": 1440,
-      "y": 2034,
-      "width": 380,
-      "height": 92,
-      "text": "9 telas (React/Vite)",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b0001c",
-      "type": "text",
-      "x": 1440,
-      "y": 2138,
-      "width": 380,
-      "height": 92,
-      "text": "Login / registro / logout + Google OAuth",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b0001d",
-      "type": "text",
-      "x": 1440,
-      "y": 2242,
-      "width": 380,
-      "height": 92,
-      "text": "bcrypt + sessao cookie httpOnly",
       "color": "5"
     },
     {
@@ -306,7 +306,7 @@
       "y": 2346,
       "width": 380,
       "height": 92,
-      "text": "MongoDB conectado",
+      "text": "9 telas (React/Vite)",
       "color": "5"
     },
     {
@@ -316,7 +316,7 @@
       "y": 2450,
       "width": 380,
       "height": 92,
-      "text": "Base ANVISA 11.7k + busca fuzzy (Fuse.js)",
+      "text": "Login / registro / logout + Google OAuth",
       "color": "5"
     },
     {
@@ -326,7 +326,7 @@
       "y": 2554,
       "width": 380,
       "height": 92,
-      "text": "Estoque/vendas/solicitados/contagem no MongoDB (por usuario)",
+      "text": "bcrypt + sessao cookie httpOnly",
       "color": "5"
     },
     {
@@ -336,7 +336,7 @@
       "y": 2658,
       "width": 380,
       "height": 92,
-      "text": "Pedidos: reposicao via Eurofarma (demo de logistica, no navegador)",
+      "text": "MongoDB conectado",
       "color": "5"
     },
     {
@@ -346,67 +346,67 @@
       "y": 2762,
       "width": 380,
       "height": 92,
-      "text": "Assistente IA (OpenRouter) + resumo automatico no Dashboard/Relatorios",
+      "text": "Base ANVISA 11.7k + busca fuzzy (Fuse.js)",
       "color": "5"
     },
     {
       "id": "a1f0c2d3e4b00023",
       "type": "text",
-      "x": 980,
+      "x": 1440,
       "y": 2866,
-      "width": 360,
+      "width": 380,
       "height": 92,
-      "text": "Em andamento",
+      "text": "Estoque/vendas/solicitados/contagem no MongoDB (por usuario)",
       "color": "5"
     },
     {
       "id": "a1f0c2d3e4b00024",
       "type": "text",
       "x": 1440,
-      "y": 2866,
+      "y": 2970,
       "width": 380,
       "height": 92,
-      "text": "Alertas de validade (campo ja existe no produto)",
+      "text": "Assistente IA (OpenRouter) + resumo automatico no Dashboard/Relatorios",
       "color": "5"
     },
     {
       "id": "a1f0c2d3e4b00025",
       "type": "text",
-      "x": 980,
-      "y": 3126,
-      "width": 360,
+      "x": 1440,
+      "y": 3074,
+      "width": 380,
       "height": 92,
-      "text": "Planejado",
+      "text": "Observabilidade de producao: logs JSON, request-ID, health detalhado, metricas, alertas",
       "color": "5"
     },
     {
       "id": "a1f0c2d3e4b00026",
       "type": "text",
-      "x": 1440,
-      "y": 2970,
-      "width": 380,
+      "x": 980,
+      "y": 3178,
+      "width": 360,
       "height": 92,
-      "text": "SNGPC",
+      "text": "Divida tecnica",
       "color": "5"
     },
     {
       "id": "a1f0c2d3e4b00027",
       "type": "text",
       "x": 1440,
-      "y": 3074,
+      "y": 3178,
       "width": 380,
       "height": 92,
-      "text": "Importacao CSV / NF-e",
+      "text": "Pedidos: demo de logistica so em localStorage; precisa persistir no banco antes do beta",
       "color": "5"
     },
     {
       "id": "a1f0c2d3e4b00028",
       "type": "text",
-      "x": 1440,
-      "y": 3178,
-      "width": 380,
+      "x": 980,
+      "y": 3282,
+      "width": 360,
       "height": 92,
-      "text": "Integracao Eurofarma",
+      "text": "Em andamento",
       "color": "5"
     },
     {
@@ -416,107 +416,107 @@
       "y": 3282,
       "width": 380,
       "height": 92,
-      "text": "Sistema de pagamento",
+      "text": "Alertas de validade (campo ja existe no produto)",
       "color": "5"
     },
     {
       "id": "a1f0c2d3e4b0002a",
       "type": "text",
+      "x": 980,
+      "y": 3542,
+      "width": 360,
+      "height": 92,
+      "text": "Planejado",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0002b",
+      "type": "text",
+      "x": 1440,
+      "y": 3386,
+      "width": 380,
+      "height": 92,
+      "text": "SNGPC (PostgreSQL Neon)",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0002c",
+      "type": "text",
+      "x": 1440,
+      "y": 3490,
+      "width": 380,
+      "height": 92,
+      "text": "Importacao CSV / NF-e",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0002d",
+      "type": "text",
+      "x": 1440,
+      "y": 3594,
+      "width": 380,
+      "height": 92,
+      "text": "Integracao distribuidora (API real)",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0002e",
+      "type": "text",
+      "x": 1440,
+      "y": 3698,
+      "width": 380,
+      "height": 92,
+      "text": "Sistema de pagamento",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b0002f",
+      "type": "text",
       "x": 540,
-      "y": 4088,
+      "y": 4530,
       "width": 340,
       "height": 92,
       "text": "**Funcionalidades**",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b0002b",
+      "id": "a1f0c2d3e4b00030",
       "type": "text",
       "x": 980,
-      "y": 3698,
+      "y": 4114,
       "width": 360,
       "height": 92,
       "text": "MVP escolar (prioridade)",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b0002c",
+      "id": "a1f0c2d3e4b00031",
       "type": "text",
       "x": 1440,
-      "y": 3386,
+      "y": 3802,
       "width": 380,
       "height": 92,
       "text": "Conectar frontend ao backend (feito)",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b0002d",
+      "id": "a1f0c2d3e4b00032",
       "type": "text",
       "x": 1440,
-      "y": 3490,
+      "y": 3906,
       "width": 380,
       "height": 92,
       "text": "Busca inteligente no estoque (feito)",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b0002e",
-      "type": "text",
-      "x": 1440,
-      "y": 3594,
-      "width": 380,
-      "height": 92,
-      "text": "Controle de estoque no Mongo (feito)",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b0002f",
-      "type": "text",
-      "x": 1440,
-      "y": 3698,
-      "width": 380,
-      "height": 92,
-      "text": "SNGPC: controlados -> ANVISA",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b00030",
-      "type": "text",
-      "x": 1440,
-      "y": 3802,
-      "width": 380,
-      "height": 92,
-      "text": "Controle de validade com alertas",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b00031",
-      "type": "text",
-      "x": 1440,
-      "y": 3906,
-      "width": 380,
-      "height": 92,
-      "text": "Pedido pra Eurofarma: demo de logistica (feito)",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b00032",
+      "id": "a1f0c2d3e4b00033",
       "type": "text",
       "x": 1440,
       "y": 4010,
       "width": 380,
       "height": 92,
-      "text": "Assistente IA sobre os dados da farmacia (feito)",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b00033",
-      "type": "text",
-      "x": 980,
-      "y": 4478,
-      "width": 360,
-      "height": 92,
-      "text": "Produto real (pos-banca)",
+      "text": "Controle de estoque no Mongo (feito)",
       "color": "2"
     },
     {
@@ -526,7 +526,7 @@
       "y": 4114,
       "width": 380,
       "height": 92,
-      "text": "API real com Eurofarma",
+      "text": "Controle de validade com alertas",
       "color": "2"
     },
     {
@@ -536,7 +536,7 @@
       "y": 4218,
       "width": 380,
       "height": 92,
-      "text": "Importar estoque via CSV",
+      "text": "Pedido para distribuidora: demo de logistica (feito, so no navegador)",
       "color": "2"
     },
     {
@@ -546,7 +546,7 @@
       "y": 4322,
       "width": 380,
       "height": 92,
-      "text": "Importar NF-e (XML)",
+      "text": "Assistente IA sobre os dados da farmacia (feito)",
       "color": "2"
     },
     {
@@ -556,338 +556,338 @@
       "y": 4426,
       "width": 380,
       "height": 92,
-      "text": "Outros fornecedores",
+      "text": "SNGPC: controlados -> ANVISA (PostgreSQL)",
       "color": "2"
     },
     {
       "id": "a1f0c2d3e4b00038",
       "type": "text",
-      "x": 1440,
-      "y": 4530,
-      "width": 380,
+      "x": 980,
+      "y": 4946,
+      "width": 360,
       "height": 92,
-      "text": "Pagamento integrado",
+      "text": "Produto real (pos-banca)",
       "color": "2"
     },
     {
       "id": "a1f0c2d3e4b00039",
       "type": "text",
       "x": 1440,
-      "y": 4634,
+      "y": 4530,
       "width": 380,
       "height": 92,
-      "text": "Rastreabilidade de psicotropicos por lote",
+      "text": "Persistir Pedidos no banco (divida tecnica)",
       "color": "2"
     },
     {
       "id": "a1f0c2d3e4b0003a",
       "type": "text",
       "x": 1440,
-      "y": 4738,
+      "y": 4634,
       "width": 380,
       "height": 92,
-      "text": "Painel de alvaras e licencas",
+      "text": "API real com distribuidora",
       "color": "2"
     },
     {
       "id": "a1f0c2d3e4b0003b",
       "type": "text",
       "x": 1440,
+      "y": 4738,
+      "width": 380,
+      "height": 92,
+      "text": "Importar estoque via CSV",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b0003c",
+      "type": "text",
+      "x": 1440,
       "y": 4842,
+      "width": 380,
+      "height": 92,
+      "text": "Importar NF-e (XML)",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b0003d",
+      "type": "text",
+      "x": 1440,
+      "y": 4946,
+      "width": 380,
+      "height": 92,
+      "text": "Outros fornecedores",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b0003e",
+      "type": "text",
+      "x": 1440,
+      "y": 5050,
+      "width": 380,
+      "height": 92,
+      "text": "Pagamento integrado",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b0003f",
+      "type": "text",
+      "x": 1440,
+      "y": 5154,
+      "width": 380,
+      "height": 92,
+      "text": "Rastreabilidade de psicotropicos por lote",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00040",
+      "type": "text",
+      "x": 1440,
+      "y": 5258,
+      "width": 380,
+      "height": 92,
+      "text": "Painel de alvaras e licencas",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00041",
+      "type": "text",
+      "x": 1440,
+      "y": 5362,
       "width": 380,
       "height": 92,
       "text": "Relatorios para o CRF",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b0003c",
-      "type": "text",
-      "x": 540,
-      "y": 5206,
-      "width": 340,
-      "height": 92,
-      "text": "**Compliance (burocracia resolvida)**",
-      "color": "1"
-    },
-    {
-      "id": "a1f0c2d3e4b0003d",
-      "type": "text",
-      "x": 980,
-      "y": 4946,
-      "width": 360,
-      "height": 92,
-      "text": "SNGPC",
-      "color": "1"
-    },
-    {
-      "id": "a1f0c2d3e4b0003e",
-      "type": "text",
-      "x": 1440,
-      "y": 4946,
-      "width": 380,
-      "height": 92,
-      "text": "envio automatico de controlados; evita multa por atraso",
-      "color": "1"
-    },
-    {
-      "id": "a1f0c2d3e4b0003f",
-      "type": "text",
-      "x": 980,
-      "y": 5050,
-      "width": 360,
-      "height": 92,
-      "text": "Controle de validade",
-      "color": "1"
-    },
-    {
-      "id": "a1f0c2d3e4b00040",
-      "type": "text",
-      "x": 1440,
-      "y": 5050,
-      "width": 380,
-      "height": 92,
-      "text": "alertas de vencimento; vencido na prateleira e infracao grave",
-      "color": "1"
-    },
-    {
-      "id": "a1f0c2d3e4b00041",
-      "type": "text",
-      "x": 980,
-      "y": 5154,
-      "width": 360,
-      "height": 92,
-      "text": "NF-e XML",
-      "color": "1"
-    },
-    {
       "id": "a1f0c2d3e4b00042",
       "type": "text",
-      "x": 1440,
-      "y": 5154,
-      "width": 380,
+      "x": 540,
+      "y": 5778,
+      "width": 340,
       "height": 92,
-      "text": "entrada automatica de mercadoria por nota fiscal",
+      "text": "**SNGPC (planejado)**",
       "color": "1"
     },
     {
       "id": "a1f0c2d3e4b00043",
       "type": "text",
       "x": 980,
-      "y": 5258,
+      "y": 5466,
       "width": 360,
       "height": 92,
-      "text": "Alvaras e licencas",
+      "text": "Nao e API de tempo real: farmacia gera XML e envia periodicamente para a ANVISA",
       "color": "1"
     },
     {
       "id": "a1f0c2d3e4b00044",
       "type": "text",
-      "x": 1440,
-      "y": 5258,
-      "width": 380,
+      "x": 980,
+      "y": 5570,
+      "width": 360,
       "height": 92,
-      "text": "painel de vencimento (sanitario, CRF, funcionamento)",
+      "text": "Campo listaPortaria344 no produto (A1/A2/B1/B2/C1...) define fluxo e relatorio",
       "color": "1"
     },
     {
       "id": "a1f0c2d3e4b00045",
       "type": "text",
       "x": 980,
-      "y": 5362,
+      "y": 5674,
       "width": 360,
       "height": 92,
-      "text": "Relatorios CRF",
+      "text": "Venda de controlado precisa: lote, CRM medico, numero receita, CPF/RG comprador, endereco",
       "color": "1"
     },
     {
       "id": "a1f0c2d3e4b00046",
       "type": "text",
-      "x": 1440,
-      "y": 5362,
-      "width": 380,
+      "x": 980,
+      "y": 5882,
+      "width": 360,
       "height": 92,
-      "text": "geracao automatica para o Conselho",
+      "text": "Implementacao em 3 camadas",
       "color": "1"
     },
     {
       "id": "a1f0c2d3e4b00047",
       "type": "text",
-      "x": 980,
-      "y": 5466,
-      "width": 360,
+      "x": 1440,
+      "y": 5778,
+      "width": 380,
       "height": 92,
-      "text": "Rastreabilidade por lote",
+      "text": "1. Formularios de entrada/saida (Postgres)",
       "color": "1"
     },
     {
       "id": "a1f0c2d3e4b00048",
       "type": "text",
       "x": 1440,
-      "y": 5466,
+      "y": 5882,
+      "width": 380,
+      "height": 92,
+      "text": "2. Gerador de XML no formato ANVISA",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00049",
+      "type": "text",
+      "x": 1440,
+      "y": 5986,
+      "width": 380,
+      "height": 92,
+      "text": "3. Envio automatico (ultimo; homologacao burocratica)",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0004a",
+      "type": "text",
+      "x": 980,
+      "y": 6090,
+      "width": 360,
+      "height": 92,
+      "text": "Venda normal continua como esta; venda de controlado ganha documento separado",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0004b",
+      "type": "text",
+      "x": 540,
+      "y": 6402,
+      "width": 340,
+      "height": 92,
+      "text": "**Compliance (outros)**",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0004c",
+      "type": "text",
+      "x": 980,
+      "y": 6194,
+      "width": 360,
+      "height": 92,
+      "text": "Controle de validade",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0004d",
+      "type": "text",
+      "x": 1440,
+      "y": 6194,
+      "width": 380,
+      "height": 92,
+      "text": "alertas de vencimento; vencido na prateleira e infracao grave",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0004e",
+      "type": "text",
+      "x": 980,
+      "y": 6298,
+      "width": 360,
+      "height": 92,
+      "text": "NF-e XML",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b0004f",
+      "type": "text",
+      "x": 1440,
+      "y": 6298,
+      "width": 380,
+      "height": 92,
+      "text": "entrada automatica de mercadoria por nota fiscal",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00050",
+      "type": "text",
+      "x": 980,
+      "y": 6402,
+      "width": 360,
+      "height": 92,
+      "text": "Alvaras e licencas",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00051",
+      "type": "text",
+      "x": 1440,
+      "y": 6402,
+      "width": 380,
+      "height": 92,
+      "text": "painel de vencimento (sanitario, CRF, funcionamento)",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00052",
+      "type": "text",
+      "x": 980,
+      "y": 6506,
+      "width": 360,
+      "height": 92,
+      "text": "Relatorios CRF",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00053",
+      "type": "text",
+      "x": 1440,
+      "y": 6506,
+      "width": 380,
+      "height": 92,
+      "text": "geracao automatica para o Conselho",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00054",
+      "type": "text",
+      "x": 980,
+      "y": 6610,
+      "width": 360,
+      "height": 92,
+      "text": "Rastreabilidade por lote",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b00055",
+      "type": "text",
+      "x": 1440,
+      "y": 6610,
       "width": 380,
       "height": 92,
       "text": "facilita recall de psicotropicos",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b00049",
+      "id": "a1f0c2d3e4b00056",
       "type": "text",
       "x": 540,
-      "y": 5830,
+      "y": 6974,
       "width": 340,
       "height": 92,
       "text": "**Base de medicamentos**",
       "color": "3"
     },
     {
-      "id": "a1f0c2d3e4b0004a",
+      "id": "a1f0c2d3e4b00057",
       "type": "text",
       "x": 980,
-      "y": 5570,
+      "y": 6714,
       "width": 360,
       "height": 92,
       "text": "Fonte: ANVISA (dados abertos)",
       "color": "3"
     },
     {
-      "id": "a1f0c2d3e4b0004b",
+      "id": "a1f0c2d3e4b00058",
       "type": "text",
       "x": 980,
-      "y": 5674,
+      "y": 6818,
       "width": 360,
       "height": 92,
       "text": "11.759 medicamentos (catalogo de busca)",
       "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b0004c",
-      "type": "text",
-      "x": 980,
-      "y": 5778,
-      "width": 360,
-      "height": 92,
-      "text": "Campos: nome, principio ativo, classe, empresa",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b0004d",
-      "type": "text",
-      "x": 980,
-      "y": 5882,
-      "width": 360,
-      "height": 92,
-      "text": "Em memoria no Node (nao no Mongo)",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b0004e",
-      "type": "text",
-      "x": 980,
-      "y": 5986,
-      "width": 360,
-      "height": 92,
-      "text": "Busca fuzzy via Fuse.js (tolera erro de digitacao)",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b0004f",
-      "type": "text",
-      "x": 980,
-      "y": 6090,
-      "width": 360,
-      "height": 92,
-      "text": "Atualizacao: job semanal baixando CSV (planejado)",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b00050",
-      "type": "text",
-      "x": 540,
-      "y": 6610,
-      "width": 340,
-      "height": 92,
-      "text": "**Assistente IA (OpenRouter)**",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b00051",
-      "type": "text",
-      "x": 980,
-      "y": 6194,
-      "width": 360,
-      "height": 92,
-      "text": "Chave fica so no backend; o front nunca a ve",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b00052",
-      "type": "text",
-      "x": 980,
-      "y": 6298,
-      "width": 360,
-      "height": 92,
-      "text": "Resumo automatico (texto pronto) no Dashboard e Relatorios",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b00053",
-      "type": "text",
-      "x": 980,
-      "y": 6402,
-      "width": 360,
-      "height": 92,
-      "text": "Tela Assistente: 1 pergunta por vez, sem contexto anterior",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b00054",
-      "type": "text",
-      "x": 980,
-      "y": 6506,
-      "width": 360,
-      "height": 92,
-      "text": "Historico das respostas so no navegador (localStorage)",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b00055",
-      "type": "text",
-      "x": 980,
-      "y": 6714,
-      "width": 360,
-      "height": 92,
-      "text": "Fluxo de 2 estagios (mais barato)",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b00056",
-      "type": "text",
-      "x": 1440,
-      "y": 6610,
-      "width": 380,
-      "height": 92,
-      "text": "IA pequena planeja quais dados buscar",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b00057",
-      "type": "text",
-      "x": 1440,
-      "y": 6714,
-      "width": 380,
-      "height": 92,
-      "text": "backend roda consultas escopadas por usuario",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b00058",
-      "type": "text",
-      "x": 1440,
-      "y": 6818,
-      "width": 380,
-      "height": 92,
-      "text": "IA principal responde com os dados certos",
-      "color": "4"
     },
     {
       "id": "a1f0c2d3e4b00059",
@@ -896,8 +896,8 @@
       "y": 6922,
       "width": 360,
       "height": 92,
-      "text": "Seletor de escopo limita onde a IA enxerga (menos erro)",
-      "color": "4"
+      "text": "Campos: nome, principio ativo, classe, empresa",
+      "color": "3"
     },
     {
       "id": "a1f0c2d3e4b0005a",
@@ -906,38 +906,38 @@
       "y": 7026,
       "width": 360,
       "height": 92,
-      "text": "Fallback de modelos: troca de modelo se um falhar",
-      "color": "4"
+      "text": "Em memoria no Node (nao no Mongo)",
+      "color": "3"
     },
     {
       "id": "a1f0c2d3e4b0005b",
-      "type": "text",
-      "x": 540,
-      "y": 7286,
-      "width": 340,
-      "height": 92,
-      "text": "**Pedidos (logistica Eurofarma)**",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b0005c",
       "type": "text",
       "x": 980,
       "y": 7130,
       "width": 360,
       "height": 92,
-      "text": "Demo de reposicao com o distribuidor Eurofarma",
-      "color": "2"
+      "text": "Busca fuzzy via Fuse.js (tolera erro de digitacao)",
+      "color": "3"
     },
     {
-      "id": "a1f0c2d3e4b0005d",
+      "id": "a1f0c2d3e4b0005c",
       "type": "text",
       "x": 980,
       "y": 7234,
       "width": 360,
       "height": 92,
-      "text": "Sugere quantidade a repor a partir do estoque minimo",
-      "color": "2"
+      "text": "Atualizacao: job semanal baixando CSV (planejado)",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b0005d",
+      "type": "text",
+      "x": 540,
+      "y": 7754,
+      "width": 340,
+      "height": 92,
+      "text": "**Assistente IA (OpenRouter)**",
+      "color": "4"
     },
     {
       "id": "a1f0c2d3e4b0005e",
@@ -946,8 +946,8 @@
       "y": 7338,
       "width": 360,
       "height": 92,
-      "text": "Estagios do pedido: aguardando, confirmado, separacao, entregue",
-      "color": "2"
+      "text": "Chave fica so no backend; o front nunca a ve",
+      "color": "4"
     },
     {
       "id": "a1f0c2d3e4b0005f",
@@ -956,113 +956,363 @@
       "y": 7442,
       "width": 360,
       "height": 92,
-      "text": "Vive so no navegador (localStorage) - exemplo de como a API real funcionaria",
-      "color": "2"
+      "text": "Resumo automatico (texto pronto) no Dashboard e Relatorios",
+      "color": "4"
     },
     {
       "id": "a1f0c2d3e4b00060",
-      "type": "text",
-      "x": 540,
-      "y": 7832,
-      "width": 340,
-      "height": 92,
-      "text": "**Roadmap & Banca**",
-      "color": "6"
-    },
-    {
-      "id": "a1f0c2d3e4b00061",
       "type": "text",
       "x": 980,
       "y": 7546,
       "width": 360,
       "height": 92,
-      "text": "Mes 1-2: fechar MVP escolar",
-      "color": "6"
+      "text": "Tela Assistente: 1 pergunta por vez, sem contexto anterior",
+      "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00062",
+      "id": "a1f0c2d3e4b00061",
       "type": "text",
       "x": 980,
       "y": 7650,
       "width": 360,
       "height": 92,
-      "text": "Mes 3-4: validar com donos de farmacias reais",
-      "color": "6"
+      "text": "Historico das respostas so no navegador (localStorage)",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00062",
+      "type": "text",
+      "x": 980,
+      "y": 7858,
+      "width": 360,
+      "height": 92,
+      "text": "Fluxo de 2 estagios (mais barato)",
+      "color": "4"
     },
     {
       "id": "a1f0c2d3e4b00063",
       "type": "text",
-      "x": 980,
+      "x": 1440,
       "y": 7754,
-      "width": 360,
+      "width": 380,
       "height": 92,
-      "text": "Mes 5-6: Eurofarma (se validado) ou MVP pra banca",
-      "color": "6"
+      "text": "IA pequena planeja quais dados buscar",
+      "color": "4"
     },
     {
       "id": "a1f0c2d3e4b00064",
       "type": "text",
-      "x": 980,
+      "x": 1440,
       "y": 7858,
+      "width": 380,
+      "height": 92,
+      "text": "backend roda consultas escopadas por usuario",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00065",
+      "type": "text",
+      "x": 1440,
+      "y": 7962,
+      "width": 380,
+      "height": 92,
+      "text": "IA principal responde com os dados certos",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00066",
+      "type": "text",
+      "x": 980,
+      "y": 8066,
+      "width": 360,
+      "height": 92,
+      "text": "Seletor de escopo limita onde a IA enxerga (menos erro)",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00067",
+      "type": "text",
+      "x": 980,
+      "y": 8170,
+      "width": 360,
+      "height": 92,
+      "text": "Fallback de modelos: troca de modelo se um falhar",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00068",
+      "type": "text",
+      "x": 540,
+      "y": 8430,
+      "width": 340,
+      "height": 92,
+      "text": "**Pedidos (logistica distribuidora)**",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b00069",
+      "type": "text",
+      "x": 980,
+      "y": 8274,
+      "width": 360,
+      "height": 92,
+      "text": "Demo de reposicao com o distribuidor (Eurofarma como exemplo)",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b0006a",
+      "type": "text",
+      "x": 980,
+      "y": 8378,
+      "width": 360,
+      "height": 92,
+      "text": "Sugere quantidade a repor a partir do estoque minimo",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b0006b",
+      "type": "text",
+      "x": 980,
+      "y": 8482,
+      "width": 360,
+      "height": 92,
+      "text": "Estagios do pedido: aguardando, confirmado, separacao, entregue",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b0006c",
+      "type": "text",
+      "x": 980,
+      "y": 8586,
+      "width": 360,
+      "height": 92,
+      "text": "DIVIDA TECNICA: vive so no navegador (localStorage) - precisa persistir no banco",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b0006d",
+      "type": "text",
+      "x": 540,
+      "y": 9106,
+      "width": 340,
+      "height": 92,
+      "text": "**Observabilidade & Monitoramento**",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0006e",
+      "type": "text",
+      "x": 980,
+      "y": 8690,
+      "width": 360,
+      "height": 92,
+      "text": "Request-ID unico por requisicao (cabecalho X-Request-Id), propagado front->back",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0006f",
+      "type": "text",
+      "x": 980,
+      "y": 8794,
+      "width": 360,
+      "height": 92,
+      "text": "Logs estruturados em JSON (1 linha por evento); nivel via LOG_LEVEL",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00070",
+      "type": "text",
+      "x": 980,
+      "y": 8898,
+      "width": 360,
+      "height": 92,
+      "text": "Erros com stack trace completo + contexto no log; nunca na resposta HTTP",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00071",
+      "type": "text",
+      "x": 980,
+      "y": 9002,
+      "width": 360,
+      "height": 92,
+      "text": "/api/health detalhado: ok, status, banco, uptime, memoria, versao",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00072",
+      "type": "text",
+      "x": 980,
+      "y": 9106,
+      "width": 360,
+      "height": 92,
+      "text": "Metricas de performance: tempo (media/p95), memoria, CPU, contadores por status",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00073",
+      "type": "text",
+      "x": 980,
+      "y": 9210,
+      "width": 360,
+      "height": 92,
+      "text": "Query logging com tempo no Mongoose + marca de query lenta",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00074",
+      "type": "text",
+      "x": 980,
+      "y": 9314,
+      "width": 360,
+      "height": 92,
+      "text": "Cache em memoria com tracking de hit/miss",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00075",
+      "type": "text",
+      "x": 980,
+      "y": 9418,
+      "width": 360,
+      "height": 92,
+      "text": "Alertas configuraveis por threshold com cooldown",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00076",
+      "type": "text",
+      "x": 980,
+      "y": 9522,
+      "width": 360,
+      "height": 92,
+      "text": "Deploy health-gated no Render + rollback documentado",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00077",
+      "type": "text",
+      "x": 540,
+      "y": 9990,
+      "width": 340,
+      "height": 92,
+      "text": "**Roadmap & Proximos passos**",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00078",
+      "type": "text",
+      "x": 980,
+      "y": 9626,
+      "width": 360,
+      "height": 92,
+      "text": "Imediato: controle de validade com alertas",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00079",
+      "type": "text",
+      "x": 980,
+      "y": 9730,
+      "width": 360,
+      "height": 92,
+      "text": "Depois: SNGPC (maior trabalho, PostgreSQL Neon)",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b0007a",
+      "type": "text",
+      "x": 980,
+      "y": 9834,
+      "width": 360,
+      "height": 92,
+      "text": "Depois: persistir Pedidos no banco (divida tecnica)",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b0007b",
+      "type": "text",
+      "x": 980,
+      "y": 9938,
+      "width": 360,
+      "height": 92,
+      "text": "Validacao: mostrar para donos de farmacias reais (meses 3-4)",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b0007c",
+      "type": "text",
+      "x": 980,
+      "y": 10042,
       "width": 360,
       "height": 92,
       "text": "Banca (~6 meses): mostrar que a ideia funciona",
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00065",
+      "id": "a1f0c2d3e4b0007d",
       "type": "text",
       "x": 980,
-      "y": 8118,
+      "y": 10354,
       "width": 360,
       "height": 92,
       "text": "Diferenciais",
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00066",
+      "id": "a1f0c2d3e4b0007e",
       "type": "text",
       "x": 1440,
-      "y": 7962,
+      "y": 10146,
       "width": 380,
       "height": 92,
       "text": "autenticacao nivel profissional",
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00067",
+      "id": "a1f0c2d3e4b0007f",
       "type": "text",
       "x": 1440,
-      "y": 8066,
+      "y": 10250,
       "width": 380,
       "height": 92,
       "text": "base real da ANVISA",
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00068",
+      "id": "a1f0c2d3e4b00080",
       "type": "text",
       "x": 1440,
-      "y": 8170,
+      "y": 10354,
       "width": 380,
       "height": 92,
-      "text": "compliance burocratico",
+      "text": "compliance burocratico (SNGPC)",
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00069",
+      "id": "a1f0c2d3e4b00081",
       "type": "text",
       "x": 1440,
-      "y": 8274,
+      "y": 10458,
       "width": 380,
       "height": 92,
-      "text": "parceria Eurofarma",
+      "text": "integracao com distribuidora",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00082",
+      "type": "text",
+      "x": 1440,
+      "y": 10562,
+      "width": 380,
+      "height": 92,
+      "text": "parceria Eurofarma (credibilidade)",
       "color": "6"
     }
   ],
   "edges": [
     {
-      "id": "a1f0c2d3e4b0006a",
+      "id": "a1f0c2d3e4b00083",
       "fromNode": "a1f0c2d3e4b00001",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00002",
@@ -1070,7 +1320,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b0006b",
+      "id": "a1f0c2d3e4b00084",
       "fromNode": "a1f0c2d3e4b00001",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00003",
@@ -1078,7 +1328,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b0006c",
+      "id": "a1f0c2d3e4b00085",
       "fromNode": "a1f0c2d3e4b00001",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00004",
@@ -1086,7 +1336,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b0006d",
+      "id": "a1f0c2d3e4b00086",
       "fromNode": "a1f0c2d3e4b00005",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00006",
@@ -1094,7 +1344,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b0006e",
+      "id": "a1f0c2d3e4b00087",
       "fromNode": "a1f0c2d3e4b00005",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00007",
@@ -1102,15 +1352,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b0006f",
-      "fromNode": "a1f0c2d3e4b00005",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00008",
-      "toSide": "left",
-      "color": "6"
-    },
-    {
-      "id": "a1f0c2d3e4b00070",
+      "id": "a1f0c2d3e4b00088",
       "fromNode": "a1f0c2d3e4b00001",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00005",
@@ -1118,7 +1360,15 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00071",
+      "id": "a1f0c2d3e4b00089",
+      "fromNode": "a1f0c2d3e4b00001",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00008",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b0008a",
       "fromNode": "a1f0c2d3e4b00001",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00009",
@@ -1126,7 +1376,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00072",
+      "id": "a1f0c2d3e4b0008b",
       "fromNode": "a1f0c2d3e4b00000",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00001",
@@ -1134,7 +1384,7 @@
       "color": "6"
     },
     {
-      "id": "a1f0c2d3e4b00073",
+      "id": "a1f0c2d3e4b0008c",
       "fromNode": "a1f0c2d3e4b0000a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0000b",
@@ -1142,7 +1392,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00074",
+      "id": "a1f0c2d3e4b0008d",
       "fromNode": "a1f0c2d3e4b0000a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0000c",
@@ -1150,7 +1400,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00075",
+      "id": "a1f0c2d3e4b0008e",
       "fromNode": "a1f0c2d3e4b0000a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0000d",
@@ -1158,7 +1408,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00076",
+      "id": "a1f0c2d3e4b0008f",
       "fromNode": "a1f0c2d3e4b0000a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0000e",
@@ -1166,7 +1416,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00077",
+      "id": "a1f0c2d3e4b00090",
       "fromNode": "a1f0c2d3e4b0000a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0000f",
@@ -1174,7 +1424,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00078",
+      "id": "a1f0c2d3e4b00091",
       "fromNode": "a1f0c2d3e4b0000a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00010",
@@ -1182,7 +1432,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00079",
+      "id": "a1f0c2d3e4b00092",
       "fromNode": "a1f0c2d3e4b0000a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00011",
@@ -1190,7 +1440,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b0007a",
+      "id": "a1f0c2d3e4b00093",
       "fromNode": "a1f0c2d3e4b0000a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00012",
@@ -1198,47 +1448,7 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b0007b",
-      "fromNode": "a1f0c2d3e4b00013",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00014",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b0007c",
-      "fromNode": "a1f0c2d3e4b00013",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00015",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b0007d",
-      "fromNode": "a1f0c2d3e4b00013",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00016",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b0007e",
-      "fromNode": "a1f0c2d3e4b00013",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00017",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b0007f",
-      "fromNode": "a1f0c2d3e4b00013",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00018",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b00080",
+      "id": "a1f0c2d3e4b00094",
       "fromNode": "a1f0c2d3e4b0000a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00013",
@@ -1246,7 +1456,71 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00081",
+      "id": "a1f0c2d3e4b00095",
+      "fromNode": "a1f0c2d3e4b00014",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00015",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00096",
+      "fromNode": "a1f0c2d3e4b00014",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00016",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00097",
+      "fromNode": "a1f0c2d3e4b00014",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00017",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00098",
+      "fromNode": "a1f0c2d3e4b00014",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00018",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b00099",
+      "fromNode": "a1f0c2d3e4b00014",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00019",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0009a",
+      "fromNode": "a1f0c2d3e4b00014",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0001a",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0009b",
+      "fromNode": "a1f0c2d3e4b00014",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0001b",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0009c",
+      "fromNode": "a1f0c2d3e4b0000a",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00014",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b0009d",
       "fromNode": "a1f0c2d3e4b00000",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0000a",
@@ -1254,650 +1528,826 @@
       "color": "4"
     },
     {
-      "id": "a1f0c2d3e4b00082",
-      "fromNode": "a1f0c2d3e4b0001a",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0001b",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b00083",
-      "fromNode": "a1f0c2d3e4b0001a",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0001c",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b00084",
-      "fromNode": "a1f0c2d3e4b0001a",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0001d",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b00085",
-      "fromNode": "a1f0c2d3e4b0001a",
+      "id": "a1f0c2d3e4b0009e",
+      "fromNode": "a1f0c2d3e4b0001d",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0001e",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00086",
-      "fromNode": "a1f0c2d3e4b0001a",
+      "id": "a1f0c2d3e4b0009f",
+      "fromNode": "a1f0c2d3e4b0001d",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0001f",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00087",
-      "fromNode": "a1f0c2d3e4b0001a",
+      "id": "a1f0c2d3e4b000a0",
+      "fromNode": "a1f0c2d3e4b0001d",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00020",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00088",
-      "fromNode": "a1f0c2d3e4b0001a",
+      "id": "a1f0c2d3e4b000a1",
+      "fromNode": "a1f0c2d3e4b0001d",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00021",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00089",
-      "fromNode": "a1f0c2d3e4b0001a",
+      "id": "a1f0c2d3e4b000a2",
+      "fromNode": "a1f0c2d3e4b0001d",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00022",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0008a",
-      "fromNode": "a1f0c2d3e4b00019",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0001a",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b0008b",
-      "fromNode": "a1f0c2d3e4b00023",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00024",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b0008c",
-      "fromNode": "a1f0c2d3e4b00019",
+      "id": "a1f0c2d3e4b000a3",
+      "fromNode": "a1f0c2d3e4b0001d",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00023",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0008d",
-      "fromNode": "a1f0c2d3e4b00025",
+      "id": "a1f0c2d3e4b000a4",
+      "fromNode": "a1f0c2d3e4b0001d",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00026",
+      "toNode": "a1f0c2d3e4b00024",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b0008e",
-      "fromNode": "a1f0c2d3e4b00025",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00027",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b0008f",
-      "fromNode": "a1f0c2d3e4b00025",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00028",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b00090",
-      "fromNode": "a1f0c2d3e4b00025",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00029",
-      "toSide": "left",
-      "color": "5"
-    },
-    {
-      "id": "a1f0c2d3e4b00091",
-      "fromNode": "a1f0c2d3e4b00019",
+      "id": "a1f0c2d3e4b000a5",
+      "fromNode": "a1f0c2d3e4b0001d",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00025",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00092",
-      "fromNode": "a1f0c2d3e4b00000",
+      "id": "a1f0c2d3e4b000a6",
+      "fromNode": "a1f0c2d3e4b0001c",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00019",
+      "toNode": "a1f0c2d3e4b0001d",
       "toSide": "left",
       "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00093",
-      "fromNode": "a1f0c2d3e4b0002b",
+      "id": "a1f0c2d3e4b000a7",
+      "fromNode": "a1f0c2d3e4b00026",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00027",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b000a8",
+      "fromNode": "a1f0c2d3e4b0001c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00026",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b000a9",
+      "fromNode": "a1f0c2d3e4b00028",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00029",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b000aa",
+      "fromNode": "a1f0c2d3e4b0001c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00028",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b000ab",
+      "fromNode": "a1f0c2d3e4b0002a",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0002b",
+      "toSide": "left",
+      "color": "5"
+    },
+    {
+      "id": "a1f0c2d3e4b000ac",
+      "fromNode": "a1f0c2d3e4b0002a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0002c",
       "toSide": "left",
-      "color": "2"
+      "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00094",
-      "fromNode": "a1f0c2d3e4b0002b",
+      "id": "a1f0c2d3e4b000ad",
+      "fromNode": "a1f0c2d3e4b0002a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0002d",
       "toSide": "left",
-      "color": "2"
+      "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00095",
-      "fromNode": "a1f0c2d3e4b0002b",
+      "id": "a1f0c2d3e4b000ae",
+      "fromNode": "a1f0c2d3e4b0002a",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0002e",
       "toSide": "left",
-      "color": "2"
+      "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00096",
-      "fromNode": "a1f0c2d3e4b0002b",
+      "id": "a1f0c2d3e4b000af",
+      "fromNode": "a1f0c2d3e4b0001c",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0002f",
+      "toNode": "a1f0c2d3e4b0002a",
       "toSide": "left",
-      "color": "2"
+      "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00097",
-      "fromNode": "a1f0c2d3e4b0002b",
+      "id": "a1f0c2d3e4b000b0",
+      "fromNode": "a1f0c2d3e4b00000",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00030",
+      "toNode": "a1f0c2d3e4b0001c",
       "toSide": "left",
-      "color": "2"
+      "color": "5"
     },
     {
-      "id": "a1f0c2d3e4b00098",
-      "fromNode": "a1f0c2d3e4b0002b",
+      "id": "a1f0c2d3e4b000b1",
+      "fromNode": "a1f0c2d3e4b00030",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00031",
       "toSide": "left",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b00099",
-      "fromNode": "a1f0c2d3e4b0002b",
+      "id": "a1f0c2d3e4b000b2",
+      "fromNode": "a1f0c2d3e4b00030",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00032",
       "toSide": "left",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b0009a",
-      "fromNode": "a1f0c2d3e4b0002a",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0002b",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b0009b",
-      "fromNode": "a1f0c2d3e4b00033",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00034",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b0009c",
-      "fromNode": "a1f0c2d3e4b00033",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00035",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b0009d",
-      "fromNode": "a1f0c2d3e4b00033",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00036",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b0009e",
-      "fromNode": "a1f0c2d3e4b00033",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00037",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b0009f",
-      "fromNode": "a1f0c2d3e4b00033",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00038",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b000a0",
-      "fromNode": "a1f0c2d3e4b00033",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00039",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b000a1",
-      "fromNode": "a1f0c2d3e4b00033",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0003a",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b000a2",
-      "fromNode": "a1f0c2d3e4b00033",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0003b",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b000a3",
-      "fromNode": "a1f0c2d3e4b0002a",
+      "id": "a1f0c2d3e4b000b3",
+      "fromNode": "a1f0c2d3e4b00030",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00033",
       "toSide": "left",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b000a4",
-      "fromNode": "a1f0c2d3e4b00000",
+      "id": "a1f0c2d3e4b000b4",
+      "fromNode": "a1f0c2d3e4b00030",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0002a",
+      "toNode": "a1f0c2d3e4b00034",
       "toSide": "left",
       "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b000a5",
-      "fromNode": "a1f0c2d3e4b0003d",
+      "id": "a1f0c2d3e4b000b5",
+      "fromNode": "a1f0c2d3e4b00030",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0003e",
+      "toNode": "a1f0c2d3e4b00035",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b000a6",
-      "fromNode": "a1f0c2d3e4b0003c",
+      "id": "a1f0c2d3e4b000b6",
+      "fromNode": "a1f0c2d3e4b00030",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00036",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000b7",
+      "fromNode": "a1f0c2d3e4b00030",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00037",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000b8",
+      "fromNode": "a1f0c2d3e4b0002f",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00030",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000b9",
+      "fromNode": "a1f0c2d3e4b00038",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00039",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000ba",
+      "fromNode": "a1f0c2d3e4b00038",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0003a",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000bb",
+      "fromNode": "a1f0c2d3e4b00038",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0003b",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000bc",
+      "fromNode": "a1f0c2d3e4b00038",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0003c",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000bd",
+      "fromNode": "a1f0c2d3e4b00038",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0003d",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b000a7",
-      "fromNode": "a1f0c2d3e4b0003f",
+      "id": "a1f0c2d3e4b000be",
+      "fromNode": "a1f0c2d3e4b00038",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00040",
+      "toNode": "a1f0c2d3e4b0003e",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b000a8",
-      "fromNode": "a1f0c2d3e4b0003c",
+      "id": "a1f0c2d3e4b000bf",
+      "fromNode": "a1f0c2d3e4b00038",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b0003f",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b000a9",
-      "fromNode": "a1f0c2d3e4b00041",
+      "id": "a1f0c2d3e4b000c0",
+      "fromNode": "a1f0c2d3e4b00038",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00042",
+      "toNode": "a1f0c2d3e4b00040",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b000aa",
-      "fromNode": "a1f0c2d3e4b0003c",
+      "id": "a1f0c2d3e4b000c1",
+      "fromNode": "a1f0c2d3e4b00038",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00041",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b000ab",
-      "fromNode": "a1f0c2d3e4b00043",
+      "id": "a1f0c2d3e4b000c2",
+      "fromNode": "a1f0c2d3e4b0002f",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00044",
+      "toNode": "a1f0c2d3e4b00038",
       "toSide": "left",
-      "color": "1"
+      "color": "2"
     },
     {
-      "id": "a1f0c2d3e4b000ac",
-      "fromNode": "a1f0c2d3e4b0003c",
+      "id": "a1f0c2d3e4b000c3",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0002f",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000c4",
+      "fromNode": "a1f0c2d3e4b00042",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00043",
       "toSide": "left",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b000ad",
-      "fromNode": "a1f0c2d3e4b00045",
+      "id": "a1f0c2d3e4b000c5",
+      "fromNode": "a1f0c2d3e4b00042",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00046",
+      "toNode": "a1f0c2d3e4b00044",
       "toSide": "left",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b000ae",
-      "fromNode": "a1f0c2d3e4b0003c",
+      "id": "a1f0c2d3e4b000c6",
+      "fromNode": "a1f0c2d3e4b00042",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00045",
       "toSide": "left",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b000af",
-      "fromNode": "a1f0c2d3e4b00047",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00048",
-      "toSide": "left",
-      "color": "1"
-    },
-    {
-      "id": "a1f0c2d3e4b000b0",
-      "fromNode": "a1f0c2d3e4b0003c",
+      "id": "a1f0c2d3e4b000c7",
+      "fromNode": "a1f0c2d3e4b00046",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00047",
       "toSide": "left",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b000b1",
-      "fromNode": "a1f0c2d3e4b00000",
+      "id": "a1f0c2d3e4b000c8",
+      "fromNode": "a1f0c2d3e4b00046",
       "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0003c",
+      "toNode": "a1f0c2d3e4b00048",
       "toSide": "left",
       "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b000b2",
-      "fromNode": "a1f0c2d3e4b00049",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0004a",
-      "toSide": "left",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b000b3",
-      "fromNode": "a1f0c2d3e4b00049",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0004b",
-      "toSide": "left",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b000b4",
-      "fromNode": "a1f0c2d3e4b00049",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0004c",
-      "toSide": "left",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b000b5",
-      "fromNode": "a1f0c2d3e4b00049",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0004d",
-      "toSide": "left",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b000b6",
-      "fromNode": "a1f0c2d3e4b00049",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0004e",
-      "toSide": "left",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b000b7",
-      "fromNode": "a1f0c2d3e4b00049",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0004f",
-      "toSide": "left",
-      "color": "3"
-    },
-    {
-      "id": "a1f0c2d3e4b000b8",
-      "fromNode": "a1f0c2d3e4b00000",
+      "id": "a1f0c2d3e4b000c9",
+      "fromNode": "a1f0c2d3e4b00046",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00049",
       "toSide": "left",
-      "color": "3"
+      "color": "1"
     },
     {
-      "id": "a1f0c2d3e4b000b9",
+      "id": "a1f0c2d3e4b000ca",
+      "fromNode": "a1f0c2d3e4b00042",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00046",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000cb",
+      "fromNode": "a1f0c2d3e4b00042",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0004a",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000cc",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00042",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000cd",
+      "fromNode": "a1f0c2d3e4b0004c",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0004d",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000ce",
+      "fromNode": "a1f0c2d3e4b0004b",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0004c",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000cf",
+      "fromNode": "a1f0c2d3e4b0004e",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0004f",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000d0",
+      "fromNode": "a1f0c2d3e4b0004b",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0004e",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000d1",
       "fromNode": "a1f0c2d3e4b00050",
       "fromSide": "right",
       "toNode": "a1f0c2d3e4b00051",
       "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b000ba",
-      "fromNode": "a1f0c2d3e4b00050",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00052",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b000bb",
-      "fromNode": "a1f0c2d3e4b00050",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00053",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b000bc",
-      "fromNode": "a1f0c2d3e4b00050",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00054",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b000bd",
-      "fromNode": "a1f0c2d3e4b00055",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00056",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b000be",
-      "fromNode": "a1f0c2d3e4b00055",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00057",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b000bf",
-      "fromNode": "a1f0c2d3e4b00055",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00058",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b000c0",
-      "fromNode": "a1f0c2d3e4b00050",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00055",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b000c1",
-      "fromNode": "a1f0c2d3e4b00050",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00059",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b000c2",
-      "fromNode": "a1f0c2d3e4b00050",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0005a",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b000c3",
-      "fromNode": "a1f0c2d3e4b00000",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00050",
-      "toSide": "left",
-      "color": "4"
-    },
-    {
-      "id": "a1f0c2d3e4b000c4",
-      "fromNode": "a1f0c2d3e4b0005b",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0005c",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b000c5",
-      "fromNode": "a1f0c2d3e4b0005b",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0005d",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b000c6",
-      "fromNode": "a1f0c2d3e4b0005b",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0005e",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b000c7",
-      "fromNode": "a1f0c2d3e4b0005b",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0005f",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b000c8",
-      "fromNode": "a1f0c2d3e4b00000",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b0005b",
-      "toSide": "left",
-      "color": "2"
-    },
-    {
-      "id": "a1f0c2d3e4b000c9",
-      "fromNode": "a1f0c2d3e4b00060",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00061",
-      "toSide": "left",
-      "color": "6"
-    },
-    {
-      "id": "a1f0c2d3e4b000ca",
-      "fromNode": "a1f0c2d3e4b00060",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00062",
-      "toSide": "left",
-      "color": "6"
-    },
-    {
-      "id": "a1f0c2d3e4b000cb",
-      "fromNode": "a1f0c2d3e4b00060",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00063",
-      "toSide": "left",
-      "color": "6"
-    },
-    {
-      "id": "a1f0c2d3e4b000cc",
-      "fromNode": "a1f0c2d3e4b00060",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00064",
-      "toSide": "left",
-      "color": "6"
-    },
-    {
-      "id": "a1f0c2d3e4b000cd",
-      "fromNode": "a1f0c2d3e4b00065",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00066",
-      "toSide": "left",
-      "color": "6"
-    },
-    {
-      "id": "a1f0c2d3e4b000ce",
-      "fromNode": "a1f0c2d3e4b00065",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00067",
-      "toSide": "left",
-      "color": "6"
-    },
-    {
-      "id": "a1f0c2d3e4b000cf",
-      "fromNode": "a1f0c2d3e4b00065",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00068",
-      "toSide": "left",
-      "color": "6"
-    },
-    {
-      "id": "a1f0c2d3e4b000d0",
-      "fromNode": "a1f0c2d3e4b00065",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00069",
-      "toSide": "left",
-      "color": "6"
-    },
-    {
-      "id": "a1f0c2d3e4b000d1",
-      "fromNode": "a1f0c2d3e4b00060",
-      "fromSide": "right",
-      "toNode": "a1f0c2d3e4b00065",
-      "toSide": "left",
-      "color": "6"
+      "color": "1"
     },
     {
       "id": "a1f0c2d3e4b000d2",
+      "fromNode": "a1f0c2d3e4b0004b",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00050",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000d3",
+      "fromNode": "a1f0c2d3e4b00052",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00053",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000d4",
+      "fromNode": "a1f0c2d3e4b0004b",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00052",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000d5",
+      "fromNode": "a1f0c2d3e4b00054",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00055",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000d6",
+      "fromNode": "a1f0c2d3e4b0004b",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00054",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000d7",
       "fromNode": "a1f0c2d3e4b00000",
       "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0004b",
+      "toSide": "left",
+      "color": "1"
+    },
+    {
+      "id": "a1f0c2d3e4b000d8",
+      "fromNode": "a1f0c2d3e4b00056",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00057",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b000d9",
+      "fromNode": "a1f0c2d3e4b00056",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00058",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b000da",
+      "fromNode": "a1f0c2d3e4b00056",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00059",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b000db",
+      "fromNode": "a1f0c2d3e4b00056",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0005a",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b000dc",
+      "fromNode": "a1f0c2d3e4b00056",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0005b",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b000dd",
+      "fromNode": "a1f0c2d3e4b00056",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0005c",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b000de",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00056",
+      "toSide": "left",
+      "color": "3"
+    },
+    {
+      "id": "a1f0c2d3e4b000df",
+      "fromNode": "a1f0c2d3e4b0005d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0005e",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000e0",
+      "fromNode": "a1f0c2d3e4b0005d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0005f",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000e1",
+      "fromNode": "a1f0c2d3e4b0005d",
+      "fromSide": "right",
       "toNode": "a1f0c2d3e4b00060",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000e2",
+      "fromNode": "a1f0c2d3e4b0005d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00061",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000e3",
+      "fromNode": "a1f0c2d3e4b00062",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00063",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000e4",
+      "fromNode": "a1f0c2d3e4b00062",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00064",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000e5",
+      "fromNode": "a1f0c2d3e4b00062",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00065",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000e6",
+      "fromNode": "a1f0c2d3e4b0005d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00062",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000e7",
+      "fromNode": "a1f0c2d3e4b0005d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00066",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000e8",
+      "fromNode": "a1f0c2d3e4b0005d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00067",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000e9",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0005d",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000ea",
+      "fromNode": "a1f0c2d3e4b00068",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00069",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000eb",
+      "fromNode": "a1f0c2d3e4b00068",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0006a",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000ec",
+      "fromNode": "a1f0c2d3e4b00068",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0006b",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000ed",
+      "fromNode": "a1f0c2d3e4b00068",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0006c",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000ee",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00068",
+      "toSide": "left",
+      "color": "2"
+    },
+    {
+      "id": "a1f0c2d3e4b000ef",
+      "fromNode": "a1f0c2d3e4b0006d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0006e",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000f0",
+      "fromNode": "a1f0c2d3e4b0006d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0006f",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000f1",
+      "fromNode": "a1f0c2d3e4b0006d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00070",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000f2",
+      "fromNode": "a1f0c2d3e4b0006d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00071",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000f3",
+      "fromNode": "a1f0c2d3e4b0006d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00072",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000f4",
+      "fromNode": "a1f0c2d3e4b0006d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00073",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000f5",
+      "fromNode": "a1f0c2d3e4b0006d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00074",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000f6",
+      "fromNode": "a1f0c2d3e4b0006d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00075",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000f7",
+      "fromNode": "a1f0c2d3e4b0006d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00076",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000f8",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0006d",
+      "toSide": "left",
+      "color": "4"
+    },
+    {
+      "id": "a1f0c2d3e4b000f9",
+      "fromNode": "a1f0c2d3e4b00077",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00078",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b000fa",
+      "fromNode": "a1f0c2d3e4b00077",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00079",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b000fb",
+      "fromNode": "a1f0c2d3e4b00077",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0007a",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b000fc",
+      "fromNode": "a1f0c2d3e4b00077",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0007b",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b000fd",
+      "fromNode": "a1f0c2d3e4b00077",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0007c",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b000fe",
+      "fromNode": "a1f0c2d3e4b0007d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0007e",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b000ff",
+      "fromNode": "a1f0c2d3e4b0007d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0007f",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00100",
+      "fromNode": "a1f0c2d3e4b0007d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00080",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00101",
+      "fromNode": "a1f0c2d3e4b0007d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00081",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00102",
+      "fromNode": "a1f0c2d3e4b0007d",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00082",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00103",
+      "fromNode": "a1f0c2d3e4b00077",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b0007d",
+      "toSide": "left",
+      "color": "6"
+    },
+    {
+      "id": "a1f0c2d3e4b00104",
+      "fromNode": "a1f0c2d3e4b00000",
+      "fromSide": "right",
+      "toNode": "a1f0c2d3e4b00077",
       "toSide": "left",
       "color": "6"
     }
