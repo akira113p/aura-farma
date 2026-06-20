@@ -1,6 +1,7 @@
 import Fuse from 'fuse.js';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { TtlCache } from './cache';
 
 /**
  * In-memory catalog of real medicines (ANVISA open data).
@@ -31,6 +32,15 @@ const CSV_URL = new URL('../../data/MEDICAMENTOS_BUSCA.csv', import.meta.url);
 
 let fuse: Fuse<IndexedMed> | null = null;
 let count = 0;
+
+/**
+ * Cache das buscas (leitura cara/repetida): o catálogo é estático, então a
+ * mesma query+limit sempre produz o mesmo resultado dentro do TTL. Chave =
+ * `query normalizada + '|' + limit`. TTL de 5 min — a correção dos resultados
+ * não muda, é só uma camada por cima de `searchCatalog`.
+ */
+const buscaCache = new TtlCache<CatalogMed[]>('catalogo-busca');
+const BUSCA_TTL_MS = 5 * 60 * 1000;
 
 /** lowercase, strip accents/diacritics, collapse whitespace. */
 export function normalize(s: string): string {
@@ -127,7 +137,14 @@ export function searchCatalog(q: string, limit = 12): CatalogMed[] {
   if (!fuse) loadCatalog();
   const nq = normalize(q);
   if (nq.length < 2) return [];
-  return fuse!
+
+  // Chave determinística por query normalizada + limit. O conteúdo do resultado
+  // é o mesmo que seria calculado abaixo — o cache não muda a corretude.
+  const cacheKey = `${nq}|${limit}`;
+  const cached = buscaCache.get(cacheKey);
+  if (cached !== undefined) return cached;
+
+  const results = fuse!
     .search(nq, { limit: Math.max(limit * 4, 40) })
     .map((r) => {
       const prefix = commonPrefixLen(nq, r.item._nome) / Math.max(nq.length, 1);
@@ -138,4 +155,7 @@ export function searchCatalog(q: string, limit = 12): CatalogMed[] {
     .sort((a, b) => a.score - b.score)
     .slice(0, limit)
     .map((x) => toPublic(x.item));
+
+  buscaCache.set(cacheKey, results, BUSCA_TTL_MS);
+  return results;
 }
