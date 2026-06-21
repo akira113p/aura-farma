@@ -112,6 +112,7 @@ const full = {
         { text: 'Estoque/vendas/solicitados/contagem no MongoDB (por usuario)' },
         { text: 'Assistente IA (OpenRouter) + resumo automatico no Dashboard/Relatorios' },
         { text: 'Observabilidade de producao: logs JSON, request-ID, health detalhado, metricas, alertas' },
+        { text: 'Conexao PostgreSQL Neon: camada pronta (pool pg, SSL, health, shutdown); sem tabelas ainda' },
       ]},
       { text: 'Divida tecnica', children: [
         { text: 'Pedidos: demo de logistica so em localStorage; precisa persistir no banco antes do beta' },

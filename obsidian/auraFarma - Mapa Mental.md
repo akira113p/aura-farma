@@ -47,6 +47,7 @@ diretamente com a distribuidora.
 | Estoque / vendas / solicitados / contagem no MongoDB (por usuario) | Pronto |
 | Assistente IA (OpenRouter) + resumo automatico (Dashboard/Relatorios) | Pronto |
 | Observabilidade de producao (logs JSON, request-ID, health, metricas, alertas) | Pronto |
+| Conexao PostgreSQL Neon (camada de conexao; sem tabelas) | Pronto |
 | Pedidos - demo de logistica com distribuidora | Divida tecnica (so em localStorage) |
 | Controle de validade com alertas | Em andamento |
 | SNGPC (PostgreSQL Neon) | Planejado |
@@ -64,6 +65,10 @@ diretamente com a distribuidora.
 - **Backend** - Node.js + Express.
 - **Banco principal** - MongoDB Atlas (auth, estoque, vendas, solicitados, contagem).
 - **Banco de compliance** - PostgreSQL Neon (SNGPC, controlados, lotes, receitas).
+  A **camada de conexao ja esta integrada** (`backend/src/db/postgres.ts`: pool `pg`,
+  TLS, ping no health, fechamento gracioso); ainda **sem tabelas** - ver
+  [[auraFarma - Neon (tutorial).md]]. Driver `pg` sobre o endpoint pooled do Neon
+  (escolha correta para servidor persistente; o driver serverless e para edge/functions).
 - **Autenticacao** - sessao via cookie httpOnly + bcrypt + Google OAuth.
 - **Busca de medicamentos** - catalogo em memoria no Node + Fuse.js (fuzzy).
 - **IA** - OpenRouter, com a chave guardada apenas no backend; fluxo de 2
