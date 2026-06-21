@@ -1,7 +1,7 @@
 # Render Blueprint — deploy do backend (Node/Express + MongoDB).
 # No Render: New + > Blueprint > conecte o repo > ele lê este arquivo.
 # Depois preencha as envVars marcadas com sync:false (MONGODB_URI,
-# FRONTEND_ORIGIN, GOOGLE_CLIENT_ID, OPENROUTER_API_KEY) no painel do servico.
+# FRONTEND_ORIGIN, GOOGLE_CLIENT_ID, OPENROUTER_API_KEY, DATABASE_URL) no painel do servico.
 services:
   - type: web
     name: aura-farma-backend
@@ -20,6 +20,10 @@ services:
         generateValue: true
       # Preencha no painel (Environment) — sao especificos/segredos:
       - key: MONGODB_URI
+        sync: false
+      # PostgreSQL (Neon) — compliance/SNGPC. Use a string POOLED (host "-pooler")
+      # com sslmode=require. Vazia = Postgres desativado. Segredo: preencha no painel.
+      - key: DATABASE_URL
         sync: false
       - key: FRONTEND_ORIGIN
         sync: false

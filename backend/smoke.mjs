@@ -39,7 +39,9 @@ if (EXTERNAL_URI) {
 // Spawn as a single Node process (node --import tsx) so server.kill() actually
 // terminates the server — `npx tsx`/shell wrappers leave the real process orphaned.
 const server = spawn(process.execPath, ['--import', 'tsx', 'src/index.ts'], {
-  env: { ...process.env, MONGODB_URI: uri, SESSION_SECRET: 'smoke-secret-0123456789', PORT: String(PORT), NODE_ENV: 'development', FRONTEND_ORIGIN: 'http://localhost:5173', GOOGLE_CLIENT_ID: '' },
+  // DATABASE_URL='' mantém o smoke hermético: desativa o Postgres mesmo se houver
+  // um .env com DATABASE_URL (dotenv não sobrescreve uma var já definida).
+  env: { ...process.env, MONGODB_URI: uri, SESSION_SECRET: 'smoke-secret-0123456789', PORT: String(PORT), NODE_ENV: 'development', FRONTEND_ORIGIN: 'http://localhost:5173', GOOGLE_CLIENT_ID: '', DATABASE_URL: '' },
   stdio: 'inherit',
 });
 

@@ -3,8 +3,10 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import helmet from 'helmet';
 import cors from 'cors';
-import { env } from './config/env';
-import { connectDb } from './db/mongoose';
+import type { Server } from 'node:http';
+import { env, isPostgresEnabled } from './config/env';
+import { connectDb, disconnectDb } from './db/mongoose';
+import { connectPostgres, pingPostgres, closePostgres } from './db/postgres';
 import { authLimiter, iaLimiter } from './middleware/rateLimit';
 import { requireAuth } from './middleware/auth';
 import { authRouter } from './routes/auth';
@@ -66,7 +68,16 @@ app.use(
   }),
 );
 
-app.get('/api/health', (_req, res) => res.json({ ok: true }));
+app.get('/api/health', async (_req, res) => {
+  // `ok` reflete a saúde operacional do app (MongoDB é o banco principal).
+  // O Postgres é opcional nesta fase: reportamos seu estado sem derrubar o ok.
+  const postgres = !isPostgresEnabled()
+    ? 'desativado'
+    : (await pingPostgres())
+      ? 'conectado'
+      : 'erro';
+  res.json({ ok: true, postgres });
+});
 
 // Rate-limit all auth endpoints (login/register/google) against brute force.
 app.use('/api/auth', authLimiter, authRouter);
@@ -84,16 +95,46 @@ app.use('/api', requireAuth, dadosRouter);
 app.use(notFound);
 app.use(errorHandler);
 
+/**
+ * Encerramento gracioso: para de aceitar conexões e fecha os bancos antes de
+ * sair, evitando conexões penduradas (importante no Render, que manda SIGTERM
+ * a cada deploy). Idempotente; força a saída se travar.
+ */
+function setupGracefulShutdown(server: Server): void {
+  let shuttingDown = false;
+  const shutdown = (signal: string) => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    console.log(`[api] ${signal} recebido, encerrando...`);
+    server.close(async () => {
+      try {
+        await closePostgres();
+        await disconnectDb();
+      } catch (err) {
+        console.error('[api] erro ao fechar conexões:', err);
+      }
+      process.exit(0);
+    });
+    // Rede de segurança: se algo travar, sai mesmo assim.
+    setTimeout(() => process.exit(1), 10_000).unref();
+  };
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+}
+
 async function start() {
   try {
     await connectDb();
+    if (isPostgresEnabled()) await connectPostgres();
     const medCount = loadCatalog();
-    app.listen(env.port, () => {
+    const server = app.listen(env.port, () => {
       console.log(`[api] auraFarma ouvindo em http://localhost:${env.port}`);
       console.log(`[api] CORS liberado para: ${env.frontendOrigins.join(', ')}`);
       console.log(`[api] Google login: ${env.googleClientId ? 'configurado' : 'desativado (defina GOOGLE_CLIENT_ID)'}`);
+      console.log(`[api] PostgreSQL (Neon): ${isPostgresEnabled() ? 'configurado' : 'desativado (defina DATABASE_URL)'}`);
       console.log(`[catalog] ${medCount} medicamentos carregados`);
     });
+    setupGracefulShutdown(server);
   } catch (err) {
     console.error('[api] Falha ao iniciar:', err);
     process.exit(1);

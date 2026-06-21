@@ -69,6 +69,13 @@ export const env = {
   isProd: IS_PROD,
   port: Number(process.env.PORT ?? 4000),
   mongoUri: required('MONGODB_URI'),
+  /**
+   * PostgreSQL (Neon) — banco de compliance/SNGPC. Vazio = desativado: o app
+   * sobe normalmente sem Postgres (o MongoDB segue como banco principal).
+   * Use a connection string do endpoint POOLED (`-pooler`) com `sslmode=require`.
+   * O segredo fica só no .env (gitignored); NUNCA vai para o bundle do cliente.
+   */
+  databaseUrl: process.env.DATABASE_URL ?? '',
   sessionSecret,
   /** Allowed CORS origins (comma-separated in env). */
   frontendOrigins,
@@ -100,3 +107,5 @@ export const env = {
 export const isGoogleEnabled = (): boolean => env.googleClientId.trim() !== '';
 
 export const isIaEnabled = (): boolean => env.openrouterApiKey.trim() !== '';
+
+export const isPostgresEnabled = (): boolean => env.databaseUrl.trim() !== '';
