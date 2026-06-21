@@ -1,0 +1,42 @@
+import type { JSX } from 'react';
+declare const PATHS: {
+    dashboard: JSX.Element;
+    box: JSX.Element;
+    cart: JSX.Element;
+    bookmark: JSX.Element;
+    history: JSX.Element;
+    list: JSX.Element;
+    menu: JSX.Element;
+    chart: JSX.Element;
+    settings: JSX.Element;
+    plus: JSX.Element;
+    search: JSX.Element;
+    check: JSX.Element;
+    x: JSX.Element;
+    chevronDown: JSX.Element;
+    chevronUp: JSX.Element;
+    moon: JSX.Element;
+    sun: JSX.Element;
+    barcode: JSX.Element;
+    sparkle: JSX.Element;
+    pkg: JSX.Element;
+    alert: JSX.Element;
+    arrowUp: JSX.Element;
+    arrowDown: JSX.Element;
+    trash: JSX.Element;
+    db: JSX.Element;
+    pill: JSX.Element;
+    truck: JSX.Element;
+    mic: JSX.Element;
+    send: JSX.Element;
+    edit: JSX.Element;
+    layers: JSX.Element;
+};
+export type IconName = keyof typeof PATHS;
+interface IconProps {
+    name: IconName;
+    size?: number;
+    className?: string;
+}
+export declare function Icon({ name, size, className }: IconProps): JSX.Element;
+export {};
