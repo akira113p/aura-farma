@@ -125,7 +125,18 @@ function setupGracefulShutdown(server: Server): void {
 async function start() {
   try {
     await connectDb();
-    if (isPostgresEnabled()) await connectPostgres();
+    // Postgres (Neon) é OPCIONAL (só compliance/SNGPC, ainda sem tabelas). Uma
+    // falha de conexão (senha errada, Neon dormindo/indisponível) NÃO deve
+    // derrubar o backend inteiro — o MongoDB é o banco principal. Logamos o
+    // aviso e seguimos; o estado real aparece em /api/health (postgres:"erro").
+    if (isPostgresEnabled()) {
+      try {
+        await connectPostgres();
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error(`[pg] AVISO: conexão com o PostgreSQL (Neon) falhou — seguindo sem ele. Causa: ${msg}`);
+      }
+    }
     const medCount = loadCatalog();
     const server = app.listen(env.port, () => {
       console.log(`[api] auraFarma ouvindo em http://localhost:${env.port}`);

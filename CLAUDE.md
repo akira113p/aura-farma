@@ -23,7 +23,7 @@ skill/, vibe-security-skill/   # repositórios-fonte das skills (referência)
 - `hooks/` — `useAppState.ts` (carrega/persiste o `AppState`, keyed por userId), `useAssistenteIA.ts` (perguntas + histórico no navegador), `usePedidos.ts` (**dívida técnica**: pedidos só em localStorage), `useTweaks.ts`.
 - `context/` — `AuthContext.tsx`.
 - `types/` — `index.ts` (AppState, Product, Sale, Summary, AuthUser…).
-- `data/seed.ts` — dados de exemplo. `config.ts` — config de runtime. `index.css` — estilos (tokens de tema/densidade).
+- `data/seed.ts` — dados de exemplo. `config.ts` — config de runtime. `index.css` — estilos (tokens de tema/densidade). **Cor de marca (accent) é laranja** `#f97316` (hover `#ea580c`/`#fb923c` no escuro), definida no token `--accent` em `:root` e `[data-theme="dark"]`; toda a UI (botões primários, nav ativa, focus rings, gráficos `LineChart`) herda desse token — para mudar o tema, troque só o `--accent`.
 
 ### `backend/src`
 - `routes/auth.ts` — todas as rotas `/api/auth` (register, login, logout, me, google, google/complete, google/config).

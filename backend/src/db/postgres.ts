@@ -28,7 +28,9 @@ function safeHost(url: string): string {
 
 /**
  * Cria o pool e valida a conectividade com `SELECT 1`. No-op se o Postgres
- * estiver desativado (sem `DATABASE_URL`). Erros propagam para o bootstrap.
+ * estiver desativado (sem `DATABASE_URL`). Em caso de erro lança — mas o
+ * bootstrap (`index.ts`) trata como não-fatal (Postgres é opcional), apenas
+ * logando o aviso; o estado aparece em `/api/health` (`postgres:"erro"`).
  */
 export async function connectPostgres(): Promise<void> {
   if (!env.databaseUrl) return;
